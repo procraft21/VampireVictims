@@ -7,11 +7,22 @@ import android.graphics.PointF;
 import android.util.Log;
 
 public class Player extends Entity{
-    Bitmap bitmap;
-    private int speed = 10;
-    public Player(Bitmap bitmap, Point pos){
-        this.pos = pos;
+    private static Player instance;
+    private Bitmap bitmap;
+    private PointF dirVector;
+    private int speed = 7;
+    private Player(){
+        this.pos = new Point();
+
+    }
+    public void setBitmap(Bitmap bitmap){
         this.bitmap = bitmap;
+    }
+    public static Player getInstance(){
+        if(instance == null){
+            instance = new Player();
+        }
+        return instance;
     }
 
     @Override
@@ -19,7 +30,11 @@ public class Player extends Entity{
         canvas.drawBitmap(bitmap, canvas.getWidth()/2 + (pos.x-center.x) - bitmap.getWidth()/2f, canvas.getHeight()/2 + (pos.y-center.y) - bitmap.getHeight()/2f, null);
     }
 
-    public void move(PointF dirVector){
+    public void setDirVector(PointF dirVector){
+        this.dirVector = dirVector;
+    }
+
+    public void move(){
         pos.x += dirVector.x * speed;
         pos.y += dirVector.y * speed;
     }

@@ -22,8 +22,8 @@ public class GameView extends SurfaceView implements Runnable{
     private boolean isJoyStickOn = false;
     private PointF joystickBaseCenter, joystickHandleCenter;
     private PointF joystickDirVector = new PointF(0,0);
-    private static final int JOYSTICK_BASE_RADIUS = 300;
-    private static final int JOYSTICK_HANDLE_RADIUS = 100;
+    private static final int JOYSTICK_BASE_RADIUS = 200;
+    private static final int JOYSTICK_HANDLE_RADIUS = 75;
     private static Paint JOYSTICK_BASE_PAINT, JOYSTICK_HANDLE_PAINT;
     private static final int JOYSTICK_BASE_COLOR = 0x60FFFFFF,JOYSTICK_HANDLE_COLOR = 0xF0FFFFFF;
     private static final int JOYSTICK_DEAD_RADIUS = 50;
@@ -33,8 +33,8 @@ public class GameView extends SurfaceView implements Runnable{
     private Canvas mainCanvas;
     private int INTERVAL = 17;
     //Player variables -----------------------------------------------------------------
-    private static final int PLAYER_WIDTH = 200;
-    private static final int PLAYER_HEIGHT = 200;
+    private static final int PLAYER_WIDTH = 150;
+    private static final int PLAYER_HEIGHT = 150;
     Player player;
     ArrayList<Enemy> enemies;
 
@@ -67,9 +67,11 @@ public class GameView extends SurfaceView implements Runnable{
 
         Bitmap playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.player_img);
         playerBitmap = Bitmap.createScaledBitmap(playerBitmap,PLAYER_WIDTH, PLAYER_HEIGHT, false);
-        player = new Player(playerBitmap, new Point());
+        player = Player.getInstance();
+        player.setBitmap(playerBitmap);
+        player.setDirVector(joystickDirVector);
         enemies = new ArrayList<>();
-        enemies.add(new Enemy(playerBitmap, new Point()));
+        enemies.add(new Enemy(playerBitmap, new Point(50, 0)));
         Thread t = new Thread(this);
         t.start();
     }
@@ -77,7 +79,9 @@ public class GameView extends SurfaceView implements Runnable{
     @Override
     public void run() {
         while(true){
-            player.move(joystickDirVector);
+            player.move();
+            for(Enemy enemy : enemies)
+                enemy.move();
             drawSurface();
             SystemClock.sleep(INTERVAL);
         }
@@ -89,16 +93,18 @@ public class GameView extends SurfaceView implements Runnable{
             mainCanvas = holder.lockCanvas();
 
             mainCanvas.drawColor(0xFF006600);
-            if(isJoyStickOn){
-                mainCanvas.drawCircle(joystickBaseCenter.x, joystickBaseCenter.y,
-                        JOYSTICK_BASE_RADIUS, JOYSTICK_BASE_PAINT);
-                mainCanvas.drawCircle(joystickHandleCenter.x, joystickHandleCenter.y,
-                    JOYSTICK_HANDLE_RADIUS, JOYSTICK_HANDLE_PAINT);
-            }
 
             player.drawRelative(mainCanvas, player.pos);
             for(Enemy enemy : enemies)
                 enemy.drawRelative(mainCanvas, player.pos);
+
+            if(isJoyStickOn){
+                mainCanvas.drawCircle(joystickBaseCenter.x, joystickBaseCenter.y,
+                        JOYSTICK_BASE_RADIUS, JOYSTICK_BASE_PAINT);
+                mainCanvas.drawCircle(joystickHandleCenter.x, joystickHandleCenter.y,
+                        JOYSTICK_HANDLE_RADIUS, JOYSTICK_HANDLE_PAINT);
+            }
+
             holder.unlockCanvasAndPost(mainCanvas);
         }
     }

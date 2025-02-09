@@ -10,4 +10,5 @@ public abstract class Entity {
         drawRelative(canvas, entity.pos);
     }
 
+    public abstract void move();
 }
