@@ -37,6 +37,7 @@ public class GameView extends SurfaceView implements Runnable{
     private static final int PLAYER_HEIGHT = 150;
     Player player;
     ArrayList<Enemy> enemies;
+    ArrayList<StationaryEntity> stationaryEntities;
 
     public GameView(Context context) {
         super(context);
@@ -71,7 +72,12 @@ public class GameView extends SurfaceView implements Runnable{
         player.setBitmap(playerBitmap);
         player.setDirVector(joystickDirVector);
         enemies = new ArrayList<>();
-        enemies.add(new Enemy(playerBitmap, new Point(50, 0)));
+        stationaryEntities = new ArrayList<>();
+
+
+        enemies.add(new Enemy(playerBitmap, new Point(1000, 0)));
+        stationaryEntities.add(new StationaryEntity(new Point()));
+
         Thread t = new Thread(this);
         t.start();
     }
@@ -97,6 +103,9 @@ public class GameView extends SurfaceView implements Runnable{
             player.drawRelative(mainCanvas, player.pos);
             for(Enemy enemy : enemies)
                 enemy.drawRelative(mainCanvas, player.pos);
+            for(StationaryEntity entity : stationaryEntities){
+                entity.drawRelative(mainCanvas, player.pos);
+            }
 
             if(isJoyStickOn){
                 mainCanvas.drawCircle(joystickBaseCenter.x, joystickBaseCenter.y,
@@ -104,6 +113,12 @@ public class GameView extends SurfaceView implements Runnable{
                 mainCanvas.drawCircle(joystickHandleCenter.x, joystickHandleCenter.y,
                         JOYSTICK_HANDLE_RADIUS, JOYSTICK_HANDLE_PAINT);
             }
+            Paint textPaint = new Paint();
+            textPaint.setColor(0xFFFFFFFF);
+            textPaint.setTextSize(100);
+            mainCanvas.drawText("x : " + player.getPosition().x + " y : " + player.getPosition().y, 200, 200, textPaint);
+
+
 
             holder.unlockCanvasAndPost(mainCanvas);
         }

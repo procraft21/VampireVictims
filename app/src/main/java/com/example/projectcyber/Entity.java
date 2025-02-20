@@ -6,8 +6,12 @@ import android.graphics.Point;
 public abstract class Entity {
     protected Point pos;
     protected abstract void drawRelative(Canvas canvas, Point center);
-    public void drawRelative(Canvas canvas, Entity entity){
-        drawRelative(canvas, entity.pos);
+
+    public Entity(Point pos){
+        this.pos = new Point(pos);
+    }
+    public Point getPosition(){
+        return pos;
     }
 
     public abstract void move();
