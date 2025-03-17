@@ -17,6 +17,7 @@ import com.example.projectcyber.gameObjects.FollowerEnemy;
 import com.example.projectcyber.gameObjects.Player;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
@@ -190,4 +191,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     public Joystick getJoystick(){
         return joystick;
     }
+
+    public long getTime(){
+        return timer.getTime();
+    }
+
+    /**
+     * */
+    public void summonEnemies(List<Enemy> enemies){
+        this.enemies.addAll(enemies);
+    }
+
 }

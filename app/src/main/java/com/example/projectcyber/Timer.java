@@ -8,9 +8,8 @@ public class Timer {
 
     private long currTime = 0;
 
-    public Timer(GameView gameView){
+    public Timer(GameView gameView){}
 
-    }
     public void update(long deltaTime){
         currTime += deltaTime;
     }
@@ -23,6 +22,11 @@ public class Timer {
         canvas.drawText(formatTime(), canvas.getWidth()/2, distanceFromTop, paint);
     }
 
+    /**@return current time in timer in ms*/
+    public long getTime(){
+        return currTime;
+    };
+
     private String formatTime(){
         long totalSeconds = currTime/1000;
 
@@ -33,4 +37,6 @@ public class Timer {
         String minutesString = minutes<10 ? "0" + minutes : "" + minutes;
         return minutesString + ":" + secondsString;
     }
+
+
 }
