@@ -1,6 +1,8 @@
 package com.example.projectcyber;
 
 import android.os.Bundle;
+import android.view.Window;
+import android.view.WindowManager;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,16 +12,21 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
-    ConstraintLayout constraintLayout;
-    GameView gameView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Window window = getWindow();
+        window.setFlags(
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN
+        );
 
-        gameView = findViewById(R.id.gameView);
-        constraintLayout = findViewById(R.id.main);
+        GameView gameView = new GameView(this);
+        window.setContentView(gameView);
+
     }
 
 }

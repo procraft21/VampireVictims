@@ -5,131 +5,160 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Point;
-import android.graphics.PointF;
-import android.os.SystemClock;
-import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+
+import com.example.projectcyber.gameObjects.Enemy;
+import com.example.projectcyber.gameObjects.FollowerEnemy;
+import com.example.projectcyber.gameObjects.Player;
+
 import java.util.ArrayList;
 
-public class GameView extends SurfaceView implements Runnable{
+public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
-    /* JOYSTICK VARIABLES ---------------------------------------------------*/
-    private boolean isJoyStickOn = false;
-    private PointF joystickBaseCenter, joystickHandleCenter;
-    private PointF joystickDirVector = new PointF(0,0);
-    private static final int JOYSTICK_BASE_RADIUS = 200;
-    private static final int JOYSTICK_HANDLE_RADIUS = 75;
-    private static Paint JOYSTICK_BASE_PAINT, JOYSTICK_HANDLE_PAINT;
-    private static final int JOYSTICK_BASE_COLOR = 0x60FFFFFF,JOYSTICK_HANDLE_COLOR = 0xF0FFFFFF;
-    private static final int JOYSTICK_DEAD_RADIUS = 50;
-
-    //SurfaceView variables ---------------------------------------------------------
+    /*//SurfaceView variables ---------------------------------------------------------
     private SurfaceHolder holder = getHolder();
     private Canvas mainCanvas;
-    private int INTERVAL = 17;
+    private int INTERVAL = 17;*/
     //Player variables -----------------------------------------------------------------
     private static final int PLAYER_WIDTH = 150;
     private static final int PLAYER_HEIGHT = 150;
+    Bitmap playerBitmap;
     Player player;
+
+    //Enemies variables -----------------------------------------------------------------
     ArrayList<Enemy> enemies;
-    ArrayList<StationaryEntity> stationaryEntities;
+
+    //Game stuff------------------------------------------------------------------------
+    private GameLoop gameLoop;
+    private Context context;
+
+    private Timer timer;
+
+    private Joystick joystick;
+
 
     public GameView(Context context) {
         super(context);
-        init(context);
+        this.context = context;
+        SurfaceHolder surfaceHolder = getHolder();
+        surfaceHolder.addCallback(this);
+        setFocusable(true);
     }
 
-    public GameView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init(context);
-    }
 
-    public GameView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init(context);
-    }
 
-    public GameView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init(context);
-    }
+    private void init(SurfaceHolder surfaceHolder){
 
-    private void init(Context context){
+        gameLoop = new GameLoop(this, surfaceHolder);
+        joystick = new Joystick();
 
-        JOYSTICK_BASE_PAINT = new Paint();
-        JOYSTICK_BASE_PAINT.setColor(JOYSTICK_BASE_COLOR);
-        JOYSTICK_HANDLE_PAINT = new Paint();
-        JOYSTICK_HANDLE_PAINT.setColor(JOYSTICK_HANDLE_COLOR);
-
-        Bitmap playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.player_img);
+        player = new Player(this);
+        playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.player_img);
         playerBitmap = Bitmap.createScaledBitmap(playerBitmap,PLAYER_WIDTH, PLAYER_HEIGHT, false);
-        player = Player.getInstance();
-        player.setBitmap(playerBitmap);
-        player.setDirVector(joystickDirVector);
+
         enemies = new ArrayList<>();
-        stationaryEntities = new ArrayList<>();
+        FollowerEnemy enemy = new FollowerEnemy(this, 100, 0);
+        Bitmap enemyBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.enemy_img);
+        enemyBitmap = Bitmap.createScaledBitmap(enemyBitmap,PLAYER_WIDTH, PLAYER_HEIGHT, false);
+        enemy.setBitmap(enemyBitmap);
+        enemies.add(enemy);
 
+        timer = new Timer(this);
 
-        enemies.add(new Enemy(playerBitmap, new Point(1000, 0)));
-        stationaryEntities.add(new StationaryEntity(new Point()));
+        player.setBitmap(playerBitmap);
+    }
 
-        Thread t = new Thread(this);
-        t.start();
+    /** Updates the data of the game, called every update*/
+    public void update(long deltaTime){
+
+        joystick.update();
+        player.update(deltaTime);
+        for(Enemy enemy : enemies){
+            enemy.update(deltaTime);
+        }
+
+        timer.update(deltaTime);
+
+    }
+
+    /** Draws the game onto the canvas, called every update*/
+    public void draw(Canvas mainCanvas){
+        super.draw(mainCanvas);
+        mainCanvas.drawColor(0xFF006600);
+
+        player.draw(mainCanvas);
+
+        for(Enemy enemy : enemies){
+            enemy.draw(mainCanvas);
+        }
+
+        timer.draw(mainCanvas);
+
+        joystick.draw(mainCanvas);
+
+        drawUPS(mainCanvas);
+        drawFPS(mainCanvas);
+        drawPlayerPosition(mainCanvas);
+        drawPlayerSpeed(mainCanvas);
+    }
+
+    public void startGame(SurfaceHolder surfaceHolder){
+        init(surfaceHolder);
+        gameLoop.startLoop();
+    }
+
+    public void drawUPS(Canvas canvas){
+        double averageUPS = gameLoop.getAverageUPS();
+        int color = ContextCompat.getColor(context, R.color.magenta);
+        Paint paint = new Paint();
+        paint.setColor(color);
+        paint.setTextSize(50);
+        canvas.drawText("UPS : " + averageUPS, 100, 40, paint);
+    }
+    public void drawFPS(Canvas canvas){
+        double averageFPS = gameLoop.getAverageFPS();
+        int color = ContextCompat.getColor(context, R.color.magenta);
+        Paint paint = new Paint();
+        paint.setColor(color);
+        paint.setTextSize(50);
+        canvas.drawText("FPS : " + averageFPS, 100, 100, paint);
+    }
+    public void drawPlayerPosition(Canvas canvas){
+        int color = ContextCompat.getColor(context, R.color.magenta);
+        Paint paint = new Paint();
+        paint.setColor(color);
+        paint.setTextSize(50);
+        canvas.drawText("X : " + player.getPositionX() + "Y : " + player.getPositionY(), 100, 160, paint);
+    }
+    public void drawPlayerSpeed(Canvas canvas){
+        int color = ContextCompat.getColor(context, R.color.magenta);
+        Paint paint = new Paint();
+        paint.setColor(color);
+        paint.setTextSize(50);
+        canvas.drawText("velX :" + player.getVelX() + " velY : " + player.getVelY(),100, 220, paint);
+        canvas.drawText("velSize : " + Utils.distance(player.getVelX(), player.getVelY(), 0, 0), 100, 280, paint);
+    }
+    // functions from SurfaceHolder.Callback
+    @Override
+    public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
+        startGame(surfaceHolder);
     }
 
     @Override
-    public void run() {
-        while(true){
-            player.move();
-            for(Enemy enemy : enemies)
-                enemy.move();
-            drawSurface();
-            SystemClock.sleep(INTERVAL);
-        }
+    public void surfaceChanged(@NonNull SurfaceHolder surfaceHolder, int i, int i1, int i2) {
 
     }
 
-    public void drawSurface(){
-        if(holder.getSurface().isValid()){
-            mainCanvas = holder.lockCanvas();
+    @Override
+    public void surfaceDestroyed(@NonNull SurfaceHolder surfaceHolder) {
 
-            mainCanvas.drawColor(0xFF006600);
-
-            player.drawRelative(mainCanvas, player.pos);
-            for(Enemy enemy : enemies)
-                enemy.drawRelative(mainCanvas, player.pos);
-            for(StationaryEntity entity : stationaryEntities){
-                entity.drawRelative(mainCanvas, player.pos);
-            }
-
-            if(isJoyStickOn){
-                mainCanvas.drawCircle(joystickBaseCenter.x, joystickBaseCenter.y,
-                        JOYSTICK_BASE_RADIUS, JOYSTICK_BASE_PAINT);
-                mainCanvas.drawCircle(joystickHandleCenter.x, joystickHandleCenter.y,
-                        JOYSTICK_HANDLE_RADIUS, JOYSTICK_HANDLE_PAINT);
-            }
-            Paint textPaint = new Paint();
-            textPaint.setColor(0xFFFFFFFF);
-            textPaint.setTextSize(100);
-            mainCanvas.drawText("x : " + player.getPosition().x + " y : " + player.getPosition().y, 200, 200, textPaint);
-
-
-
-            holder.unlockCanvasAndPost(mainCanvas);
-        }
     }
 
-//    @Override
-//    protected void onDraw(@NonNull Canvas canvas) {
-//        super.onDraw(canvas);
-//        setBackgroundColor(0xFF006600);
-//        /**/
-//    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -137,47 +166,28 @@ public class GameView extends SurfaceView implements Runnable{
 
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
-                isJoyStickOn = true;
-                joystickBaseCenter = new PointF(x,y);
-                joystickHandleCenter = new PointF(x,y);
+                joystick.setIsJoystickOn(true); //turns on the joystick.
+                joystick.setBase(x,y);
+                joystick.resetActuator();
                 break;
+
             case MotionEvent.ACTION_UP:
-                joystickHandleCenter = new PointF(joystickBaseCenter);
-                isJoyStickOn = false;
-                joystickDirVector.x = 0;
-                joystickDirVector.y = 0;
+                joystick.setIsJoystickOn(false);
+                joystick.resetActuator();
                 break;
+
             case MotionEvent.ACTION_MOVE:
-                int radius = (int)Math.sqrt((joystickBaseCenter.x-x)*(joystickBaseCenter.x-x)+
-                        (joystickBaseCenter.y-y)*(joystickBaseCenter.y-y));
-
-
-                if(radius > JOYSTICK_BASE_RADIUS){
-
-                    x  = (int) ((x- joystickBaseCenter.x)*JOYSTICK_BASE_RADIUS/radius+joystickBaseCenter.x);
-                    y = (int) ((y- joystickBaseCenter.y)*JOYSTICK_BASE_RADIUS/radius+joystickBaseCenter.y);
-                    radius = (int)Math.sqrt((joystickBaseCenter.x-x)*(joystickBaseCenter.x-x)+
-                            (joystickBaseCenter.y-y)*(joystickBaseCenter.y-y));
-                }
-
-                joystickHandleCenter.x = x;
-                joystickHandleCenter.y = y;
-
-                if(radius <= JOYSTICK_DEAD_RADIUS){
-                    joystickDirVector.x = 0;
-                    joystickDirVector.y = 0;
-                    break;
-                }
-
-                joystickDirVector.x = (joystickHandleCenter.x - joystickBaseCenter.x)/JOYSTICK_BASE_RADIUS;
-                joystickDirVector.y = (joystickHandleCenter.y - joystickBaseCenter.y)/JOYSTICK_BASE_RADIUS;
-
-
+                joystick.setActuator(x,y);
                 break;
         }
-
-
-
         return true;
+    }
+
+    public Player getPlayer(){
+        return player;
+    }
+
+    public Joystick getJoystick(){
+        return joystick;
     }
 }
