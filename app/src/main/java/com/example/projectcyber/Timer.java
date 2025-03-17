@@ -12,7 +12,7 @@ public class Timer {
 
     }
     public void update(long deltaTime){
-        currTime += 10* deltaTime;
+        currTime += deltaTime;
     }
 
     public void draw(Canvas canvas){
