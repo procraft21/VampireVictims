@@ -1,5 +1,7 @@
 package com.example.projectcyber.gameObjects;
 
+import androidx.annotation.NonNull;
+
 import com.example.projectcyber.GameView;
 import com.example.projectcyber.Utils;
 
@@ -24,5 +26,11 @@ public class FollowerEnemy extends Enemy{
         posX += velX*deltaTime/1000;
         posY += velY*deltaTime/1000;
 
+    }
+
+    @NonNull
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

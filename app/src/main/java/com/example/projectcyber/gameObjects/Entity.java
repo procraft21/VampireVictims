@@ -34,6 +34,14 @@ public abstract class Entity {
 
     protected abstract void drawRelative(Canvas canvas, double relX, double relY);
 
+    public void setPosX(double posX) {
+        this.posX = posX;
+    }
+
+    public void setPosY(double posY) {
+        this.posY = posY;
+    }
+
     public void draw(Canvas canvas){
         double playerPosX = gameView.getPlayer().getPositionX();
         double playerPosY = gameView.getPlayer().getPositionY();

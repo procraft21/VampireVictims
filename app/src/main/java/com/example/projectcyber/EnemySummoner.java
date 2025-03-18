@@ -30,7 +30,7 @@ public class EnemySummoner {
     }
 
     private static final double SUMMON_OUTER_RING_MODIFIER = 1.2;
-    private static final double SUMMON_INNER_RING_MODIFIER = 1.1;
+    private static final double SUMMON_INNER_RING_MODIFIER = 1.01;
 
     private static Random rnd = new Random();
 
@@ -58,16 +58,23 @@ public class EnemySummoner {
     public void update(long deltaTime){
         timeSinceSlotStarted += deltaTime;
         timeSinceLastSummon += deltaTime;
-        if(timeSinceSlotStarted >= summoningList.get(currSlotIndex).length){
+
+        SummoningSlot currentSlot = summoningList.get(currSlotIndex);
+
+        if(timeSinceSlotStarted >= currentSlot.length){
             currSlotIndex++;
             timeSinceSlotStarted = 0;
         }
 
         ArrayList<Enemy> enemiesToSpawn = new ArrayList<>();
-        if(timeSinceLastSummon > summoningList.get(currSlotIndex).summoningInterval){//TODO:add minimum enemies functionality
+        if(timeSinceLastSummon > currentSlot.summoningInterval){
             enemiesToSpawn.add(getEnemyFromSlot());
             Log.d("addedToSummonList", timeSinceLastSummon + "");
             timeSinceLastSummon = 0;
+        }
+
+        while(gameView.getNumberOfEnemies() + enemiesToSpawn.size() < currentSlot.minimumEnemies){
+            enemiesToSpawn.add(getEnemyFromSlot());
         }
 
         gameView.summonEnemies(enemiesToSpawn);
@@ -82,7 +89,14 @@ public class EnemySummoner {
         for(Enemy enemy : enemySet){
             if(i == item){
                 Pair<Double,Double> newPos = getRandomEnemyPosition();
-                return new Enemy(enemy, newPos.first, newPos.second);
+                try {
+                    Enemy newEnemy = (Enemy) enemy.clone();
+                    newEnemy.setPosX(newPos.first);
+                    newEnemy.setPosY(newPos.second);
+                    return newEnemy;
+                } catch (CloneNotSupportedException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
         Log.d("a","a");
