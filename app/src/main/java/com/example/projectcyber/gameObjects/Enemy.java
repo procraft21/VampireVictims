@@ -13,6 +13,11 @@ public class Enemy extends Entity{
         super(posX,posY, gameView);
     }
 
+    public Enemy(Enemy enemy, double posX, double posY){
+        super(posX, posY, enemy.gameView);
+        this.speed = enemy.speed;
+        this.bitmap = enemy.bitmap;
+    }
     @Override
     public void setBitmap(Bitmap bitmap) {
         this.bitmap = bitmap;

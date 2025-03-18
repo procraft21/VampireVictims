@@ -32,6 +32,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     Player player;
 
     //Enemies variables -----------------------------------------------------------------
+    ArrayList<Enemy> enemyQueue;
     ArrayList<Enemy> enemies;
 
     //Game stuff------------------------------------------------------------------------
@@ -76,6 +77,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
     /** Updates the data of the game, called every update*/
     public void update(long deltaTime){
+
+        //add enemies from queue to main list
+        enemies.addAll(enemyQueue);
+        enemyQueue.clear();
 
         joystick.update();
         player.update(deltaTime);
@@ -196,10 +201,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         return timer.getTime();
     }
 
-    /**
-     * */
+    /**Adds all enemies in given list to the enemies queue. */
     public void summonEnemies(List<Enemy> enemies){
-        this.enemies.addAll(enemies);
+        enemyQueue.addAll(enemies);
     }
 
+    public int getNumberOfEnemies(){
+        return enemies.size() + enemyQueue.size();
+    }
 }

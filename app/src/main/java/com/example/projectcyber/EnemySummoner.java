@@ -1,9 +1,12 @@
 package com.example.projectcyber;
 
+import android.util.Pair;
+
 import com.example.projectcyber.gameObjects.Enemy;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Random;
+import java.util.Set;
 
 public class EnemySummoner {
 
@@ -13,9 +16,9 @@ public class EnemySummoner {
         long summoningInterval;
         int minimumEnemies;
 
-        List<Enemy> enemies;
+        Set<Enemy> enemies;
 
-        public SummoningSlot(long length, long summoningInterval, int minimumEnemies, List<Enemy> enemies){
+        public SummoningSlot(long length, long summoningInterval, int minimumEnemies, Set<Enemy> enemies){
             this.length = length;
             this.summoningInterval = summoningInterval;
             this.minimumEnemies = minimumEnemies;
@@ -23,12 +26,14 @@ public class EnemySummoner {
         }
     }
 
+    private static Random rnd = new Random();
+
     private GameView gameView;
 
     private long timeSinceLastSummon;
 
     private long timeSinceSlotStarted = 0;
-    private int currSlot = 0;
+    private int currSlotIndex = 0;
     private ArrayList<SummoningSlot> summoningList;
 
     public EnemySummoner(GameView gameView){
@@ -46,10 +51,38 @@ public class EnemySummoner {
 
     public void update(long deltaTime){
         timeSinceSlotStarted += deltaTime;
-        if(timeSinceSlotStarted >= summoningList.get(currSlot).length){
-            currSlot++;
+        if(timeSinceSlotStarted >= summoningList.get(currSlotIndex).length){
+            currSlotIndex++;
             timeSinceSlotStarted = 0;
         }
+        ArrayList<Enemy> enemiesToSpawn = new ArrayList<>();
+        if(timeSinceLastSummon > summoningList.get(currSlotIndex).summoningInterval){//TODO:add minimum enemies functionality
+            enemiesToSpawn.add()
+        }
+    }
+
+    private Enemy getEnemyFromSlot(){
+
+        Set<Enemy> enemySet = summoningList.get(currSlotIndex).enemies;
+        int size = enemySet.size();
+        int item = rnd.nextInt(size);
+        int i = 0;
+        for(Enemy enemy : enemySet){
+            if(i == item){
+                return new Enemy(enemy, )
+            }
+        }
+        return null;
+    }
+
+    private Pair getRandomEnemyPosition(){
+        double playerPosX = gameView.getPlayer().getPositionX();
+        double playerPosY = gameView.getPlayer().getPositionY();
+
+        //get random radius
+        //get random angle
+        //compute x and y of enemy
+
     }
 }
 
