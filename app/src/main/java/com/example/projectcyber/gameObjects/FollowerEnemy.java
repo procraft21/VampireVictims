@@ -5,6 +5,7 @@ import com.example.projectcyber.Utils;
 
 public class FollowerEnemy extends Enemy{
     Player player;
+
     public FollowerEnemy(GameView gameView, double posX, double posY) {
         super(gameView, posX, posY);
         player = gameView.getPlayer();

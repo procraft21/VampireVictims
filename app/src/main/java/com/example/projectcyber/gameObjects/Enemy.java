@@ -1,12 +1,14 @@
 package com.example.projectcyber.gameObjects;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
 import com.example.projectcyber.GameView;
+import com.example.projectcyber.R;
 
 public class Enemy extends Entity{
-    private Bitmap bitmap;
+    private static Bitmap bitmap;
     protected int speed = 100;
 
     public Enemy(GameView gameView, double posX, double posY){
@@ -16,7 +18,12 @@ public class Enemy extends Entity{
     public Enemy(Enemy enemy, double posX, double posY){
         super(posX, posY, enemy.gameView);
         this.speed = enemy.speed;
-        this.bitmap = enemy.bitmap;
+        if(bitmap == null){
+            Bitmap enemyBitmap = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.enemy_img);
+            enemyBitmap = Bitmap.createScaledBitmap(enemyBitmap,150,150, false);
+            this.bitmap = enemyBitmap;
+
+        }
     }
     @Override
     public void setBitmap(Bitmap bitmap) {

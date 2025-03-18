@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -35,6 +36,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     ArrayList<Enemy> enemyQueue;
     ArrayList<Enemy> enemies;
 
+    EnemySummoner enemySummoner;
+
     //Game stuff------------------------------------------------------------------------
     private GameLoop gameLoop;
     private Context context;
@@ -42,6 +45,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     private Timer timer;
 
     private Joystick joystick;
+
+    private int screenWidth;
+    private int screenHeight;
 
 
     public GameView(Context context) {
@@ -63,12 +69,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.player_img);
         playerBitmap = Bitmap.createScaledBitmap(playerBitmap,PLAYER_WIDTH, PLAYER_HEIGHT, false);
 
+        enemyQueue = new ArrayList<>();
         enemies = new ArrayList<>();
-        FollowerEnemy enemy = new FollowerEnemy(this, 100, 0);
-        Bitmap enemyBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.enemy_img);
-        enemyBitmap = Bitmap.createScaledBitmap(enemyBitmap,PLAYER_WIDTH, PLAYER_HEIGHT, false);
-        enemy.setBitmap(enemyBitmap);
-        enemies.add(enemy);
+
+        enemySummoner = new EnemySummoner(this);
+
+
 
         timer = new Timer(this);
 
@@ -77,7 +83,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
     /** Updates the data of the game, called every update*/
     public void update(long deltaTime){
-
+        //Log.d("deltaTime", "deltaTime" + deltaTime);
         //add enemies from queue to main list
         enemies.addAll(enemyQueue);
         enemyQueue.clear();
@@ -88,6 +94,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
             enemy.update(deltaTime);
         }
 
+        enemySummoner.update(deltaTime);
+
         timer.update(deltaTime);
 
     }
@@ -96,6 +104,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     public void draw(Canvas mainCanvas){
         super.draw(mainCanvas);
         mainCanvas.drawColor(0xFF006600);
+
+        screenWidth = getWidth();
+        screenHeight = getHeight();
 
         player.draw(mainCanvas);
 
