@@ -1,7 +1,9 @@
-package com.example.projectcyber;
+package com.example.projectcyber.uiObjects;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+
+import com.example.projectcyber.GameView;
 
 public class Timer {
 

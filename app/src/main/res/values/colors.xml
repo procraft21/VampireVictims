@@ -3,4 +3,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="magenta">#FFC552C5</color>
+    <color name="neonGreen">#FF10ff00</color>
+    <color name="neonRed">#FFff0000</color>
 </resources>

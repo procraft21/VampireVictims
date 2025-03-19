@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -14,8 +13,10 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import com.example.projectcyber.gameObjects.Enemy;
-import com.example.projectcyber.gameObjects.FollowerEnemy;
 import com.example.projectcyber.gameObjects.Player;
+import com.example.projectcyber.uiObjects.HealthBar;
+import com.example.projectcyber.uiObjects.Joystick;
+import com.example.projectcyber.uiObjects.Timer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     private static final int PLAYER_HEIGHT = 150;
     Bitmap playerBitmap;
     Player player;
+
+    HealthBar healthBar;
 
     //Enemies variables -----------------------------------------------------------------
     ArrayList<Enemy> enemyQueue;
@@ -74,11 +77,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
         enemySummoner = new EnemySummoner(this);
 
-
+        healthBar = new HealthBar(this);
 
         timer = new Timer(this);
 
         player.setBitmap(playerBitmap);
+        player.takeDamage(10);
     }
 
     /** Updates the data of the game, called every update*/
@@ -113,6 +117,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         for(Enemy enemy : enemies){
             enemy.draw(mainCanvas);
         }
+
+        healthBar.draw(mainCanvas);
 
         timer.draw(mainCanvas);
 

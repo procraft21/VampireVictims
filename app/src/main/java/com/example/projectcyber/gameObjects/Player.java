@@ -6,13 +6,13 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 import com.example.projectcyber.GameView;
-import com.example.projectcyber.Joystick;
+import com.example.projectcyber.uiObjects.Joystick;
 
 public class Player extends Entity{
     private Bitmap bitmap;
     private double movementSpeed = 200;
-    private int maxHP = 100;
-    private int currHP = 100;
+    private double maxHP = 100;
+    private double currHP = 100;
     public Player(GameView gameView){
         super(0, 0, gameView);
     }
@@ -29,6 +29,14 @@ public class Player extends Entity{
         canvas.drawBitmap(bitmap, (int)(relX - bitmap.getWidth()/2),(int)(relY - bitmap.getHeight()/2), playerPaint);
     }
 
+    public int getHeight(){
+        return bitmap.getHeight();
+    }
+
+    public int getWidth(){
+        return bitmap.getWidth();
+    }
+
     @Override
     public void update(long deltaTime) {
         Joystick joystick = gameView.getJoystick();
@@ -38,5 +46,20 @@ public class Player extends Entity{
         posY += velY * deltaTime/1000;
     }
 
+    public void takeDamage(int damage){
+        if(damage < 0)
+            return;
+        currHP -= damage;
+        if(currHP < 0)
+            currHP = 0;
+    }
 
+    public double getMaxHP(){
+        return maxHP;
+    }
+
+    public double getCurrentHP(){
+        return currHP;
+    }
 }
+
