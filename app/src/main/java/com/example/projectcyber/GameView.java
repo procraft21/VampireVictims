@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -13,20 +14,19 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import com.example.projectcyber.gameObjects.Enemy;
+import com.example.projectcyber.gameObjects.Entity;
 import com.example.projectcyber.gameObjects.Player;
 import com.example.projectcyber.uiObjects.HealthBar;
 import com.example.projectcyber.uiObjects.Joystick;
 import com.example.projectcyber.uiObjects.Timer;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
-    /*//SurfaceView variables ---------------------------------------------------------
-    private SurfaceHolder holder = getHolder();
-    private Canvas mainCanvas;
-    private int INTERVAL = 17;*/
     //Player variables -----------------------------------------------------------------
     private static final int PLAYER_WIDTH = 150;
     private static final int PLAYER_HEIGHT = 150;
@@ -36,10 +36,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     HealthBar healthBar;
 
     //Enemies variables -----------------------------------------------------------------
-    ArrayList<Enemy> enemyQueue;
     ArrayList<Enemy> enemies;
 
     EnemySummoner enemySummoner;
+
+    //grid of the entities. will only check collisions between entities in the same square.
+    HashMap<Pair<Integer, Integer>, Collection<Entity>> entityGrid;
 
     //Game stuff------------------------------------------------------------------------
     private GameLoop gameLoop;
@@ -72,7 +74,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.player_img);
         playerBitmap = Bitmap.createScaledBitmap(playerBitmap,PLAYER_WIDTH, PLAYER_HEIGHT, false);
 
-        enemyQueue = new ArrayList<>();
         enemies = new ArrayList<>();
 
         enemySummoner = new EnemySummoner(this);
@@ -89,16 +90,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     public void update(long deltaTime){
         //Log.d("deltaTime", "deltaTime" + deltaTime);
         //add enemies from queue to main list
-        enemies.addAll(enemyQueue);
-        enemyQueue.clear();
 
         joystick.update();
         player.update(deltaTime);
+
+        enemySummoner.update(deltaTime);
+
         for(Enemy enemy : enemies){
             enemy.update(deltaTime);
         }
 
-        enemySummoner.update(deltaTime);
 
         timer.update(deltaTime);
 
@@ -220,10 +221,26 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
     /**Adds all enemies in given list to the enemies queue. */
     public void summonEnemies(List<Enemy> enemies){
-        enemyQueue.addAll(enemies);
+        this.enemies.addAll(enemies);
     }
 
     public int getNumberOfEnemies(){
-        return enemies.size() + enemyQueue.size();
+        return enemies.size();
+    }
+
+    public boolean updateGridPlacement(@NonNull Entity entity, double prevX, double prevY){
+        if(entityGrid.get(new Pair<>(getGridPositionFromPositionX(prevX),getGridPositionFromPositionY(prevY))).remove(entity)){
+            Pair<Integer,Integer> newSquare = new Pair<>(getGridPositionFromPositionX(entity.getPositionX()), getGridPositionFromPositionY(entity.getPositionY()));
+            entityGrid.get(newSquare).add(entity);
+            return true;
+        }
+        return false;
+    }
+
+    public int getGridPositionFromPositionX(double x){
+        return (int)x/500;
+    }
+    public int getGridPositionFromPositionY(double y){
+        return (int)y/500;
     }
 }

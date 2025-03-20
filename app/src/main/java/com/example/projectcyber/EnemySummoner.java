@@ -69,7 +69,6 @@ public class EnemySummoner {
         ArrayList<Enemy> enemiesToSpawn = new ArrayList<>();
         if(timeSinceLastSummon > currentSlot.summoningInterval){
             enemiesToSpawn.add(getEnemyFromSlot());
-            Log.d("addedToSummonList", timeSinceLastSummon + "");
             timeSinceLastSummon = 0;
         }
 

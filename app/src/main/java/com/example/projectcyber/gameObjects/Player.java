@@ -9,10 +9,13 @@ import com.example.projectcyber.GameView;
 import com.example.projectcyber.uiObjects.Joystick;
 
 public class Player extends Entity{
+
     private Bitmap bitmap;
+
     private double movementSpeed = 200;
     private double maxHP = 100;
     private double currHP = 100;
+
     public Player(GameView gameView){
         super(0, 0, gameView);
     }

@@ -25,7 +25,6 @@ public class HealthBar {
        this.gameView = gameView;
     }
 
-
     public void draw(Canvas canvas){
         int left = canvas.getWidth()/2 - WIDTH/2;
         int top = canvas.getHeight()/2 + player.getHeight()/2 + DISTANCE_FROM_PLAYER;

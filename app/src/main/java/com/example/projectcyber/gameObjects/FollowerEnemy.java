@@ -22,7 +22,6 @@ public class FollowerEnemy extends Enemy{
             velY = speed * (player.getPositionY() -posY)/distance;
         }
 
-
         posX += velX*deltaTime/1000;
         posY += velY*deltaTime/1000;
 
