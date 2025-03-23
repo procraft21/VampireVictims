@@ -35,11 +35,11 @@ public abstract class Mob extends Entity{
                 resolveCollision(mob);
             }
         }
-        /*
-        for(Mob mob : closeMobs){
+
+        /*for(Mob mob : closeMobs){
             if(mob != this && this.hasCollision(mob)){
-                velX = velX*(mass-mob.mass)/(mass+mob.mass) + mob.velX*2*mob.mass/(mass+mob.mass);
-                velY = velY*(mass-mob.mass)/(mass+mob.mass) + mob.velY*2*mob.mass/(mass+mob.mass);
+                velX =  mob.velX;
+                velY = mob.velY;
 
             }
         }*/
@@ -78,7 +78,8 @@ public abstract class Mob extends Entity{
     }
 
     public double getCollisionRadius() {
-
+        if(bitmap == null)
+            return 75/2.0;
         return bitmap.getWidth()/2;
     }
 }
