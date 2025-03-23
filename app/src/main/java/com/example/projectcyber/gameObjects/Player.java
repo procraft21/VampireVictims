@@ -4,20 +4,22 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 
 import com.example.projectcyber.GameView;
 import com.example.projectcyber.uiObjects.Joystick;
 
-public class Player extends Entity{
+public class Player extends Mob{
 
-    private Bitmap bitmap;
 
     private double movementSpeed = 200;
     private double maxHP = 100;
     private double currHP = 100;
 
+
     public Player(GameView gameView){
         super(0, 0, gameView);
+        gameView.addToGrid(this);
     }
 
     public void setBitmap(Bitmap bitmap){
@@ -45,8 +47,13 @@ public class Player extends Entity{
         Joystick joystick = gameView.getJoystick();
         velX = joystick.getDirX() * movementSpeed;
         velY = joystick.getDirY() * movementSpeed;
-        posX += velX * deltaTime/1000;
-        posY += velY * deltaTime/1000;
+        super.update(deltaTime);
+
+    }
+
+    @Override
+    public double getCollisionRadius() {
+        return bitmap.getWidth()/2;
     }
 
     public void takeDamage(int damage){

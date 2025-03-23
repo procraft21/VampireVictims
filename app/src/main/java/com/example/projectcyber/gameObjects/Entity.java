@@ -3,8 +3,12 @@ package com.example.projectcyber.gameObjects;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Point;
+import android.util.Pair;
 
 import com.example.projectcyber.GameView;
+import com.example.projectcyber.Utils;
+
+import java.util.Set;
 
 public abstract class Entity {
     protected double posX;
@@ -14,10 +18,16 @@ public abstract class Entity {
 
     GameView gameView;
 
+    int tag;
+    static int counter = 0;
+
     public Entity(double posX, double posY, GameView gameView){
         this.posX = posX;
         this.posY = posY;
         this.gameView = gameView;
+
+        tag = counter;
+        counter++;
     }
     public double getPositionX(){
         return posX;
@@ -52,4 +62,7 @@ public abstract class Entity {
     public abstract void update(long deltaTime);
     public abstract void setBitmap(Bitmap bitmap);
 
+    public double distance(Entity other){
+        return Utils.distance(this.posX, this.posY, other.posX, other.posY);
+    }
 }

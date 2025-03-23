@@ -8,7 +8,7 @@ public class Utils {
         return Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
     }
 
-    public static PointF normalize(int x, int y){
+    public static PointF normalize(double x, double y){
         double dist = distance(x,y,0,0);
         return new PointF((float) (x/dist),(float) (y/dist));
     }

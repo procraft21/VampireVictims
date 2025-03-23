@@ -15,15 +15,13 @@ public class FollowerEnemy extends Enemy{
 
     @Override
     public void update(long deltaTime) {
-        super.update(deltaTime);
         double distance = Utils.distance(posX, posY, player.getPositionX(), player.getPositionY());
         if(distance > 0){
             velX = speed * (player.getPositionX() -posX)/distance;
             velY = speed * (player.getPositionY() -posY)/distance;
         }
 
-        posX += velX*deltaTime/1000;
-        posY += velY*deltaTime/1000;
+        super.update(deltaTime);
 
     }
 

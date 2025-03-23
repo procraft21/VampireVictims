@@ -15,14 +15,15 @@ import androidx.core.content.ContextCompat;
 
 import com.example.projectcyber.gameObjects.Enemy;
 import com.example.projectcyber.gameObjects.Entity;
+import com.example.projectcyber.gameObjects.Mob;
 import com.example.projectcyber.gameObjects.Player;
 import com.example.projectcyber.uiObjects.HealthBar;
 import com.example.projectcyber.uiObjects.Joystick;
 import com.example.projectcyber.uiObjects.Timer;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback{
@@ -41,7 +42,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     EnemySummoner enemySummoner;
 
     //grid of the entities. will only check collisions between entities in the same square.
-    HashMap<Pair<Integer, Integer>, Collection<Entity>> entityGrid;
+    HashMap<Pair<Integer, Integer>, HashSet<Mob>> mobGrid;
 
     //Game stuff------------------------------------------------------------------------
     private GameLoop gameLoop;
@@ -70,20 +71,19 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         gameLoop = new GameLoop(this, surfaceHolder);
         joystick = new Joystick();
 
+        mobGrid = new HashMap<>();
         player = new Player(this);
         playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.player_img);
         playerBitmap = Bitmap.createScaledBitmap(playerBitmap,PLAYER_WIDTH, PLAYER_HEIGHT, false);
+        player.setBitmap(playerBitmap);
 
         enemies = new ArrayList<>();
 
         enemySummoner = new EnemySummoner(this);
-
         healthBar = new HealthBar(this);
 
         timer = new Timer(this);
 
-        player.setBitmap(playerBitmap);
-        player.takeDamage(10);
     }
 
     /** Updates the data of the game, called every update*/
@@ -96,12 +96,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
         enemySummoner.update(deltaTime);
 
+
+
         for(Enemy enemy : enemies){
             enemy.update(deltaTime);
         }
 
 
         timer.update(deltaTime);
+
+        //Log.d("grid", entityGrid.toString());
 
     }
 
@@ -219,28 +223,76 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         return timer.getTime();
     }
 
-    /**Adds all enemies in given list to the enemies queue. */
+    /**Summons all enemies in the list to the game*/
     public void summonEnemies(List<Enemy> enemies){
+
         this.enemies.addAll(enemies);
+        for(Enemy enemy : enemies)
+            addToGrid(enemy);
     }
 
     public int getNumberOfEnemies(){
         return enemies.size();
     }
 
-    public boolean updateGridPlacement(@NonNull Entity entity, double prevX, double prevY){
-        if(entityGrid.get(new Pair<>(getGridPositionFromPositionX(prevX),getGridPositionFromPositionY(prevY))).remove(entity)){
-            Pair<Integer,Integer> newSquare = new Pair<>(getGridPositionFromPositionX(entity.getPositionX()), getGridPositionFromPositionY(entity.getPositionY()));
-            entityGrid.get(newSquare).add(entity);
+    public boolean updateGridPlacement(@NonNull Mob mob, double prevX, double prevY){
+        //the prev slot index
+        Pair<Integer, Integer> prevSlotIndex = new Pair<>(getGridPositionFromPositionX(prevX),getGridPositionFromPositionY(prevY));
+
+        //the set of the enemies in the prev slot
+        HashSet<Mob> prevEntitySlot = mobGrid.get(prevSlotIndex);
+
+        //tries to remove the entity
+        if(prevEntitySlot.remove(mob)){
+
+            //if successful, add the entity again in the correct slot
+            addToGrid(mob);
+
+            //if after removal the prev slot is empty, remove it from the grid
+            if(prevEntitySlot.isEmpty())
+                mobGrid.remove(prevSlotIndex);
+
             return true;
         }
         return false;
     }
 
+    public void addToGrid(@NonNull Mob mob){
+        Pair<Integer, Integer> slotIndex =new Pair<>(getGridPositionFromPositionX(mob.getPositionX()), getGridPositionFromPositionY(mob.getPositionY()));
+        HashSet<Mob> mobSlot = mobGrid.get(slotIndex);
+        if(mobSlot == null){
+            HashSet<Mob> newMobSet = new HashSet<>();
+            newMobSet.add(mob);
+            mobGrid.put(slotIndex, newMobSet);
+            return;
+        }
+        mobSlot.add(mob);
+    }
+
     public int getGridPositionFromPositionX(double x){
-        return (int)x/500;
+        return (int)x/200;
     }
     public int getGridPositionFromPositionY(double y){
-        return (int)y/500;
+        return (int)y/200;
+    }
+
+
+    public HashSet<Mob> getMobsNear(Mob mob){
+        Pair<Integer, Integer> slotIndex =new Pair<>(getGridPositionFromPositionX(mob.getPositionX()), getGridPositionFromPositionY(mob.getPositionY()));
+        return getNeighboringSquares(slotIndex);
+    }
+
+    /**Gets all the mobs in the neighboring square and the square itself
+     * @param slotIndex the index of the center slot
+     * @return a hashSet of all the mobs*/
+    private HashSet<Mob> getNeighboringSquares(Pair<Integer,Integer> slotIndex){
+        HashSet<Mob> mobs = new HashSet<>();
+        for(int i = -1; i<=1; i++){
+            for(int j = -1; j<=1; j++){
+                HashSet<Mob> group = mobGrid.get(new Pair<>(i,j));
+                if(group!=null) mobs.addAll(group);
+            }
+        }
+        return mobs;
     }
 }
