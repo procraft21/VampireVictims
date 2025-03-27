@@ -12,4 +12,9 @@ public class Utils {
         double dist = distance(x,y,0,0);
         return new PointF((float) (x/dist),(float) (y/dist));
     }
+
+    /**linear interpolation function of a and b with a having a weight of wA.*/
+    public static double lerp(double a, double b, double wA){
+        return b*(1-wA) + a*wA;
+    }
 }

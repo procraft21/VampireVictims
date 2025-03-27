@@ -20,6 +20,7 @@ public class Player extends Mob{
     public Player(GameView gameView){
         super(0, 0, gameView);
         gameView.addToGrid(this);
+        mass = Double.POSITIVE_INFINITY;
     }
 
     public void setBitmap(Bitmap bitmap){
@@ -44,6 +45,7 @@ public class Player extends Mob{
 
     @Override
     public void update(long deltaTime) {
+        savePrevPos();
         Joystick joystick = gameView.getJoystick();
         velX = joystick.getDirX() * movementSpeed;
         velY = joystick.getDirY() * movementSpeed;

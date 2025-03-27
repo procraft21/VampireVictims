@@ -4,26 +4,40 @@ import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.example.projectcyber.GameView;
+import com.example.projectcyber.Utils;
 
 import java.util.HashSet;
 
 public abstract class Mob extends Entity{
 
+
     protected Bitmap bitmap;
+
+    double prevX = 0;
+    double prevY = 0;
+
+    protected double mass = 1;
 
     public Mob(double posX, double posY, GameView gameView) {
         super(posX, posY, gameView);
+
+    }
+
+    public void addToGrid(){
         gameView.addToGrid(this);
     }
 
     @Override
     public void update(long deltaTime) {
 
-        double prevX = posX;
-        double prevY = posY;
         posX += velX * deltaTime/1000;
         posY += velY * deltaTime/1000;
         gameView.updateGridPlacement(this, prevX, prevY);
+    }
+
+    protected void savePrevPos(){
+        prevX = posX;
+        prevY = posY;
     }
 
     /**Detects and changes the velocity of only this mob according to the principles of elastic collision.*/
@@ -47,23 +61,44 @@ public abstract class Mob extends Entity{
     }
 
     private  void resolveCollision(Mob b) {
-        double normalX = b.posX - posX;
-        double normalY = b.posY - posY;
-        double length = Math.sqrt(normalX * normalX + normalY * normalY);
-        normalX /= length;
-        normalY /= length;
 
-        double relativeVelocityX = b.velX - velX;
-        double relativeVelocityY = b.velY - velY;
-        double dotProduct = (relativeVelocityX * normalX) + (relativeVelocityY * normalY);
+        //calculate new velocity according to collision formula
 
-        if (dotProduct > 0) return;
+        //velX = (mass * velX +b.mass * b.velX + b.mass*restitutionCoefficent*(b.velX-velX))/(mass+b.mass);
+        //velY = (mass * velY +b.mass * b.velY + b.mass*restitutionCoefficent*(b.velY-velY))/(mass+b.mass);
 
-        double impulse = -2 * dotProduct / 2; // Equal mass assumption
 
-        velX -= impulse * normalX;
-        velY -= impulse * normalY;
+        double deltaVx = b.velX - velX;
+        double deltaVy = b.velY - velY;
 
+        double deltaPosX = b.posX - posX;
+        double deltaPosY = b.posY - posY;
+
+        double distance = distance(b);
+        if(distance < getCollisionRadius() + b.getCollisionRadius()){
+
+            double overlap = getCollisionRadius() + b.getCollisionRadius() - distance;
+
+            double massRatio = mass/(mass+b.mass);
+            if(mass == Double.POSITIVE_INFINITY){
+                massRatio = 1;
+            }
+
+            //b.posX += massRatio * deltaPosX;
+            posX -= (1-massRatio) * overlap*deltaPosX/distance;
+            //b.velY += massRatio * deltaPosY;
+            posY -= (1-massRatio) * overlap * deltaPosY/distance;
+
+        }
+
+        double deltasDotProduct = deltaVx * deltaPosX + deltaVy * deltaPosY;
+        double deltaPosSize = Utils.distance(0,0,deltaPosX,deltaPosY);
+        double massCoefficient = (2*b.mass/(mass+b.mass));
+        if(b.mass == Double.POSITIVE_INFINITY){
+            massCoefficient = 2;
+        }
+        velX = velX + massCoefficient*deltasDotProduct/(deltaPosSize*deltaPosSize) * (deltaPosX);
+        velY = velY + massCoefficient*deltasDotProduct/(deltaPosSize*deltaPosSize) * (deltaPosY);
     }
 
 

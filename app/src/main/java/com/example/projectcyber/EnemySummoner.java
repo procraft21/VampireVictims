@@ -51,10 +51,6 @@ public class EnemySummoner {
         summoningList.add(new SummoningSlot(100000, 500,10, enemies));
     }
 
-    public boolean readyToSpawn(){
-        return false;
-    }
-
     public void update(long deltaTime){
         timeSinceSlotStarted += deltaTime;
         timeSinceLastSummon += deltaTime;
@@ -89,9 +85,9 @@ public class EnemySummoner {
             if(i == item){
                 Pair<Double,Double> newPos = getRandomEnemyPosition();
                 try {
+                    enemy.setPosX(newPos.first);
+                    enemy.setPosY(newPos.second);
                     Enemy newEnemy = (Enemy) enemy.clone();
-                    newEnemy.setPosX(newPos.first);
-                    newEnemy.setPosY(newPos.second);
                     return newEnemy;
                 } catch (CloneNotSupportedException e) {
                     throw new RuntimeException(e);

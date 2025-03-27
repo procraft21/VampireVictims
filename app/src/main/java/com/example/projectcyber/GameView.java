@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -242,6 +243,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         //the set of the enemies in the prev slot
         HashSet<Mob> prevEntitySlot = mobGrid.get(prevSlotIndex);
 
+
+        if(prevEntitySlot == null){
+            Log.d("wrong", "wrong");
+        }
+
         //tries to remove the entity
         if(prevEntitySlot.remove(mob)){
 
@@ -249,8 +255,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
             addToGrid(mob);
 
             //if after removal the prev slot is empty, remove it from the grid
-            if(prevEntitySlot.isEmpty())
+            if(prevEntitySlot.isEmpty()){
+                Log.d("removed", prevSlotIndex + "");
                 mobGrid.remove(prevSlotIndex);
+            }
 
             return true;
         }
@@ -270,10 +278,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     }
 
     public int getGridPositionFromPositionX(double x){
-        return (int)x/200;
+        return Math.floorDiv((int)x,500);
     }
     public int getGridPositionFromPositionY(double y){
-        return (int)y/200;
+        return Math.floorDiv((int)y, 500);
     }
 
 
