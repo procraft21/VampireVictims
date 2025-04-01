@@ -278,10 +278,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     }
 
     public int getGridPositionFromPositionX(double x){
-        return Math.floorDiv((int)x,500);
+        return (int)x/500;
     }
     public int getGridPositionFromPositionY(double y){
-        return Math.floorDiv((int)y, 500);
+        return (int)y/ 500;
     }
 
 

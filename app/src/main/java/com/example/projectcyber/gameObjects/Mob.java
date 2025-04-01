@@ -43,6 +43,7 @@ public abstract class Mob extends Entity{
     /**Detects and changes the velocity of only this mob according to the principles of elastic collision.*/
     protected void detectAndChangeVelocityAfterCollision(){
         HashSet<Mob> closeMobs = getCollisionList();
+        assert closeMobs != null;
         for(Mob mob : closeMobs){
 
             if(mob != this && this.hasCollision(mob)){
