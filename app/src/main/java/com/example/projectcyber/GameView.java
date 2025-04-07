@@ -43,7 +43,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     EnemySummoner enemySummoner;
 
     //grid of the entities. will only check collisions between entities in the same square.
-    HashMap<Pair<Integer, Integer>, HashSet<Mob>> mobGrid;
+    HashMap<Pair<Integer, Integer>, HashSet<Entity>> entityGrid;
 
     //Game stuff------------------------------------------------------------------------
     private GameLoop gameLoop;
@@ -72,7 +72,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         gameLoop = new GameLoop(this, surfaceHolder);
         joystick = new Joystick();
 
-        mobGrid = new HashMap<>();
+        entityGrid = new HashMap<>();
         player = new Player(this);
         playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.player_img);
         playerBitmap = Bitmap.createScaledBitmap(playerBitmap,PLAYER_WIDTH, PLAYER_HEIGHT, false);
@@ -236,12 +236,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         return enemies.size();
     }
 
-    public boolean updateGridPlacement(@NonNull Mob mob, double prevX, double prevY){
+    public boolean updateGridPlacement(@NonNull Entity entity, double prevX, double prevY){
         //the prev slot index
         Pair<Integer, Integer> prevSlotIndex = new Pair<>(getGridPositionFromPositionX(prevX),getGridPositionFromPositionY(prevY));
 
         //the set of the enemies in the prev slot
-        HashSet<Mob> prevEntitySlot = mobGrid.get(prevSlotIndex);
+        HashSet<Entity> prevEntitySlot = entityGrid.get(prevSlotIndex);
 
 
         if(prevEntitySlot == null){
@@ -249,15 +249,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         }
 
         //tries to remove the entity
-        if(prevEntitySlot.remove(mob)){
+        if(prevEntitySlot.remove(entity)){
 
             //if successful, add the entity again in the correct slot
-            addToGrid(mob);
+            addToGrid(entity);
 
             //if after removal the prev slot is empty, remove it from the grid
             if(prevEntitySlot.isEmpty()){
                 Log.d("removed", prevSlotIndex + "");
-                mobGrid.remove(prevSlotIndex);
+                entityGrid.remove(prevSlotIndex);
             }
 
             return true;
@@ -265,16 +265,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         return false;
     }
 
-    public void addToGrid(@NonNull Mob mob){
-        Pair<Integer, Integer> slotIndex =new Pair<>(getGridPositionFromPositionX(mob.getPositionX()), getGridPositionFromPositionY(mob.getPositionY()));
-        HashSet<Mob> mobSlot = mobGrid.get(slotIndex);
+    public void addToGrid(@NonNull Entity entity){
+        Pair<Integer, Integer> slotIndex =new Pair<>(getGridPositionFromPositionX(entity.getPositionX()), getGridPositionFromPositionY(entity.getPositionY()));
+        HashSet<Entity> mobSlot = entityGrid.get(slotIndex);
         if(mobSlot == null){
-            HashSet<Mob> newMobSet = new HashSet<>();
-            newMobSet.add(mob);
-            mobGrid.put(slotIndex, newMobSet);
+            HashSet<Entity> newEntitiesSet = new HashSet<>();
+            newEntitiesSet.add(entity);
+            entityGrid.put(slotIndex, newEntitiesSet);
             return;
         }
-        mobSlot.add(mob);
+        mobSlot.add(entity);
     }
 
     public int getGridPositionFromPositionX(double x){
@@ -285,7 +285,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     }
 
 
-    public HashSet<Mob> getMobsNear(Mob mob){
+    public HashSet<Entity> getMobsNear(Mob mob){
         Pair<Integer, Integer> slotIndex =new Pair<>(getGridPositionFromPositionX(mob.getPositionX()), getGridPositionFromPositionY(mob.getPositionY()));
         return getNeighboringSquares(slotIndex);
     }
@@ -293,14 +293,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     /**Gets all the mobs in the neighboring square and the square itself
      * @param slotIndex the index of the center slot
      * @return a hashSet of all the mobs*/
-    private HashSet<Mob> getNeighboringSquares(Pair<Integer,Integer> slotIndex){
-        HashSet<Mob> mobs = new HashSet<>();
+    private HashSet<Entity> getNeighboringSquares(Pair<Integer,Integer> slotIndex){
+        HashSet<Entity> entities = new HashSet<>();
+
         for(int i = -1; i<=1; i++){
             for(int j = -1; j<=1; j++){
-                HashSet<Mob> group = mobGrid.get(new Pair<>(i,j));
-                if(group!=null) mobs.addAll(group);
+                HashSet<Entity> group = entityGrid.get(new Pair<>(slotIndex.first + i,slotIndex.second+ j));
+                if(group!=null) entities.addAll(group);
             }
         }
-        return mobs;
+        return entities;
     }
 }

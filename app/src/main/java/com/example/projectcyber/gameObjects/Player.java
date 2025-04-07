@@ -66,6 +66,12 @@ public class Player extends Mob{
             currHP = 0;
     }
 
+    @Override
+    protected void resolveMobCollision(Mob b) {
+        super.resolveMobCollision(b);
+
+    }
+
     public double getMaxHP(){
         return maxHP;
     }

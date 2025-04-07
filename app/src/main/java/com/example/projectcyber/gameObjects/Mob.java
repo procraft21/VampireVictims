@@ -1,7 +1,6 @@
 package com.example.projectcyber.gameObjects;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import com.example.projectcyber.GameView;
 import com.example.projectcyber.Utils;
@@ -13,8 +12,7 @@ public abstract class Mob extends Entity{
 
     protected Bitmap bitmap;
 
-    double prevX = 0;
-    double prevY = 0;
+
 
     protected double mass = 1;
 
@@ -27,13 +25,7 @@ public abstract class Mob extends Entity{
         gameView.addToGrid(this);
     }
 
-    @Override
-    public void update(long deltaTime) {
 
-        posX += velX * deltaTime/1000;
-        posY += velY * deltaTime/1000;
-        gameView.updateGridPlacement(this, prevX, prevY);
-    }
 
     protected void savePrevPos(){
         prevX = posX;
@@ -42,12 +34,13 @@ public abstract class Mob extends Entity{
 
     /**Detects and changes the velocity of only this mob according to the principles of elastic collision.*/
     protected void detectAndChangeVelocityAfterCollision(){
-        HashSet<Mob> closeMobs = getCollisionList();
-        assert closeMobs != null;
-        for(Mob mob : closeMobs){
+        HashSet<Entity> closeEntities = getCollisionList();
+        assert closeEntities != null;
+        for(Entity entity : closeEntities){
 
-            if(mob != this && this.hasCollision(mob)){
-                resolveCollision(mob);
+            if(entity != this && this.hasCollision(entity)){
+                if(entity instanceof Mob)
+                    resolveMobCollision((Mob)entity);
             }
         }
 
@@ -61,7 +54,8 @@ public abstract class Mob extends Entity{
 
     }
 
-    private  void resolveCollision(Mob b) {
+    @Override
+    protected  void resolveMobCollision(Mob b) {
 
         //calculate new velocity according to collision formula
 
@@ -103,16 +97,13 @@ public abstract class Mob extends Entity{
     }
 
 
-    protected boolean hasCollision(Mob other){
-        boolean coll = distance(other) <= this.getCollisionRadius() + other.getCollisionRadius();
-        //if(coll)Log.d("collision", tag + " " + other.tag + " : " + distance(other));
-        return coll;
-    }
 
-    protected HashSet<Mob> getCollisionList(){
+
+    protected HashSet<Entity> getCollisionList(){
         return gameView.getMobsNear(this);
     }
 
+    @Override
     public double getCollisionRadius() {
         if(bitmap == null)
             return 75/2.0;

@@ -14,6 +14,7 @@ import com.example.projectcyber.R;
 public class Enemy extends Mob implements Cloneable{
     private static Bitmap bitmap;
     protected int speed = 100;
+    protected int damage = 5;
 
     public Enemy(GameView gameView, double posX, double posY){
         super(posX,posY, gameView);
@@ -66,5 +67,12 @@ public class Enemy extends Mob implements Cloneable{
         clone.tag = counter;
         counter++;
         return clone;
+    }
+
+    @Override
+    protected void resolveMobCollision(Mob b) {
+        super.resolveMobCollision(b);
+        if(b instanceof Player)
+            ((Player) b).takeDamage(5);
     }
 }

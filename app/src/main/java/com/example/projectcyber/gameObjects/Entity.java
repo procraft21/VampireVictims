@@ -11,6 +11,9 @@ import com.example.projectcyber.Utils;
 import java.util.Set;
 
 public abstract class Entity {
+
+    protected double prevX = 0;
+    protected double prevY = 0;
     protected double posX;
     protected double posY;
     protected double velX;
@@ -59,10 +62,29 @@ public abstract class Entity {
         double relY = posY - playerPosY + canvas.getHeight()/2;
         drawRelative(canvas, relX, relY);
     };
-    public abstract void update(long deltaTime);
+    public void update(long deltaTime){
+        posX += velX * deltaTime/1000;
+        posY += velY * deltaTime/1000;
+        gameView.updateGridPlacement(this, prevX, prevY);
+    };
     public abstract void setBitmap(Bitmap bitmap);
 
     public double distance(Entity other){
         return Utils.distance(this.posX, this.posY, other.posX, other.posY);
     }
+
+    protected abstract void resolveMobCollision(Mob other);
+
+    protected boolean hasCollision(Entity other){
+        boolean coll = distance(other) <= this.getCollisionRadius() + other.getCollisionRadius();
+        //if(coll)Log.d("collision", tag + " " + other.tag + " : " + distance(other));
+        return coll;
+    }
+    public double getCollisionRadius() {
+        return 0;
+    }
+
+
+
+
 }
