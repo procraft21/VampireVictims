@@ -1,11 +1,11 @@
-package com.example.projectcyber.gameObjects;
+package com.example.projectcyber.GameActivity.gameObjects;
 
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.example.projectcyber.GameView;
-import com.example.projectcyber.Utils;
+import com.example.projectcyber.GameActivity.GameView;
+import com.example.projectcyber.GameActivity.Utils;
 
 public class FollowerEnemy extends Enemy{
     Player player;

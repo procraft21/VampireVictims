@@ -1,9 +1,9 @@
-package com.example.projectcyber.gameObjects;
+package com.example.projectcyber.GameActivity.gameObjects;
 
 import android.graphics.Bitmap;
 
-import com.example.projectcyber.GameView;
-import com.example.projectcyber.Utils;
+import com.example.projectcyber.GameActivity.GameView;
+import com.example.projectcyber.GameActivity.Utils;
 
 import java.util.HashSet;
 
@@ -63,6 +63,16 @@ public abstract class Mob extends Entity{
         //velY = (mass * velY +b.mass * b.velY + b.mass*restitutionCoefficent*(b.velY-velY))/(mass+b.mass);
 
 
+        resolveMovementOfMobCollision(b);
+        if(!immunityList.inList(b))
+            resolveCollisionEffect(b);
+        super.resolveMobCollision(b);
+
+    }
+
+    protected abstract void resolveCollisionEffect(Mob b);
+
+    private void resolveMovementOfMobCollision(Mob b){
         double deltaVx = b.velX - velX;
         double deltaVy = b.velY - velY;
 
@@ -95,8 +105,6 @@ public abstract class Mob extends Entity{
         velX = velX + massCoefficient*deltasDotProduct/(deltaPosSize*deltaPosSize) * (deltaPosX);
         velY = velY + massCoefficient*deltasDotProduct/(deltaPosSize*deltaPosSize) * (deltaPosY);
     }
-
-
 
 
     protected HashSet<Entity> getCollisionList(){

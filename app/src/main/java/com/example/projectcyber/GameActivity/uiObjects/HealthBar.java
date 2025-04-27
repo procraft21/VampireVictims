@@ -1,14 +1,13 @@
-package com.example.projectcyber.uiObjects;
+package com.example.projectcyber.GameActivity.uiObjects;
 
 
-import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
-import com.example.projectcyber.GameView;
+import com.example.projectcyber.GameActivity.GameView;
 import com.example.projectcyber.R;
-import com.example.projectcyber.gameObjects.Player;
+import com.example.projectcyber.GameActivity.gameObjects.Player;
 
 public class HealthBar {
 

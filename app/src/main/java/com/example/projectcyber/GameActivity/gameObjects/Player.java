@@ -1,13 +1,12 @@
-package com.example.projectcyber.gameObjects;
+package com.example.projectcyber.GameActivity.gameObjects;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 
-import com.example.projectcyber.GameView;
-import com.example.projectcyber.uiObjects.Joystick;
+import com.example.projectcyber.GameActivity.GameView;
+import com.example.projectcyber.GameActivity.uiObjects.Joystick;
 
 public class Player extends Mob{
 
@@ -68,7 +67,13 @@ public class Player extends Mob{
 
     @Override
     protected void resolveMobCollision(Mob b) {
+
         super.resolveMobCollision(b);
+
+    }
+
+    @Override
+    protected void resolveCollisionEffect(Mob b) {
 
     }
 

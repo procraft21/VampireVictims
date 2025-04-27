@@ -1,14 +1,12 @@
-package com.example.projectcyber.gameObjects;
+package com.example.projectcyber.GameActivity.gameObjects;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 
-import com.example.projectcyber.GameView;
+import com.example.projectcyber.GameActivity.GameView;
 import com.example.projectcyber.R;
 
 public class Enemy extends Mob implements Cloneable{
@@ -74,5 +72,10 @@ public class Enemy extends Mob implements Cloneable{
         super.resolveMobCollision(b);
         if(b instanceof Player)
             ((Player) b).takeDamage(5);
+    }
+
+    @Override
+    protected void resolveCollisionEffect(Mob b) {
+
     }
 }

@@ -1,10 +1,10 @@
-package com.example.projectcyber.uiObjects;
+package com.example.projectcyber.GameActivity.uiObjects;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
 
-import com.example.projectcyber.Utils;
+import com.example.projectcyber.GameActivity.Utils;
 
 public class Joystick {
 

@@ -1,10 +1,10 @@
-package com.example.projectcyber;
+package com.example.projectcyber.GameActivity;
 
 import android.util.Log;
 import android.util.Pair;
 
-import com.example.projectcyber.gameObjects.Enemy;
-import com.example.projectcyber.gameObjects.FollowerEnemy;
+import com.example.projectcyber.GameActivity.gameObjects.Enemy;
+import com.example.projectcyber.GameActivity.gameObjects.FollowerEnemy;
 
 import java.util.ArrayList;
 import java.util.HashSet;

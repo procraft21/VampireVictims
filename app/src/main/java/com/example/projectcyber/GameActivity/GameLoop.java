@@ -1,4 +1,4 @@
-package com.example.projectcyber;
+package com.example.projectcyber.GameActivity;
 
 import android.graphics.Canvas;
 import android.os.SystemClock;

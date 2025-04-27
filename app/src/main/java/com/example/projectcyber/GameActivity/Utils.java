@@ -1,6 +1,5 @@
-package com.example.projectcyber;
+package com.example.projectcyber.GameActivity;
 
-import android.graphics.Point;
 import android.graphics.PointF;
 
 public class Utils {

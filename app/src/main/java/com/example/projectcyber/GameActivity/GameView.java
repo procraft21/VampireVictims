@@ -1,4 +1,4 @@
-package com.example.projectcyber;
+package com.example.projectcyber.GameActivity;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -14,13 +14,14 @@ import android.view.SurfaceView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
-import com.example.projectcyber.gameObjects.Enemy;
-import com.example.projectcyber.gameObjects.Entity;
-import com.example.projectcyber.gameObjects.Mob;
-import com.example.projectcyber.gameObjects.Player;
-import com.example.projectcyber.uiObjects.HealthBar;
-import com.example.projectcyber.uiObjects.Joystick;
-import com.example.projectcyber.uiObjects.Timer;
+import com.example.projectcyber.GameActivity.gameObjects.Enemy;
+import com.example.projectcyber.GameActivity.gameObjects.Entity;
+import com.example.projectcyber.GameActivity.gameObjects.Mob;
+import com.example.projectcyber.GameActivity.gameObjects.Player;
+import com.example.projectcyber.R;
+import com.example.projectcyber.GameActivity.uiObjects.HealthBar;
+import com.example.projectcyber.GameActivity.uiObjects.Joystick;
+import com.example.projectcyber.GameActivity.uiObjects.Timer;
 
 import java.util.ArrayList;
 import java.util.HashMap;

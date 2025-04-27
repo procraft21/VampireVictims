@@ -1,14 +1,10 @@
-package com.example.projectcyber.gameObjects;
+package com.example.projectcyber.GameActivity.gameObjects;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Point;
-import android.util.Pair;
 
-import com.example.projectcyber.GameView;
-import com.example.projectcyber.Utils;
-
-import java.util.Set;
+import com.example.projectcyber.GameActivity.GameView;
+import com.example.projectcyber.GameActivity.Utils;
 
 public abstract class Entity {
 
@@ -19,7 +15,9 @@ public abstract class Entity {
     protected double velX;
     protected double velY;
 
-    GameView gameView;
+    protected GameView gameView;
+
+    protected ImmunityList immunityList;
 
     int tag;
     static int counter = 0;
@@ -28,6 +26,8 @@ public abstract class Entity {
         this.posX = posX;
         this.posY = posY;
         this.gameView = gameView;
+
+        immunityList = new ImmunityList(200);
 
         tag = counter;
         counter++;
@@ -66,6 +66,7 @@ public abstract class Entity {
         posX += velX * deltaTime/1000;
         posY += velY * deltaTime/1000;
         gameView.updateGridPlacement(this, prevX, prevY);
+        immunityList.update(deltaTime);
     };
     public abstract void setBitmap(Bitmap bitmap);
 
@@ -73,18 +74,27 @@ public abstract class Entity {
         return Utils.distance(this.posX, this.posY, other.posX, other.posY);
     }
 
-    protected abstract void resolveMobCollision(Mob other);
+    protected void resolveEntityCollision(Entity other){
+        if(immunityList.inList(other))return;
+        immunityList.add(other);
+    }
+
+    protected void resolveMobCollision(Mob other){
+        if(immunityList.inList(other)) return;
+
+        resolveEntityCollision(other);
+    };
+
+
 
     protected boolean hasCollision(Entity other){
         boolean coll = distance(other) <= this.getCollisionRadius() + other.getCollisionRadius();
         //if(coll)Log.d("collision", tag + " " + other.tag + " : " + distance(other));
         return coll;
     }
+
     public double getCollisionRadius() {
         return 0;
     }
-
-
-
 
 }
