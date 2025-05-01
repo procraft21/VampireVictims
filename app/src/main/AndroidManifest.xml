@@ -13,14 +13,23 @@
         android:theme="@style/Theme.ProjectCyber"
         tools:targetApi="31">
         <activity
-            android:name=".GameActivity.MainActivity"
-            android:exported="true">
+            android:name="Menu.MenuActivity"
+            android:exported="false" />
+        <activity
+            android:name="UserLogic.RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name="UserLogic.LoginActivity"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".GameActivity.GameActivity"
+            android:exported="true"/>
     </application>
 
 </manifest>
