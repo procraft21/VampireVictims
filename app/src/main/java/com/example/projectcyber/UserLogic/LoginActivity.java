@@ -1,10 +1,9 @@
-package UserLogic;
+package com.example.projectcyber.UserLogic;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EdgeEffect;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,7 +14,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-import Menu.MenuActivity;
+import com.example.projectcyber.Menu.MenuActivity;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -24,6 +23,8 @@ public class LoginActivity extends AppCompatActivity {
     private EditText emailEditText;
     private EditText passwordEditText;
     private Button loginButton;
+    private Button registerButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +35,8 @@ public class LoginActivity extends AppCompatActivity {
         emailEditText = findViewById(R.id.loginEmailEditText);
         passwordEditText = findViewById(R.id.loginPasswordEditText);
         loginButton = findViewById(R.id.loginButton);
+        registerButton = findViewById(R.id.moveToNewUserActivityButton);
+
 
         if(auth.getCurrentUser() != null){
             moveToMenu();
@@ -51,6 +54,14 @@ public class LoginActivity extends AppCompatActivity {
                         moveToMenu();
                     }
                 });
+            }
+        });
+
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
             }
         });
     }

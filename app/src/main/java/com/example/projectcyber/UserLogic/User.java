@@ -1,12 +1,11 @@
-package UserLogic;
+package com.example.projectcyber.UserLogic;
 
 import com.google.firebase.firestore.Exclude;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
-import Menu.StatItem;
-import Menu.StatStoreList;
+import com.example.projectcyber.Menu.StatItem;
+import com.example.projectcyber.Menu.StatStoreList;
 
 public class User {
     private int coins;

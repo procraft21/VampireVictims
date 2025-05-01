@@ -1,4 +1,4 @@
-package Menu;
+package com.example.projectcyber.Menu;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,13 +18,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.projectcyber.GameActivity.GameActivity;
 import com.example.projectcyber.R;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
-import UserLogic.User;
+import com.example.projectcyber.UserLogic.User;
 
 public class MenuActivity extends AppCompatActivity {
 
@@ -38,6 +39,8 @@ public class MenuActivity extends AppCompatActivity {
 
     Button playButton;
 
+    FloatingActionButton logoutButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +51,7 @@ public class MenuActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        MenuActivity activity = this;
 
         coinTextView = findViewById(R.id.coinsTextView);
         statShop = findViewById(R.id.statsUpgradesView);
@@ -59,6 +63,9 @@ public class MenuActivity extends AppCompatActivity {
         playButton = findViewById(R.id.playButton);
 
         String uid = firebaseAuth.getCurrentUser().getUid();
+
+        logoutButton = findViewById(R.id.logoutButton);
+
         DB.collection(getString(R.string.usersCollection)).document(uid).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -81,6 +88,14 @@ public class MenuActivity extends AppCompatActivity {
                         Log.d("user", user.getMaxHpLvl() + "");
                         saveUserToDatabase(user);
                         startGame();
+                    }
+                });
+
+                logoutButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        firebaseAuth.signOut();
+                        activity.finish();
                     }
                 });
             }

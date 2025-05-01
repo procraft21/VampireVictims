@@ -14,7 +14,7 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.game_activity);
         Window window = getWindow();
         window.setFlags(
                 WindowManager.LayoutParams.FLAG_FULLSCREEN,

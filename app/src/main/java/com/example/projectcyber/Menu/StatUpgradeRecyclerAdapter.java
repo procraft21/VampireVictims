@@ -1,6 +1,5 @@
-package Menu;
+package com.example.projectcyber.Menu;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +10,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.projectcyber.R;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
-import UserLogic.User;
+import com.example.projectcyber.UserLogic.User;
 
 public class StatUpgradeRecyclerAdapter extends RecyclerView.Adapter<StatUpgradeRecyclerAdapter.ViewHolder> {
 
@@ -39,7 +36,13 @@ public class StatUpgradeRecyclerAdapter extends RecyclerView.Adapter<StatUpgrade
         StatItem item = statItemList.get(position);
         holder.statNameTextView.setText(item.getName());
         holder.statLvlTextView.setText("level : " + item.getLevel());
-        holder.priceTextView.setText("cost : " + item.getPrice());
+        int price = item.getPrice();
+        if(price == -1){
+            holder.priceTextView.setText("Max level!");
+        }else{
+            holder.priceTextView.setText("cost : " + item.getPrice());
+        }
+
     }
 
     @Override

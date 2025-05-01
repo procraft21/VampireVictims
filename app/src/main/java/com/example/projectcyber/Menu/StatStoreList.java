@@ -1,8 +1,6 @@
-package Menu;
+package com.example.projectcyber.Menu;
 
 import java.util.ArrayList;
-
-import UserLogic.User;
 
 public class StatStoreList {
 

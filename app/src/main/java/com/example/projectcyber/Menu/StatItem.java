@@ -1,4 +1,4 @@
-package Menu;
+package com.example.projectcyber.Menu;
 
 public class StatItem {
     private String name;
@@ -43,9 +43,9 @@ public class StatItem {
     }
 
     public int getPrice(){
+        if(level == maxLevel) return -1;
         int basePrice = initialPrice*(1+level);
-        int totalBought = list.getTotalBought();
-        int fees = level == 0 ? 0 : (int)(20*Math.pow(1.1, list.totalBought));
+        int fees = list.totalBought == 0 ? 0 : (int)(20*Math.pow(1.1, list.totalBought));
         return basePrice + fees;
     }
 }
