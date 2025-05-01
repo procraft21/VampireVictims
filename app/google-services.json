@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1092771474937",
+    "project_id": "vampirevictims-6b0ee",
+    "storage_bucket": "vampirevictims-6b0ee.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1092771474937:android:eccc0999a473eed3c36128",
+        "android_client_info": {
+          "package_name": "com.example.projectcyber"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCeHtLQ8VkVMUgVPXH8d33STMMhjVH14Gs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
