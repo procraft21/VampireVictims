@@ -11,8 +11,12 @@ import com.example.projectcyber.R;
 
 public class Enemy extends Mob implements Cloneable{
     private static Bitmap bitmap;
+
+    //movement speed
     protected int speed = 100;
-    protected int damage = 5;
+
+    //raw damage to player without armor.
+    protected int might = 5;
 
     public Enemy(GameView gameView, double posX, double posY){
         super(posX,posY, gameView);
@@ -41,6 +45,8 @@ public class Enemy extends Mob implements Cloneable{
         this.bitmap = bitmap;
     }
 
+
+
     @Override
     protected void drawRelative(Canvas canvas, double relX, double relY) {
         canvas.drawBitmap(bitmap,(int)(relX - bitmap.getWidth()/2), (int)(relY - bitmap.getHeight()/2), null );
@@ -54,7 +60,6 @@ public class Enemy extends Mob implements Cloneable{
 
     @Override
     public void update(long deltaTime) {
-        detectAndChangeVelocityAfterCollision();
         super.update(deltaTime);
     }
 
@@ -68,14 +73,11 @@ public class Enemy extends Mob implements Cloneable{
     }
 
     @Override
-    protected void resolveMobCollision(Mob b) {
-        super.resolveMobCollision(b);
-        if(b instanceof Player)
-            ((Player) b).takeDamage(5);
+    public double getCollisionRadius() {
+        return super.getCollisionRadius();
     }
 
-    @Override
-    protected void resolveCollisionEffect(Mob b) {
-
+    public int getMight(){
+        return might;
     }
 }

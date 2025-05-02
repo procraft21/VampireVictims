@@ -48,7 +48,7 @@ public class EnemySummoner {
         summoningList = new ArrayList<>();
         HashSet<Enemy> enemies = new HashSet<Enemy>();
         enemies.add(new FollowerEnemy(gameView, 0,0));
-        summoningList.add(new SummoningSlot(100000, 500,10, enemies));
+        summoningList.add(new SummoningSlot(100000, 500,0, enemies));
     }
 
     public void update(long deltaTime){

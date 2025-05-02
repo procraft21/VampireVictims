@@ -25,54 +25,21 @@ public abstract class Mob extends Entity{
         gameView.addToGrid(this);
     }
 
-
-
     protected void savePrevPos(){
         prevX = posX;
         prevY = posY;
     }
 
-    /**Detects and changes the velocity of only this mob according to the principles of elastic collision.*/
-    protected void detectAndChangeVelocityAfterCollision(){
-        HashSet<Entity> closeEntities = getCollisionList();
-        assert closeEntities != null;
-        for(Entity entity : closeEntities){
+    @Override
+    protected void resolveEntityCollision(Entity entity){
+        if(entity instanceof Mob){
+            resolveMovementOfMobCollision((Mob)entity);
 
-            if(entity != this && this.hasCollision(entity)){
-                if(entity instanceof Mob)
-                    resolveMobCollision((Mob)entity);
-            }
         }
 
-        /*for(Mob mob : closeMobs){
-            if(mob != this && this.hasCollision(mob)){
-                velX =  mob.velX;
-                velY = mob.velY;
-
-            }
-        }*/
-
     }
 
-    @Override
-    protected  void resolveMobCollision(Mob b) {
-
-        //calculate new velocity according to collision formula
-
-        //velX = (mass * velX +b.mass * b.velX + b.mass*restitutionCoefficent*(b.velX-velX))/(mass+b.mass);
-        //velY = (mass * velY +b.mass * b.velY + b.mass*restitutionCoefficent*(b.velY-velY))/(mass+b.mass);
-
-
-        resolveMovementOfMobCollision(b);
-        if(!immunityList.inList(b))
-            resolveCollisionEffect(b);
-        super.resolveMobCollision(b);
-
-    }
-
-    protected abstract void resolveCollisionEffect(Mob b);
-
-    private void resolveMovementOfMobCollision(Mob b){
+    protected void resolveMovementOfMobCollision(Mob b){
         double deltaVx = b.velX - velX;
         double deltaVy = b.velY - velY;
 
@@ -107,9 +74,7 @@ public abstract class Mob extends Entity{
     }
 
 
-    protected HashSet<Entity> getCollisionList(){
-        return gameView.getMobsNear(this);
-    }
+
 
     @Override
     public double getCollisionRadius() {

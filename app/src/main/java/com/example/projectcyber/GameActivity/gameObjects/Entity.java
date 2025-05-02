@@ -6,6 +6,8 @@ import android.graphics.Canvas;
 import com.example.projectcyber.GameActivity.GameView;
 import com.example.projectcyber.GameActivity.Utils;
 
+import java.util.HashSet;
+
 public abstract class Entity {
 
     protected double prevX = 0;
@@ -27,11 +29,12 @@ public abstract class Entity {
         this.posY = posY;
         this.gameView = gameView;
 
-        immunityList = new ImmunityList(200);
+        immunityList = new ImmunityList(200, this);
 
         tag = counter;
         counter++;
     }
+
     public double getPositionX(){
         return posX;
     }
@@ -61,31 +64,34 @@ public abstract class Entity {
         double relX = posX - playerPosX + canvas.getWidth()/2;
         double relY = posY - playerPosY + canvas.getHeight()/2;
         drawRelative(canvas, relX, relY);
-    };
+    }
+
     public void update(long deltaTime){
         posX += velX * deltaTime/1000;
         posY += velY * deltaTime/1000;
+
+        HashSet<Entity> closeEntities = getCollisionList();
+        assert closeEntities != null;
+        for(Entity entity : closeEntities){
+            if(entity != this && this.hasCollision(entity)){
+
+                resolveEntityCollision(entity);
+                if(!immunityList.inList(entity))
+                    immunityList.add(entity);
+            }
+        }
+
         gameView.updateGridPlacement(this, prevX, prevY);
         immunityList.update(deltaTime);
-    };
+    }
+
     public abstract void setBitmap(Bitmap bitmap);
 
     public double distance(Entity other){
         return Utils.distance(this.posX, this.posY, other.posX, other.posY);
     }
 
-    protected void resolveEntityCollision(Entity other){
-        if(immunityList.inList(other))return;
-        immunityList.add(other);
-    }
-
-    protected void resolveMobCollision(Mob other){
-        if(immunityList.inList(other)) return;
-
-        resolveEntityCollision(other);
-    };
-
-
+    protected abstract void resolveEntityCollision(Entity other);
 
     protected boolean hasCollision(Entity other){
         boolean coll = distance(other) <= this.getCollisionRadius() + other.getCollisionRadius();
@@ -95,6 +101,10 @@ public abstract class Entity {
 
     public double getCollisionRadius() {
         return 0;
+    }
+
+    protected HashSet<Entity> getCollisionList(){
+        return gameView.getEntitiesNear(this);
     }
 
 }

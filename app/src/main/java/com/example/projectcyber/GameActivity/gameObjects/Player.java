@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 
 import com.example.projectcyber.GameActivity.GameView;
 import com.example.projectcyber.GameActivity.uiObjects.Joystick;
@@ -65,17 +66,18 @@ public class Player extends Mob{
             currHP = 0;
     }
 
-    @Override
-    protected void resolveMobCollision(Mob b) {
 
-        super.resolveMobCollision(b);
-
-    }
 
     @Override
-    protected void resolveCollisionEffect(Mob b) {
-
+    protected void resolveEntityCollision(Entity entity){
+        Log.d("collision", immunityList.timeMap.toString());
+        super.resolveEntityCollision(entity);
+        if(entity instanceof Enemy && !immunityList.inList(entity)){
+            Enemy enemy = (Enemy)entity;
+            takeDamage(enemy.getMight());
+        }
     }
+
 
     public double getMaxHP(){
         return maxHP;

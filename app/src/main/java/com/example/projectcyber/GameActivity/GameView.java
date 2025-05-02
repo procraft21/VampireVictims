@@ -16,7 +16,6 @@ import androidx.core.content.ContextCompat;
 
 import com.example.projectcyber.GameActivity.gameObjects.Enemy;
 import com.example.projectcyber.GameActivity.gameObjects.Entity;
-import com.example.projectcyber.GameActivity.gameObjects.Mob;
 import com.example.projectcyber.GameActivity.gameObjects.Player;
 import com.example.projectcyber.R;
 import com.example.projectcyber.GameActivity.uiObjects.HealthBar;
@@ -98,12 +97,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
         enemySummoner.update(deltaTime);
 
-
-
         for(Enemy enemy : enemies){
             enemy.update(deltaTime);
         }
-
 
         timer.update(deltaTime);
 
@@ -257,7 +253,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
             //if after removal the prev slot is empty, remove it from the grid
             if(prevEntitySlot.isEmpty()){
-                Log.d("removed", prevSlotIndex + "");
                 entityGrid.remove(prevSlotIndex);
             }
 
@@ -286,8 +281,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     }
 
 
-    public HashSet<Entity> getMobsNear(Mob mob){
-        Pair<Integer, Integer> slotIndex =new Pair<>(getGridPositionFromPositionX(mob.getPositionX()), getGridPositionFromPositionY(mob.getPositionY()));
+    public HashSet<Entity> getEntitiesNear(Entity entity){
+        Pair<Integer, Integer> slotIndex =new Pair<>(getGridPositionFromPositionX(entity.getPositionX()), getGridPositionFromPositionY(entity.getPositionY()));
         return getNeighboringSquares(slotIndex);
     }
 
