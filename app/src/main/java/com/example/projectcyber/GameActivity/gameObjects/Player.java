@@ -15,7 +15,7 @@ public class Player extends Mob{
     private double movementSpeed = 200;
     private double maxHP = 100;
     private double currHP = 100;
-
+    private Bitmap bitmap;
 
     public Player(GameView gameView){
         super(0, 0, gameView);
@@ -70,7 +70,6 @@ public class Player extends Mob{
 
     @Override
     protected void resolveEntityCollision(Entity entity){
-        Log.d("collision", immunityList.timeMap.toString());
         super.resolveEntityCollision(entity);
         if(entity instanceof Enemy && !immunityList.inList(entity)){
             Enemy enemy = (Enemy)entity;

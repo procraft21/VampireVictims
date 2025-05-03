@@ -1,5 +1,7 @@
 package com.example.projectcyber.Menu;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +18,17 @@ import com.example.projectcyber.UserLogic.User;
 
 public class StatUpgradeRecyclerAdapter extends RecyclerView.Adapter<StatUpgradeRecyclerAdapter.ViewHolder> {
 
-    ArrayList<StatItem> statItemList;
     User user;
 
-    public StatUpgradeRecyclerAdapter(User user){
+    ArrayList<StatItem> statItemList;
+
+    MenuActivity activity;
+
+    public StatUpgradeRecyclerAdapter(User user, MenuActivity activity){
         this.user = user;
         this.statItemList = user.getStats();
+
+        this.activity = activity;
     }
 
     @NonNull
@@ -62,11 +69,21 @@ public class StatUpgradeRecyclerAdapter extends RecyclerView.Adapter<StatUpgrade
             priceTextView = itemView.findViewById(R.id.statCostTextView);
             itemView.setOnClickListener(this);
         }
+
+        @SuppressLint("NotifyDataSetChanged")
         @Override
         public void onClick(View v){
-            if(statItemList.get(getAdapterPosition()).raiseLevel()){
+            StatItem statItem =statItemList.get(getAdapterPosition());
+            int price = statItem.getPrice();
+            if(user.getCoins() > price && statItem.canLevelUp()){
+
+                user.setCoins(user.getCoins() - price);
+                statItem.raiseLevel();
+
+                activity.setCoins(user.getCoins());
                 notifyDataSetChanged(); //all the data set changes once we buy something because the price...
             }
+
             //Log.d("stat", statItemList.get(getAdapterPosition()).getLevel() + "");
 
         }

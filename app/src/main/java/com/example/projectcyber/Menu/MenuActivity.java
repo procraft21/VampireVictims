@@ -76,9 +76,9 @@ public class MenuActivity extends AppCompatActivity {
                 long coins = user.getCoins();
                 stats = user.getStats();
 
-                coinTextView.setText(coinTextView.getText().toString() + coins);
+                coinTextView.setText("Coins : " + coins);
 
-                StatUpgradeRecyclerAdapter adapter = new StatUpgradeRecyclerAdapter(user);
+                StatUpgradeRecyclerAdapter adapter = new StatUpgradeRecyclerAdapter(user, activity);
                 statShop.setAdapter(adapter);
                 statShop.setLayoutManager(new GridLayoutManager(getApplicationContext(), 3));
 
@@ -114,5 +114,9 @@ public class MenuActivity extends AppCompatActivity {
     private void saveUserToDatabase(User user){
         DB.collection(getString(R.string.usersCollection)).document(firebaseAuth.getCurrentUser().getUid())
                 .set(user);
+    }
+
+    public void setCoins(int coins){
+        coinTextView.setText("Coins : " + coins);
     }
 }

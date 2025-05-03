@@ -35,6 +35,10 @@ public class StatItem {
         return setLevel(level+1);
     }
 
+    public boolean canLevelUp(){
+        return level<maxLevel;
+    }
+
     public String getName() {
         return name;
     }

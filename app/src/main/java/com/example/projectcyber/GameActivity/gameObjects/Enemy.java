@@ -18,6 +18,9 @@ public class Enemy extends Mob implements Cloneable{
     //raw damage to player without armor.
     protected int might = 5;
 
+    protected int maxHp = 1;
+    protected int currHp = 1;
+
     public Enemy(GameView gameView, double posX, double posY){
         super(posX,posY, gameView);
         if(bitmap == null){

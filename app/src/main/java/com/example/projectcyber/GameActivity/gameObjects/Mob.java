@@ -36,7 +36,6 @@ public abstract class Mob extends Entity{
             resolveMovementOfMobCollision((Mob)entity);
 
         }
-
     }
 
     protected void resolveMovementOfMobCollision(Mob b){

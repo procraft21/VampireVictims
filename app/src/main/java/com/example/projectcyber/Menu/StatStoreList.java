@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 public class StatStoreList {
 
-    enum Stats{
+    enum StatItems {
         MaxHp, MoveSpd
     }
-    private ArrayList<StatItem> stats;
+    private ArrayList<StatItem> stats;//TODO:Change to map{Stat -> StatItem}
     protected int totalBought;
 
     public StatStoreList(){
@@ -22,20 +22,20 @@ public class StatStoreList {
     }
 
     public int getMaxHpLvl() {
-        return stats.get(Stats.MaxHp.ordinal()).getLevel();
+        return stats.get(StatItems.MaxHp.ordinal()).getLevel();
     }
 
     public void setMaxHpLvl(int maxHpLvl) {
 
-        this.stats.get(Stats.MaxHp.ordinal()).setLevel(maxHpLvl);
+        this.stats.get(StatItems.MaxHp.ordinal()).setLevel(maxHpLvl);
     }
 
     public int getMoveSpdLvl() {
-        return this.stats.get(Stats.MoveSpd.ordinal()).getLevel();
+        return this.stats.get(StatItems.MoveSpd.ordinal()).getLevel();
     }
 
     public void setMoveSpdLvl(int moveSpdLvl) {
-        this.stats.get(Stats.MoveSpd.ordinal()).setLevel(moveSpdLvl);
+        this.stats.get(StatItems.MoveSpd.ordinal()).setLevel(moveSpdLvl);
     }
 
     public int getTotalBought(){
