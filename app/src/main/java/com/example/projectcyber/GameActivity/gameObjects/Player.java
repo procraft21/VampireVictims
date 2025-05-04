@@ -7,20 +7,28 @@ import android.graphics.Paint;
 import android.util.Log;
 
 import com.example.projectcyber.GameActivity.GameView;
+import com.example.projectcyber.GameActivity.Stats.StatType;
+import com.example.projectcyber.GameActivity.Stats.StatsContainer;
 import com.example.projectcyber.GameActivity.uiObjects.Joystick;
+
+import java.util.HashMap;
 
 public class Player extends Mob{
 
-
-    private double movementSpeed = 200;
-    private double maxHP = 100;
-    private double currHP = 100;
+    private double currHP;
     private Bitmap bitmap;
 
-    public Player(GameView gameView){
+    private StatsContainer stats;
+
+    public Player(GameView gameView, HashMap<StatType, Double> startingStats){
         super(0, 0, gameView);
         gameView.addToGrid(this);
         mass = Double.POSITIVE_INFINITY;
+
+        stats = new StatsContainer(startingStats);
+        currHP = stats.getStat(StatType.MaxHp).getFinalValue();
+
+
     }
 
     public void setBitmap(Bitmap bitmap){
@@ -47,8 +55,8 @@ public class Player extends Mob{
     public void update(long deltaTime) {
         savePrevPos();
         Joystick joystick = gameView.getJoystick();
-        velX = joystick.getDirX() * movementSpeed;
-        velY = joystick.getDirY() * movementSpeed;
+        velX = joystick.getDirX() * stats.getStat(StatType.MoveSpd).getFinalValue();
+        velY = joystick.getDirY() * stats.getStat(StatType.MoveSpd).getFinalValue();
         super.update(deltaTime);
 
     }
@@ -79,7 +87,7 @@ public class Player extends Mob{
 
 
     public double getMaxHP(){
-        return maxHP;
+        return stats.getStat(StatType.MaxHp).getFinalValue();
     }
 
     public double getCurrentHP(){

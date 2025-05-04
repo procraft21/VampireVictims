@@ -14,6 +14,7 @@ import android.view.SurfaceView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
+import com.example.projectcyber.GameActivity.Stats.StatType;
 import com.example.projectcyber.GameActivity.gameObjects.Enemy;
 import com.example.projectcyber.GameActivity.gameObjects.Entity;
 import com.example.projectcyber.GameActivity.gameObjects.Player;
@@ -37,6 +38,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
     HealthBar healthBar;
 
+    HashMap<StatType, Double> startingStats;
     //Enemies variables -----------------------------------------------------------------
     ArrayList<Enemy> enemies;
 
@@ -57,12 +59,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     private int screenHeight;
 
 
-    public GameView(Context context) {
+    public GameView(Context context, HashMap<StatType, Double> startingStats) {
         super(context);
         this.context = context;
         SurfaceHolder surfaceHolder = getHolder();
         surfaceHolder.addCallback(this);
         setFocusable(true);
+
+        this.startingStats = startingStats;
     }
 
 
@@ -73,7 +77,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         joystick = new Joystick();
 
         entityGrid = new HashMap<>();
-        player = new Player(this);
+        player = new Player(this, startingStats);
         playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.player_img);
         playerBitmap = Bitmap.createScaledBitmap(playerBitmap,PLAYER_WIDTH, PLAYER_HEIGHT, false);
         player.setBitmap(playerBitmap);
@@ -131,6 +135,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         drawFPS(mainCanvas);
         drawPlayerPosition(mainCanvas);
         drawPlayerSpeed(mainCanvas);
+        drawPlayerHp(mainCanvas);
     }
 
     public void startGame(SurfaceHolder surfaceHolder){
@@ -168,6 +173,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         paint.setTextSize(50);
         canvas.drawText("velX :" + player.getVelX() + " velY : " + player.getVelY(),100, 220, paint);
         canvas.drawText("velSize : " + Utils.distance(player.getVelX(), player.getVelY(), 0, 0), 100, 280, paint);
+    }
+
+    public void drawPlayerHp(Canvas canvas){
+        int color = ContextCompat.getColor(context, R.color.magenta);
+        Paint paint = new Paint();
+        paint.setColor(color);
+        paint.setTextSize(50);
+        canvas.drawText("CurrHealth : " + player.getCurrentHP(), 100, 340, paint);
     }
     // functions from SurfaceHolder.Callback
     @Override

@@ -106,8 +106,11 @@ public class MenuActivity extends AppCompatActivity {
     private void startGame(){
         Intent intent = new Intent(MenuActivity.this, GameActivity.class);
         for(StatItem item : stats){
-            intent.putExtra(item.getName(), item.getLevel());
+            intent.putExtra(item.getType().name(), item.getFinalValue());
+            Log.d("stats", item.getType().name() + item.getFinalValue());
         }
+
+        Log.d("stats", stats.toString());
         startActivity(intent);
     }
 

@@ -1,6 +1,6 @@
 package com.example.projectcyber.GameActivity.Stats;
 
-public abstract class StatModifier {
+public class StatModifier {
 
     public enum Type{
         percentile, bonus

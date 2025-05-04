@@ -12,8 +12,6 @@ public abstract class Mob extends Entity{
 
     protected Bitmap bitmap;
 
-
-
     protected double mass = 1;
 
     public Mob(double posX, double posY, GameView gameView) {
@@ -34,7 +32,6 @@ public abstract class Mob extends Entity{
     protected void resolveEntityCollision(Entity entity){
         if(entity instanceof Mob){
             resolveMovementOfMobCollision((Mob)entity);
-
         }
     }
 

@@ -1,17 +1,29 @@
 package com.example.projectcyber.Menu;
 
+import android.util.Log;
+
+import com.example.projectcyber.GameActivity.Stats.Stat;
+import com.example.projectcyber.GameActivity.Stats.StatModifier;
+import com.example.projectcyber.GameActivity.Stats.StatType;
+
 public class StatItem {
     private String name;
     private int level;
     private int maxLevel;
     private int initialPrice;
+
+    private final Stat basicStat;
+    private final StatModifier modifier;
+
     private StatStoreList list;
 
-    public StatItem(String name, int level, int maxLevel, int initialPrice, StatStoreList list){
+    public StatItem(String name, int level, int maxLevel, int initialPrice, Stat stat, StatModifier modifier, StatStoreList list){
         this.name = name;
         this.level = level;
         this.maxLevel = maxLevel;
         this.initialPrice = initialPrice;
+        this.basicStat = stat;
+        this.modifier = modifier;
         this.list = list;
     }
 
@@ -51,5 +63,18 @@ public class StatItem {
         int basePrice = initialPrice*(1+level);
         int fees = list.totalBought == 0 ? 0 : (int)(20*Math.pow(1.1, list.totalBought));
         return basePrice + fees;
+    }
+
+    public StatType getType(){
+        return basicStat.getStatType();
+    }
+
+    public double getFinalValue(){
+        Stat finalStat = new Stat(basicStat);
+        for(int i = 0; i<level; i++){
+            Log.d("stats", finalStat.getStatType().name() + " " +finalStat.getFinalValue());
+            finalStat.applyModifier(modifier);
+        }
+        return finalStat.getFinalValue();
     }
 }

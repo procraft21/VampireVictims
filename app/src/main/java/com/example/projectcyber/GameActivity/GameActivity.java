@@ -3,10 +3,14 @@ package com.example.projectcyber.GameActivity;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.projectcyber.GameActivity.Stats.StatType;
 import com.example.projectcyber.R;
+
+import java.util.HashMap;
 
 public class GameActivity extends AppCompatActivity {
 
@@ -21,7 +25,14 @@ public class GameActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN
         );
 
-        GameView gameView = new GameView(this);
+        Bundle bundle = getIntent().getExtras();
+
+        HashMap<StatType, Double> startingStats = new HashMap<>();
+        for(String name : bundle.keySet())
+            startingStats.put(StatType.valueOf(name),bundle.getDouble(name));
+
+        Log.d("stats", startingStats.toString());
+        GameView gameView = new GameView(this, startingStats);
         window.setContentView(gameView);
 
     }
