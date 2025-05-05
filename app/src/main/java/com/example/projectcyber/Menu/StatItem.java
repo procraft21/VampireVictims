@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.example.projectcyber.GameActivity.Stats.Stat;
 import com.example.projectcyber.GameActivity.Stats.StatModifier;
-import com.example.projectcyber.GameActivity.Stats.StatType;
+import com.example.projectcyber.GameActivity.Stats.PlayerStatsType;
 
 public class StatItem {
     private String name;
@@ -12,7 +12,7 @@ public class StatItem {
     private int maxLevel;
     private int initialPrice;
 
-    private final Stat basicStat;
+    private final Stat<PlayerStatsType> basicStat;
     private final StatModifier modifier;
 
     private StatStoreList list;
@@ -65,12 +65,12 @@ public class StatItem {
         return basePrice + fees;
     }
 
-    public StatType getType(){
+    public PlayerStatsType getType(){
         return basicStat.getStatType();
     }
 
     public double getFinalValue(){
-        Stat finalStat = new Stat(basicStat);
+        Stat<PlayerStatsType> finalStat = new Stat<>(basicStat);
         for(int i = 0; i<level; i++){
             Log.d("stats", finalStat.getStatType().name() + " " +finalStat.getFinalValue());
             finalStat.applyModifier(modifier);

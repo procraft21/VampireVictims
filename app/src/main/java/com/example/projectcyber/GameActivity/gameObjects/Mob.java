@@ -23,10 +23,7 @@ public abstract class Mob extends Entity{
         gameView.addToGrid(this);
     }
 
-    protected void savePrevPos(){
-        prevX = posX;
-        prevY = posY;
-    }
+
 
     @Override
     protected void resolveEntityCollision(Entity entity){

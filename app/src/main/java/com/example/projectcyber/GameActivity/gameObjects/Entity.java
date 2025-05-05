@@ -35,6 +35,11 @@ public abstract class Entity {
         counter++;
     }
 
+    protected void savePrevPos(){
+        prevX = posX;
+        prevY = posY;
+    }
+
     public double getPositionX(){
         return posX;
     }
@@ -107,4 +112,11 @@ public abstract class Entity {
         return gameView.getEntitiesNear(this);
     }
 
+    public void setVelX(double velX) {
+        this.velX = velX;
+    }
+
+    public void setVelY(double velY) {
+        this.velY = velY;
+    }
 }

@@ -7,7 +7,7 @@ import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.projectcyber.GameActivity.Stats.StatType;
+import com.example.projectcyber.GameActivity.Stats.PlayerStatsType;
 import com.example.projectcyber.R;
 
 import java.util.HashMap;
@@ -27,9 +27,9 @@ public class GameActivity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
 
-        HashMap<StatType, Double> startingStats = new HashMap<>();
+        HashMap<PlayerStatsType, Double> startingStats = new HashMap<>();
         for(String name : bundle.keySet())
-            startingStats.put(StatType.valueOf(name),bundle.getDouble(name));
+            startingStats.put(PlayerStatsType.valueOf(name),bundle.getDouble(name));
 
         Log.d("stats", startingStats.toString());
         GameView gameView = new GameView(this, startingStats);

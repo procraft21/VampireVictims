@@ -4,11 +4,11 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 
 import com.example.projectcyber.GameActivity.GameView;
-import com.example.projectcyber.GameActivity.Stats.StatType;
-import com.example.projectcyber.GameActivity.Stats.StatsContainer;
+import com.example.projectcyber.GameActivity.Stats.PlayerStatsType;
+import com.example.projectcyber.GameActivity.Stats.PlayerStatsContainer;
+import com.example.projectcyber.GameActivity.Stats.Stat;
 import com.example.projectcyber.GameActivity.uiObjects.Joystick;
 
 import java.util.HashMap;
@@ -18,15 +18,15 @@ public class Player extends Mob{
     private double currHP;
     private Bitmap bitmap;
 
-    private StatsContainer stats;
+    private PlayerStatsContainer stats;
 
-    public Player(GameView gameView, HashMap<StatType, Double> startingStats){
+    public Player(GameView gameView, HashMap<PlayerStatsType, Double> startingStats){
         super(0, 0, gameView);
         gameView.addToGrid(this);
         mass = Double.POSITIVE_INFINITY;
 
-        stats = new StatsContainer(startingStats);
-        currHP = stats.getStat(StatType.MaxHp).getFinalValue();
+        stats = new PlayerStatsContainer(startingStats);
+        currHP = stats.getStat(PlayerStatsType.MaxHp).getFinalValue();
 
 
     }
@@ -55,8 +55,8 @@ public class Player extends Mob{
     public void update(long deltaTime) {
         savePrevPos();
         Joystick joystick = gameView.getJoystick();
-        velX = joystick.getDirX() * stats.getStat(StatType.MoveSpd).getFinalValue();
-        velY = joystick.getDirY() * stats.getStat(StatType.MoveSpd).getFinalValue();
+        velX = joystick.getDirX() * stats.getStat(PlayerStatsType.MoveSpd).getFinalValue();
+        velY = joystick.getDirY() * stats.getStat(PlayerStatsType.MoveSpd).getFinalValue();
         super.update(deltaTime);
 
     }
@@ -87,11 +87,15 @@ public class Player extends Mob{
 
 
     public double getMaxHP(){
-        return stats.getStat(StatType.MaxHp).getFinalValue();
+        return stats.getStat(PlayerStatsType.MaxHp).getFinalValue();
     }
 
     public double getCurrentHP(){
         return currHP;
+    }
+
+    public Stat<PlayerStatsType> getStat(PlayerStatsType type){
+        return stats.getStat(type);
     }
 }
 

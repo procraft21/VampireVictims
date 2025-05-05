@@ -1,24 +1,26 @@
-package com.example.projectcyber.GameActivity.gameObjects;
+package com.example.projectcyber.GameActivity.gameObjects.Projectile;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
 import com.example.projectcyber.GameActivity.GameView;
+import com.example.projectcyber.GameActivity.gameObjects.Entity;
 import com.example.projectcyber.R;
 
-public class Projectile extends Entity{
+public class Projectile extends Entity {
 
     private static Bitmap bitmap;
+    private ProjectileMovement projectileMovement;
 
-
-    public Projectile(double posX, double posY, GameView gameView) {
+    public Projectile(double posX, double posY, GameView gameView, ProjectileMovement projectileMovement) {
         super(posX, posY, gameView);
         if(bitmap == null){
             Bitmap enemyBitmap = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.projectile_img);
             enemyBitmap = Bitmap.createScaledBitmap(enemyBitmap,50,50, false);
             this.bitmap = enemyBitmap;
         }
+        this.projectileMovement = projectileMovement;
     }
 
     @Override
@@ -36,6 +38,15 @@ public class Projectile extends Entity{
 
     }
 
+    public void setProjectileMovement(ProjectileMovement movement){
+        this.projectileMovement = projectileMovement;
+    }
 
+    @Override
+    public void update(long deltaTime){
+        savePrevPos();
+        projectileMovement.update(deltaTime,gameView, this);
+        super.update(deltaTime);
+    }
 
 }

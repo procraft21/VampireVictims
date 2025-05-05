@@ -45,4 +45,12 @@ public class User {
     public void setMoveSpdLvl(int moveSpdLvl) {
         stats.setMoveSpdLvl(moveSpdLvl);
     }
+
+    public int getDurationLvl(){return this.stats.getDurationLvl();}
+
+    public void setDurationLvl(int durationLvl){stats.setDurationLvl(durationLvl);}
+
+    public int getMightLvl() {return stats.getMightLvl();}
+
+    public void setMightLvl(int mightLvl){stats.setMightLvl(mightLvl);}
 }

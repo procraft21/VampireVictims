@@ -48,7 +48,7 @@
             android:layout_width="164dp"
             android:layout_height="72dp"
             android:backgroundTint="#5C944F"
-            android:text="Start Game"
+            android:text="Play Button"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

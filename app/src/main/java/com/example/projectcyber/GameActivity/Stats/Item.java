@@ -4,12 +4,12 @@ import java.util.ArrayList;
 
 public class Item {
     final ArrayList<StatModifier> levelEffect;
-    StatType statType;
+    PlayerStatsType playerStat;
     int currLevel;
     int maxLevel;
 
-    public Item(StatType statType, ArrayList<StatModifier> levelEffect, int currLevel){
-        this.statType = statType;
+    public Item(PlayerStatsType playerStat, ArrayList<StatModifier> levelEffect, int currLevel){
+        this.playerStat = playerStat;
         this.levelEffect = levelEffect;
         this.maxLevel = levelEffect.size();
         this.currLevel = currLevel;

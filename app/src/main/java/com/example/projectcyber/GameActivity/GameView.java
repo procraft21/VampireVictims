@@ -14,7 +14,7 @@ import android.view.SurfaceView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
-import com.example.projectcyber.GameActivity.Stats.StatType;
+import com.example.projectcyber.GameActivity.Stats.PlayerStatsType;
 import com.example.projectcyber.GameActivity.gameObjects.Enemy;
 import com.example.projectcyber.GameActivity.gameObjects.Entity;
 import com.example.projectcyber.GameActivity.gameObjects.Player;
@@ -38,7 +38,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
     HealthBar healthBar;
 
-    HashMap<StatType, Double> startingStats;
+    HashMap<PlayerStatsType, Double> startingStats;
     //Enemies variables -----------------------------------------------------------------
     ArrayList<Enemy> enemies;
 
@@ -59,7 +59,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     private int screenHeight;
 
 
-    public GameView(Context context, HashMap<StatType, Double> startingStats) {
+    public GameView(Context context, HashMap<PlayerStatsType, Double> startingStats) {
         super(context);
         this.context = context;
         SurfaceHolder surfaceHolder = getHolder();
@@ -240,6 +240,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         this.enemies.addAll(enemies);
         for(Enemy enemy : enemies)
             addToGrid(enemy);
+    }
+
+    public ArrayList<Enemy> getEnemies(){
+        return enemies;
     }
 
     public int getNumberOfEnemies(){

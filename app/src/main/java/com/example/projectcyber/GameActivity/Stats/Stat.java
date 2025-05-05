@@ -1,21 +1,19 @@
 package com.example.projectcyber.GameActivity.Stats;
 
-import java.util.ArrayList;
-
-public class Stat {
-    private StatType statType;
+public class Stat<T> {
+    private T statType;
     private double value;
     private double percentileBonus;
     private double rawBonus;
 
-    public Stat(StatType statType, double defaultValue){
+    public Stat(T statType, double defaultValue){
         this.statType = statType;
         this.value = defaultValue;
         percentileBonus = 0;
         rawBonus = 0;
     }
 
-    public Stat(Stat other) {
+    public Stat(Stat<T> other) {
         this.statType = other.statType;
         this.value = other.value;
         this.percentileBonus = other.percentileBonus;;
@@ -37,7 +35,7 @@ public class Stat {
         return (value+rawBonus)*(1+percentileBonus);
     }
 
-    public StatType getStatType() {
+    public T getStatType() {
         return statType;
     }
 }
