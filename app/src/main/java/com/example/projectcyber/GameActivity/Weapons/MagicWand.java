@@ -27,7 +27,7 @@ public class MagicWand extends Weapon{
     @Override
     public Projectile createProjectile() {
         Player player = gameView.getPlayer();
-        Projectile projectile = new Projectile(player.getPositionX(), player.getPositionY(), gameView, new ProjectileMovement() {
+        Projectile projectile = new Projectile(player.getPositionX(), player.getPositionY(), gameView, 1, stats.getStatValue(WeaponStatsType.Damage), 500, new ProjectileMovement() {
             boolean lockedOn = false;
             @Override
             public void update(double deltaTime, GameView gameView, Projectile projectile) {

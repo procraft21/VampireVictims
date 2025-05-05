@@ -20,11 +20,13 @@ public class WeaponStatsContainer {
         this.player = player;
         stats = new HashMap<>();
         stats.put(WeaponStatsType.Duration, new Stat<>(WeaponStatsType.Duration, startingStats.get(WeaponStatsType.Duration)));
+        stats.put(WeaponStatsType.Damage, new Stat<>(WeaponStatsType.Damage, startingStats.get(WeaponStatsType.Damage)));
     }
 
     private void setModifierTable(){
         modifierTable = new HashMap<>();
         modifierTable.put(WeaponStatsType.Duration, PlayerStatsType.Duration);
+        modifierTable.put(WeaponStatsType.Damage, PlayerStatsType.Might);
     }
 
     public double getStatValue(WeaponStatsType type){

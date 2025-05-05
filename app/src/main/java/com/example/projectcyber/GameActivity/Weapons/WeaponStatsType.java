@@ -1,5 +1,5 @@
 package com.example.projectcyber.GameActivity.Weapons;
 
 public enum WeaponStatsType {
-    Duration
+    Duration, Damage
 }

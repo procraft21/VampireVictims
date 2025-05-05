@@ -27,6 +27,7 @@ public class StatStoreList {
 
     public ArrayList<StatItem> getList(){
         return new ArrayList<>(stats.values());
+
     }
 
     public int getMaxHpLvl() {

@@ -13,7 +13,11 @@ public class Projectile extends Entity {
     private static Bitmap bitmap;
     private ProjectileMovement projectileMovement;
 
-    public Projectile(double posX, double posY, GameView gameView, ProjectileMovement projectileMovement) {
+    private int penetration;
+    private double damage;
+    private double speed;
+
+    public Projectile(double posX, double posY, GameView gameView, int penetration, double damage, int speed, ProjectileMovement projectileMovement) {
         super(posX, posY, gameView);
         if(bitmap == null){
             Bitmap enemyBitmap = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.projectile_img);
@@ -21,6 +25,9 @@ public class Projectile extends Entity {
             this.bitmap = enemyBitmap;
         }
         this.projectileMovement = projectileMovement;
+        this.penetration = penetration;
+        this.damage = damage;
+        this.speed = speed;
     }
 
     @Override
