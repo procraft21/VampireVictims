@@ -21,8 +21,6 @@ public class ImmunityList {
     public void update(double deltaTime){
         for(Entity entity : timeMap.keySet()){
             timeMap.put(entity, timeMap.get(entity) - deltaTime);
-            if(owner instanceof Player)
-                Log.d("reCollision", timeMap.get(entity) + " ");
             if(timeMap.get(entity) <= 0 ){
 
                 timeMap.remove(entity);

@@ -18,6 +18,7 @@ import com.example.projectcyber.GameActivity.Stats.PlayerStatsType;
 import com.example.projectcyber.GameActivity.gameObjects.Enemy;
 import com.example.projectcyber.GameActivity.gameObjects.Entity;
 import com.example.projectcyber.GameActivity.gameObjects.Player;
+import com.example.projectcyber.GameActivity.gameObjects.Projectile.Projectile;
 import com.example.projectcyber.R;
 import com.example.projectcyber.GameActivity.uiObjects.HealthBar;
 import com.example.projectcyber.GameActivity.uiObjects.Joystick;
@@ -39,8 +40,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     HealthBar healthBar;
 
     HashMap<PlayerStatsType, Double> startingStats;
+
+    HashSet<Projectile> projectiles;
     //Enemies variables -----------------------------------------------------------------
-    ArrayList<Enemy> enemies;
+    HashSet<Enemy> enemies;
 
     EnemySummoner enemySummoner;
 
@@ -82,7 +85,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         playerBitmap = Bitmap.createScaledBitmap(playerBitmap,PLAYER_WIDTH, PLAYER_HEIGHT, false);
         player.setBitmap(playerBitmap);
 
-        enemies = new ArrayList<>();
+        enemies = new HashSet<>();
+        projectiles = new HashSet<>();
 
         enemySummoner = new EnemySummoner(this);
         healthBar = new HealthBar(this);
@@ -104,6 +108,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         for(Enemy enemy : enemies){
             enemy.update(deltaTime);
         }
+        for(Projectile projectile : projectiles){
+            projectile.update(deltaTime);
+        }
 
         timer.update(deltaTime);
 
@@ -123,6 +130,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
         for(Enemy enemy : enemies){
             enemy.draw(mainCanvas);
+        }
+
+        for(Projectile projectile : projectiles){
+            projectile.draw(mainCanvas);
         }
 
         healthBar.draw(mainCanvas);
@@ -242,7 +253,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
             addToGrid(enemy);
     }
 
-    public ArrayList<Enemy> getEnemies(){
+    public HashSet<Enemy> getEnemies(){
         return enemies;
     }
 
@@ -316,5 +327,23 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
             }
         }
         return entities;
+    }
+
+    public void addProjectile(Projectile projectile){
+        projectiles.add(projectile);
+        addToGrid(projectile);
+    }
+
+    public void removeEntity(Entity entity){
+        Pair<Integer, Integer> slot = new Pair<>((int) entity.getPositionX(), (int) entity.getPositionY());
+        entityGrid.get(slot).remove(entity);
+        if(entityGrid.get(slot).isEmpty())
+            entityGrid.remove(slot);
+
+        if(entity instanceof Projectile)
+            projectiles.remove(entity);
+        if(entity instanceof Enemy)
+            enemies.remove(entity);
+
     }
 }

@@ -119,4 +119,8 @@ public abstract class Entity {
     public void setVelY(double velY) {
         this.velY = velY;
     }
+
+    public void destroy(){
+        gameView.removeEntity(this);
+    }
 }

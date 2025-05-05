@@ -9,8 +9,11 @@ import com.example.projectcyber.GameActivity.GameView;
 import com.example.projectcyber.GameActivity.Stats.PlayerStatsType;
 import com.example.projectcyber.GameActivity.Stats.PlayerStatsContainer;
 import com.example.projectcyber.GameActivity.Stats.Stat;
+import com.example.projectcyber.GameActivity.Weapons.MagicWand;
+import com.example.projectcyber.GameActivity.Weapons.Weapon;
 import com.example.projectcyber.GameActivity.uiObjects.Joystick;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Player extends Mob{
@@ -20,6 +23,8 @@ public class Player extends Mob{
 
     private PlayerStatsContainer stats;
 
+    private ArrayList<Weapon> weapons;
+
     public Player(GameView gameView, HashMap<PlayerStatsType, Double> startingStats){
         super(0, 0, gameView);
         gameView.addToGrid(this);
@@ -28,7 +33,8 @@ public class Player extends Mob{
         stats = new PlayerStatsContainer(startingStats);
         currHP = stats.getStat(PlayerStatsType.MaxHp).getFinalValue();
 
-
+        weapons = new ArrayList<>();
+        weapons.add(new MagicWand(gameView));
     }
 
     public void setBitmap(Bitmap bitmap){
@@ -57,6 +63,11 @@ public class Player extends Mob{
         Joystick joystick = gameView.getJoystick();
         velX = joystick.getDirX() * stats.getStat(PlayerStatsType.MoveSpd).getFinalValue();
         velY = joystick.getDirY() * stats.getStat(PlayerStatsType.MoveSpd).getFinalValue();
+
+        for(Weapon weapon : weapons){
+            weapon.update(deltaTime);
+        }
+
         super.update(deltaTime);
 
     }

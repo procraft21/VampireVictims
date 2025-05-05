@@ -8,6 +8,7 @@ import com.example.projectcyber.GameActivity.gameObjects.Projectile.ProjectileMo
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class MagicWand extends Weapon{
 
@@ -18,10 +19,21 @@ public class MagicWand extends Weapon{
     public MagicWand( GameView gameView) {
         this.gameView = gameView;
 
-        HashMap<WeaponStatsType, Double> startingStats = new HashMap<>();
-        startingStats.put(WeaponStatsType.Duration, Double.POSITIVE_INFINITY);
 
+        HashMap<WeaponStatsType, Double> startingStats = new HashMap<>();
+        startingStats.put(WeaponStatsType.Duration, 0.0);
+        startingStats.put(WeaponStatsType.Damage, 10.0);
+        startingStats.put(WeaponStatsType.Cooldown, 1200.0);
+        startingStats.put(WeaponStatsType.Speed, 500.0);
+        startingStats.put(WeaponStatsType.Pierce, 1.0);
+        startingStats.put(WeaponStatsType.Amount, 1.0);
+        startingStats.put(WeaponStatsType.ProjectileInterval, 100.0);
         stats = new WeaponStatsContainer(startingStats, gameView.getPlayer());
+
+        timeLeftInWindow = 0;
+        isActive = true;
+        timeSinceLastShot = 0;
+        amountShot = 0;
     }
 
     @Override
@@ -32,7 +44,7 @@ public class MagicWand extends Weapon{
             @Override
             public void update(double deltaTime, GameView gameView, Projectile projectile) {
                 if(!lockedOn){
-                    ArrayList<Enemy> enemies = gameView.getEnemies();
+                    HashSet<Enemy> enemies = gameView.getEnemies();
                     double min = 1000;
                     Enemy closest = null;
                     for(Enemy enemy : enemies){
@@ -42,9 +54,19 @@ public class MagicWand extends Weapon{
                             min =dist;
                         }
                     }
-                    if(closest != null)
-                        projectile.setVelX((closest.getPositionX() - player.getPositionX())/min);
+                    if(closest != null){
+                        projectile.setVelX(stats.getStatValue (WeaponStatsType.Speed) * (closest.getPositionX() - player.getPositionX())/min);
+                        projectile.setVelY(stats.getStatValue (WeaponStatsType.Speed) * (closest.getPositionY() - player.getPositionY())/min);
+                    }else{
+                        projectile.destroy();
+                    }
+
+                    lockedOn = true;
                 }
+
+                double dist = projectile.distance(player);
+                if(dist > 10000)
+                    projectile.destroy();
             }
         });
         return projectile;
