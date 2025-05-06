@@ -26,7 +26,7 @@ public class MagicWand extends Weapon{
         startingStats.put(WeaponStatsType.Speed, 500.0);
         startingStats.put(WeaponStatsType.Pierce, 1.0);
         startingStats.put(WeaponStatsType.Amount, 1.0);
-        startingStats.put(WeaponStatsType.ProjectileInterval, 100.0);
+        startingStats.put(WeaponStatsType.ProjectileInterval, 150.0);
         stats = new WeaponStatsContainer(startingStats, gameView);
 
         timeLeftInWindow = 0;

@@ -1,5 +1,6 @@
 package com.example.projectcyber.UserLogic;
 
+import com.example.projectcyber.GameActivity.Stats.PlayerStatsType;
 import com.google.firebase.firestore.Exclude;
 
 import java.util.ArrayList;
@@ -30,35 +31,56 @@ public class User {
         this.coins = coins;
     }
 
-    public int getMaxHpLvl() {
-        return stats.getMaxHpLvl();
-    }
+    //The getters and setters for the firebase
 
+    public int getMaxHpLvl() {
+        return stats.getStatLvl(PlayerStatsType.MaxHp);
+    }
     public void setMaxHpLvl(int maxHpLvl) {
-        this.stats.setMaxHpLvl(maxHpLvl);
+        this.stats.setStatLvl(PlayerStatsType.MaxHp, maxHpLvl);
     }
 
     public int getMoveSpdLvl() {
-        return this.stats.getMoveSpdLvl();
+        return stats.getStatLvl(PlayerStatsType.MoveSpd);
+    }
+    public void setMoveSpdLvl(int level) {
+        stats.setStatLvl(PlayerStatsType.MoveSpd, level);
     }
 
-    public void setMoveSpdLvl(int moveSpdLvl) {
-        stats.setMoveSpdLvl(moveSpdLvl);
+    public int getDurationLvl() {
+        return stats.getStatLvl(PlayerStatsType.Duration);
+    }
+    public void setDurationLvl(int level) {
+        stats.setStatLvl(PlayerStatsType.Duration, level);
     }
 
-    public int getDurationLvl(){return this.stats.getDurationLvl();}
+    public int getMightLvl() {
+        return stats.getStatLvl(PlayerStatsType.Might);
+    }
+    public void setMightLvl(int level) {
+        stats.setStatLvl(PlayerStatsType.Might, level);
+    }
 
-    public void setDurationLvl(int durationLvl){stats.setDurationLvl(durationLvl);}
+    public int getAmountLvl() {
+        return stats.getStatLvl(PlayerStatsType.Amount);
+    }
+    public void setAmountLvl(int level) {
+        stats.setStatLvl(PlayerStatsType.Amount, level);
+    }
 
-    public int getMightLvl() {return stats.getMightLvl();}
+    public int getArmorLvl() {
+        return stats.getStatLvl(PlayerStatsType.Armor);
+    }
+    public void setArmorLvl(int level) {
+        stats.setStatLvl(PlayerStatsType.Armor, level);
+    }
 
-    public void setMightLvl(int mightLvl){stats.setMightLvl(mightLvl);}
+    public int getRecoveryLvl() {return stats.getStatLvl(PlayerStatsType.Recovery);}
+    public void setRecoveryLvl(int level) {stats.setStatLvl(PlayerStatsType.Recovery, level);}
 
-    public int getAmountLvl() {return stats.getAmountLvl();}
+    public int getProjectileSpd() {return stats.getStatLvl(PlayerStatsType.ProjectileSpd);}
+    public void setProjectileSpd(int level) {stats.setStatLvl(PlayerStatsType.ProjectileSpd, level);}
 
-    public void setAmountLvl(int amountLvl) {stats.setAmountLvl(amountLvl);}
-
-    public int getArmorLvl() {return stats.getArmorLvl();}
-
-    public void setArmorLvl(int armorLvl) {stats.setArmorLvl(armorLvl);}
+    public int getCooldown() {return stats.getStatLvl(PlayerStatsType.Cooldown);}
+    public void setCooldown(int level) {stats.setStatLvl(PlayerStatsType.Cooldown, level);}
 }

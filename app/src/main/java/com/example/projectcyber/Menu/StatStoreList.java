@@ -1,5 +1,7 @@
 package com.example.projectcyber.Menu;
 
+import android.graphics.Rect;
+
 import com.example.projectcyber.GameActivity.Stats.Stat;
 import com.example.projectcyber.GameActivity.Stats.StatModifier;
 import com.example.projectcyber.GameActivity.Stats.PlayerStatsType;
@@ -27,6 +29,12 @@ public class StatStoreList {
                 new Stat<>(PlayerStatsType.Amount, 0), new StatModifier(StatModifier.Type.bonus, 1), this));
         stats.put(PlayerStatsType.Armor, new StatItem("Armor", 0, 3, 600,
                 new Stat<>(PlayerStatsType.Armor, 0), new StatModifier(StatModifier.Type.bonus, 1),this));
+        stats.put(PlayerStatsType.Recovery, new StatItem("Recovery", 0, 5, 200,
+                new Stat<>(PlayerStatsType.Recovery, 0), new StatModifier(StatModifier.Type.bonus, 0.1), this));
+        stats.put(PlayerStatsType.ProjectileSpd, new StatItem("Projectile Speed", 0, 2, 300,
+                new Stat<>(PlayerStatsType.ProjectileSpd, 1), new StatModifier(StatModifier.Type.percentile, 10), this));
+        stats.put(PlayerStatsType.Cooldown, new StatItem("Cooldown", 0, 2, 900,
+                new Stat<>(PlayerStatsType.Cooldown, 1), new StatModifier(StatModifier.Type.percentile, -5), this));
     }
 
     public ArrayList<StatItem> getList(){
@@ -34,58 +42,14 @@ public class StatStoreList {
 
     }
 
-    public int getMaxHpLvl() {
-        return stats.get(PlayerStatsType.MaxHp).getLevel();
-    }
-
-    public void setMaxHpLvl(int maxHpLvl) {
-
-        this.stats.get(PlayerStatsType.MaxHp).setLevel(maxHpLvl);
-    }
-
-    public int getMoveSpdLvl() {
-        return this.stats.get(PlayerStatsType.MoveSpd).getLevel();
-    }
-
-    public void setMoveSpdLvl(int moveSpdLvl) {
-        this.stats.get(PlayerStatsType.MoveSpd).setLevel(moveSpdLvl);
-    }
-
-    public int getDurationLvl(){
-        return stats.get(PlayerStatsType.Duration).getLevel();
-    }
-
-    public void setDurationLvl(int level){
-        stats.get(PlayerStatsType.Duration).setLevel(level);
-    }
-
-    public int getMightLvl(){
-        return stats.get(PlayerStatsType.Might).getLevel();
-    }
-
-    public void setMightLvl(int level){
-        stats.get(PlayerStatsType.Might).setLevel(level);
-    }
-
-    public int getAmountLvl(){
-        return stats.get(PlayerStatsType.Amount).getLevel();
-    }
-
-    public void setAmountLvl(int amountLvl){
-        stats.get(PlayerStatsType.Amount).setLevel(amountLvl);
-    }
-
-    public int getArmorLvl(){
-        return stats.get(PlayerStatsType.Armor).getLevel();
-    }
-
-    public void setArmorLvl(int armorLvl){
-        stats.get(PlayerStatsType.Armor).setLevel(armorLvl);
-    }
+    public int getStatLvl(PlayerStatsType type) { return stats.get(type).getLevel();}
+    public void setStatLvl(PlayerStatsType type, int level) {stats.get(type).setLevel(level);}
 
     public int getTotalBought(){
         return totalBought;
     }
+
+
 
 
 }

@@ -15,6 +15,9 @@ public class PlayerStatsContainer {
         stats.put(PlayerStatsType.Might, new Stat<>(PlayerStatsType.Might, startingStats.get(PlayerStatsType.Might)));
         stats.put(PlayerStatsType.Amount, new Stat<>(PlayerStatsType.Amount, startingStats.get(PlayerStatsType.Amount)));
         stats.put(PlayerStatsType.Armor, new Stat<>(PlayerStatsType.Armor, startingStats.get(PlayerStatsType.Armor)));
+        stats.put(PlayerStatsType.Recovery, new Stat<>(PlayerStatsType.Recovery, startingStats.get(PlayerStatsType.Recovery)));
+        stats.put(PlayerStatsType.ProjectileSpd, new Stat<>(PlayerStatsType.ProjectileSpd, startingStats.get(PlayerStatsType.ProjectileSpd)));
+        stats.put(PlayerStatsType.Cooldown, new Stat<>(PlayerStatsType.Cooldown, startingStats.get(PlayerStatsType.Cooldown)));
     }
 
     public Stat getStat(PlayerStatsType type){

@@ -46,7 +46,7 @@ public abstract class Weapon {
             if(timeSinceLastShot > stats.getStatValue(WeaponStatsType.ProjectileInterval) && amountShot < stats.getStatValue(WeaponStatsType.Amount)){
                 gameView.addProjectile(createProjectile());
                 amountShot++;
-                timeSinceLastShot = 0;
+                timeSinceLastShot -= (long) stats.getStatValue(WeaponStatsType.ProjectileInterval);
                 Log.d("shot", amountShot + " " + stats.getStatValue(WeaponStatsType.Amount));
             }
 

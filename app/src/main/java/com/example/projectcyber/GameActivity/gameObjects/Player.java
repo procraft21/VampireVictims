@@ -25,6 +25,8 @@ public class Player extends Mob{
 
     private ArrayList<Weapon> weapons;
 
+    private long lastTimeSinceHeal = 0;
+
     public Player(GameView gameView, HashMap<PlayerStatsType, Double> startingStats){
         super(0, 0, gameView);
         gameView.addToGrid(this);
@@ -68,6 +70,12 @@ public class Player extends Mob{
             weapon.update(deltaTime);
         }
 
+        lastTimeSinceHeal += deltaTime;
+        if(lastTimeSinceHeal > 1000){
+            heal(stats.getStat(PlayerStatsType.Recovery).getFinalValue());
+            lastTimeSinceHeal -= 1000;
+        }
+
         super.update(deltaTime);
 
     }
@@ -86,10 +94,17 @@ public class Player extends Mob{
         super.resolveEntityCollision(entity);
         if(entity instanceof Enemy && !immunityList.inList(entity)){
             Enemy enemy = (Enemy)entity;
-            takeDamage(enemy.getMight());
+            double damage = enemy.getMight() - stats.getStat(PlayerStatsType.Armor).getFinalValue();
+            if(damage > 0) takeDamage(damage);
         }
     }
 
+    public void heal(double heal){
+        currHP += heal;
+        if(currHP > stats.getStat(PlayerStatsType.MaxHp).getFinalValue()){
+            currHP = stats.getStat(PlayerStatsType.MaxHp).getFinalValue();
+        }
+    }
 
     public double getMaxHP(){
         return stats.getStat(PlayerStatsType.MaxHp).getFinalValue();

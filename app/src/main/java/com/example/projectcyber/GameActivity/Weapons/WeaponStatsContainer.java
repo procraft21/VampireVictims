@@ -41,6 +41,8 @@ public class WeaponStatsContainer {
         modifierTable.put(WeaponStatsType.Duration, PlayerStatsType.Duration);
         modifierTable.put(WeaponStatsType.Damage, PlayerStatsType.Might);
         modifierTable.put(WeaponStatsType.Amount,PlayerStatsType.Amount);
+        modifierTable.put(WeaponStatsType.Cooldown, PlayerStatsType.Cooldown);
+        modifierTable.put(WeaponStatsType.Speed, PlayerStatsType.ProjectileSpd);
     }
 
     private void setTypeTable(){
@@ -48,6 +50,8 @@ public class WeaponStatsContainer {
         typeTable.put(WeaponStatsType.Duration, StatModifier.Type.percentile);
         typeTable.put(WeaponStatsType.Damage, StatModifier.Type.percentile);
         typeTable.put(WeaponStatsType.Amount, StatModifier.Type.bonus);
+        typeTable.put(WeaponStatsType.Cooldown, StatModifier.Type.percentile);
+        typeTable.put(WeaponStatsType.Speed, StatModifier.Type.percentile);
     }
 
     public double getStatValue(WeaponStatsType type){
