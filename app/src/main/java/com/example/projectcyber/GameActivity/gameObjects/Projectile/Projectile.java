@@ -56,4 +56,5 @@ public class Projectile extends Entity {
         super.update(deltaTime);
     }
 
+
 }

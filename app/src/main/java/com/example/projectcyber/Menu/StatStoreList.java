@@ -23,6 +23,8 @@ public class StatStoreList {
                 new Stat<>(PlayerStatsType.Duration, 1.0), new StatModifier(StatModifier.Type.percentile, 15),this));
         stats.put(PlayerStatsType.Might, new StatItem("Might",0,5,200,
                 new Stat<>(PlayerStatsType.Might, 1), new StatModifier(StatModifier.Type.percentile, 5), this));
+        stats.put(PlayerStatsType.Amount, new StatItem("Amount", 0, 1, 5000,
+                new Stat<>(PlayerStatsType.Amount, 0), new StatModifier(StatModifier.Type.bonus, 1), this));
     }
 
     public ArrayList<StatItem> getList(){
@@ -61,6 +63,14 @@ public class StatStoreList {
 
     public void setMightLvl(int level){
         stats.get(PlayerStatsType.Might).setLevel(level);
+    }
+
+    public int getAmountLvl(){
+        return stats.get(PlayerStatsType.Amount).getLevel();
+    }
+
+    public void setAmountLvl(int amountLvl){
+        stats.get(PlayerStatsType.Amount).setLevel(amountLvl);
     }
 
     public int getTotalBought(){

@@ -53,4 +53,8 @@ public class User {
     public int getMightLvl() {return stats.getMightLvl();}
 
     public void setMightLvl(int mightLvl){stats.setMightLvl(mightLvl);}
+
+    public int getAmountLvl() {return stats.getAmountLvl();}
+
+    public void setAmountLvl(int amountLvl) {stats.setAmountLvl(amountLvl);}
 }

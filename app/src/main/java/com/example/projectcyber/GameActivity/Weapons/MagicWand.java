@@ -16,9 +16,8 @@ public class MagicWand extends Weapon{
         super(startingStats, gameView);
     }
 
-    public MagicWand( GameView gameView) {
+    public MagicWand(GameView gameView) {
         this.gameView = gameView;
-
 
         HashMap<WeaponStatsType, Double> startingStats = new HashMap<>();
         startingStats.put(WeaponStatsType.Duration, 0.0);
@@ -28,7 +27,7 @@ public class MagicWand extends Weapon{
         startingStats.put(WeaponStatsType.Pierce, 1.0);
         startingStats.put(WeaponStatsType.Amount, 1.0);
         startingStats.put(WeaponStatsType.ProjectileInterval, 100.0);
-        stats = new WeaponStatsContainer(startingStats, gameView.getPlayer());
+        stats = new WeaponStatsContainer(startingStats, gameView);
 
         timeLeftInWindow = 0;
         isActive = true;

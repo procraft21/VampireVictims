@@ -27,6 +27,7 @@ import com.example.projectcyber.GameActivity.uiObjects.Timer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback{
@@ -61,6 +62,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     private int screenWidth;
     private int screenHeight;
 
+    HashSet<Entity> toBeRemoved;
+
 
     public GameView(Context context, HashMap<PlayerStatsType, Double> startingStats) {
         super(context);
@@ -84,6 +87,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.player_img);
         playerBitmap = Bitmap.createScaledBitmap(playerBitmap,PLAYER_WIDTH, PLAYER_HEIGHT, false);
         player.setBitmap(playerBitmap);
+
+        toBeRemoved = new HashSet<>();
 
         enemies = new HashSet<>();
         projectiles = new HashSet<>();
@@ -110,7 +115,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         }
         for(Projectile projectile : projectiles){
             projectile.update(deltaTime);
+
         }
+
+        for(Entity remove : toBeRemoved){
+            removeEntityCompletely(remove);
+        }
+
+        toBeRemoved = new HashSet<>();
 
         timer.update(deltaTime);
 
@@ -334,8 +346,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         addToGrid(projectile);
     }
 
-    public void removeEntity(Entity entity){
-        Pair<Integer, Integer> slot = new Pair<>((int) entity.getPositionX(), (int) entity.getPositionY());
+    private void removeEntityCompletely(Entity entity){
+        Pair<Integer, Integer> slot = new Pair<>(getGridPositionFromPositionX(entity.getPositionX()), getGridPositionFromPositionY(entity.getPositionY()));
         entityGrid.get(slot).remove(entity);
         if(entityGrid.get(slot).isEmpty())
             entityGrid.remove(slot);
@@ -345,5 +357,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         if(entity instanceof Enemy)
             enemies.remove(entity);
 
+    }
+
+    //Add to the set of entities to be removed, doesn't remove now.
+    public void removeEntity(Entity entity){
+        toBeRemoved.add(entity);
     }
 }

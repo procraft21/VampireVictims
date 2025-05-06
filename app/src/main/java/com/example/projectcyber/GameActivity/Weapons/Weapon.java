@@ -19,7 +19,7 @@ public abstract class Weapon {
     protected int amountShot;
 
     public Weapon(HashMap<WeaponStatsType, Double> startingStats, GameView gameView){
-        stats = new WeaponStatsContainer(startingStats, gameView.getPlayer());
+        stats = new WeaponStatsContainer(startingStats, gameView);
         this.gameView = gameView;
     }
 
@@ -45,7 +45,9 @@ public abstract class Weapon {
         if(isActive){
             if(timeSinceLastShot > stats.getStatValue(WeaponStatsType.ProjectileInterval) && amountShot < stats.getStatValue(WeaponStatsType.Amount)){
                 gameView.addProjectile(createProjectile());
+                amountShot++;
                 timeSinceLastShot = 0;
+                Log.d("shot", amountShot + " " + stats.getStatValue(WeaponStatsType.Amount));
             }
 
         }
