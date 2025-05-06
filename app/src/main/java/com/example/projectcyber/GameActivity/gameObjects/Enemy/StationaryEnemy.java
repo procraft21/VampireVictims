@@ -1,4 +1,4 @@
-package com.example.projectcyber.GameActivity.gameObjects;
+package com.example.projectcyber.GameActivity.gameObjects.Enemy;
 
 import com.example.projectcyber.GameActivity.GameView;
 

@@ -1,12 +1,12 @@
 package com.example.projectcyber.GameActivity.Weapons;
 
 import com.example.projectcyber.GameActivity.GameView;
-import com.example.projectcyber.GameActivity.gameObjects.Enemy;
+import com.example.projectcyber.GameActivity.gameObjects.Enemy.Enemy;
 import com.example.projectcyber.GameActivity.gameObjects.Player;
+import com.example.projectcyber.GameActivity.gameObjects.Projectile.FriendlyProjectile;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.Projectile;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.ProjectileMovement;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -38,7 +38,7 @@ public class MagicWand extends Weapon{
     @Override
     public Projectile createProjectile() {
         Player player = gameView.getPlayer();
-        Projectile projectile = new Projectile(player.getPositionX(), player.getPositionY(), gameView, 1, stats.getStatValue(WeaponStatsType.Damage), 500, new ProjectileMovement() {
+        Projectile projectile = new FriendlyProjectile(player.getPositionX(), player.getPositionY(), gameView, 1, stats.getStatValue(WeaponStatsType.Damage), 500, new ProjectileMovement() {
             boolean lockedOn = false;
             @Override
             public void update(double deltaTime, GameView gameView, Projectile projectile) {

@@ -57,4 +57,8 @@ public class User {
     public int getAmountLvl() {return stats.getAmountLvl();}
 
     public void setAmountLvl(int amountLvl) {stats.setAmountLvl(amountLvl);}
+
+    public int getArmorLvl() {return stats.getArmorLvl();}
+
+    public void setArmorLvl(int armorLvl) {stats.setArmorLvl(armorLvl);}
 }

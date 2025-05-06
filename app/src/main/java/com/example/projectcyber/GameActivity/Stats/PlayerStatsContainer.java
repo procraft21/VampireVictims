@@ -14,7 +14,7 @@ public class PlayerStatsContainer {
         stats.put(PlayerStatsType.Duration, new Stat<>(PlayerStatsType.Duration, startingStats.get(PlayerStatsType.Duration)));
         stats.put(PlayerStatsType.Might, new Stat<>(PlayerStatsType.Might, startingStats.get(PlayerStatsType.Might)));
         stats.put(PlayerStatsType.Amount, new Stat<>(PlayerStatsType.Amount, startingStats.get(PlayerStatsType.Amount)));
-        Log.d("shot", "" + stats.get(PlayerStatsType.Amount).getFinalValue());
+        stats.put(PlayerStatsType.Armor, new Stat<>(PlayerStatsType.Armor, startingStats.get(PlayerStatsType.Armor)));
     }
 
     public Stat getStat(PlayerStatsType type){

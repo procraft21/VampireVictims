@@ -1,4 +1,4 @@
-package com.example.projectcyber.GameActivity.gameObjects;
+package com.example.projectcyber.GameActivity.gameObjects.Enemy;
 
 import android.util.Log;
 
@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 
 import com.example.projectcyber.GameActivity.GameView;
 import com.example.projectcyber.GameActivity.Utils;
+import com.example.projectcyber.GameActivity.gameObjects.Player;
 
 public class FollowerEnemy extends Enemy{
     Player player;
@@ -16,8 +17,8 @@ public class FollowerEnemy extends Enemy{
         double length = distance(player);
         if(length > 0){
             Log.d("startingVel", "startingVel");
-            velX = (posX - player.posX)/length;
-            velY = (posY - player.posY)/length;
+            velX = (posX - player.getPositionX())/length;
+            velY = (posY - player.getPositionY())/length;
         }
 
 
@@ -34,8 +35,8 @@ public class FollowerEnemy extends Enemy{
     /**lerp with ideal velocity(towards the player)*/
     private void lerpWithIdealVel(){
         double length = distance(player);
-        double idealVelX = speed*(player.posX-posX)/length;
-        double idealVelY = speed*(player.posY-posY)/length;
+        double idealVelX = speed*(player.getPositionX()-posX)/length;
+        double idealVelY = speed*(player.getPositionY()-posY)/length;
 
         double idealWeight = 0.5;
         velX = Utils.lerp(idealVelX, velX, idealWeight);

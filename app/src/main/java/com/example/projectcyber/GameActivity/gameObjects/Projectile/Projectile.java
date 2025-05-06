@@ -5,17 +5,18 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
 import com.example.projectcyber.GameActivity.GameView;
+import com.example.projectcyber.GameActivity.gameObjects.Enemy.Enemy;
 import com.example.projectcyber.GameActivity.gameObjects.Entity;
 import com.example.projectcyber.R;
 
 public class Projectile extends Entity {
 
-    private static Bitmap bitmap;
-    private ProjectileMovement projectileMovement;
+    protected static Bitmap bitmap;
+    protected ProjectileMovement projectileMovement;
 
-    private int penetration;
-    private double damage;
-    private double speed;
+    protected int penetration;
+    protected double damage;
+    protected double speed;
 
     public Projectile(double posX, double posY, GameView gameView, int penetration, double damage, int speed, ProjectileMovement projectileMovement) {
         super(posX, posY, gameView);
@@ -56,5 +57,8 @@ public class Projectile extends Entity {
         super.update(deltaTime);
     }
 
-
+    @Override
+    public double getCollisionRadius(){
+        return bitmap.getWidth()/2;
+    }
 }

@@ -3,8 +3,8 @@ package com.example.projectcyber.GameActivity;
 import android.util.Log;
 import android.util.Pair;
 
-import com.example.projectcyber.GameActivity.gameObjects.Enemy;
-import com.example.projectcyber.GameActivity.gameObjects.FollowerEnemy;
+import com.example.projectcyber.GameActivity.gameObjects.Enemy.Enemy;
+import com.example.projectcyber.GameActivity.gameObjects.Enemy.FollowerEnemy;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -48,7 +48,7 @@ public class EnemySummoner {
         summoningList = new ArrayList<>();
         HashSet<Enemy> enemies = new HashSet<Enemy>();
         enemies.add(new FollowerEnemy(gameView, 0,0));
-        summoningList.add(new SummoningSlot(100000, 500,0, enemies));
+        summoningList.add(new SummoningSlot(10000000, 500,30, enemies));
     }
 
     public void update(long deltaTime){

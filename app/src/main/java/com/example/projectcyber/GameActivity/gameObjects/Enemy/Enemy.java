@@ -1,4 +1,4 @@
-package com.example.projectcyber.GameActivity.gameObjects;
+package com.example.projectcyber.GameActivity.gameObjects.Enemy;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import androidx.annotation.NonNull;
 
 import com.example.projectcyber.GameActivity.GameView;
+import com.example.projectcyber.GameActivity.gameObjects.Mob;
 import com.example.projectcyber.R;
 
 public class Enemy extends Mob implements Cloneable{
@@ -19,7 +20,6 @@ public class Enemy extends Mob implements Cloneable{
     protected int might = 5;
 
     protected int maxHp = 1;
-    protected int currHp = 1;
 
     public Enemy(GameView gameView, double posX, double posY){
         super(posX,posY, gameView);
@@ -48,7 +48,13 @@ public class Enemy extends Mob implements Cloneable{
         this.bitmap = bitmap;
     }
 
-
+    @Override
+    public void takeDamage(double damage) {
+        super.takeDamage(damage);
+        if(currHP <= 0){
+            destroy();
+        }
+    }
 
     @Override
     protected void drawRelative(Canvas canvas, double relX, double relY) {
@@ -70,8 +76,6 @@ public class Enemy extends Mob implements Cloneable{
     @Override
     public Object clone() throws CloneNotSupportedException {
         Enemy clone = (Enemy) super.clone();
-        clone.tag = counter;
-        counter++;
         return clone;
     }
 

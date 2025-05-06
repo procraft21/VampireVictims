@@ -11,6 +11,7 @@ import com.example.projectcyber.GameActivity.Stats.PlayerStatsContainer;
 import com.example.projectcyber.GameActivity.Stats.Stat;
 import com.example.projectcyber.GameActivity.Weapons.MagicWand;
 import com.example.projectcyber.GameActivity.Weapons.Weapon;
+import com.example.projectcyber.GameActivity.gameObjects.Enemy.Enemy;
 import com.example.projectcyber.GameActivity.uiObjects.Joystick;
 
 import java.util.ArrayList;
@@ -18,7 +19,6 @@ import java.util.HashMap;
 
 public class Player extends Mob{
 
-    private double currHP;
     private Bitmap bitmap;
 
     private PlayerStatsContainer stats;
@@ -77,13 +77,7 @@ public class Player extends Mob{
         return bitmap.getWidth()/2;
     }
 
-    public void takeDamage(int damage){
-        if(damage < 0)
-            return;
-        currHP -= damage;
-        if(currHP < 0)
-            currHP = 0;
-    }
+
 
 
 

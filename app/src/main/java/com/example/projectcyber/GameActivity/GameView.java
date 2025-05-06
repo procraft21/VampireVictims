@@ -15,7 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import com.example.projectcyber.GameActivity.Stats.PlayerStatsType;
-import com.example.projectcyber.GameActivity.gameObjects.Enemy;
+import com.example.projectcyber.GameActivity.gameObjects.Enemy.Enemy;
 import com.example.projectcyber.GameActivity.gameObjects.Entity;
 import com.example.projectcyber.GameActivity.gameObjects.Player;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.Projectile;
@@ -24,10 +24,8 @@ import com.example.projectcyber.GameActivity.uiObjects.HealthBar;
 import com.example.projectcyber.GameActivity.uiObjects.Joystick;
 import com.example.projectcyber.GameActivity.uiObjects.Timer;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback{

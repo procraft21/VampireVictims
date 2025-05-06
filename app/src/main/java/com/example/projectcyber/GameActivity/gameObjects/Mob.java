@@ -13,6 +13,7 @@ public abstract class Mob extends Entity{
     protected Bitmap bitmap;
 
     protected double mass = 1;
+    protected double currHP;
 
     public Mob(double posX, double posY, GameView gameView) {
         super(posX, posY, gameView);
@@ -23,7 +24,13 @@ public abstract class Mob extends Entity{
         gameView.addToGrid(this);
     }
 
-
+    public void takeDamage(double damage){
+        if(damage < 0)
+            return;
+        currHP -= damage;
+        if(currHP < 0)
+            currHP = 0;
+    }
 
     @Override
     protected void resolveEntityCollision(Entity entity){
@@ -74,5 +81,9 @@ public abstract class Mob extends Entity{
         if(bitmap == null)
             return 75/2.0;
         return bitmap.getWidth()/2;
+    }
+
+    public double getCurrHP(){
+        return currHP;
     }
 }

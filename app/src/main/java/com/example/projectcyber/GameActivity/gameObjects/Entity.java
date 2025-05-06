@@ -21,9 +21,6 @@ public abstract class Entity {
 
     protected ImmunityList immunityList;
 
-    int tag;
-    static int counter = 0;
-
     public Entity(double posX, double posY, GameView gameView){
         this.posX = posX;
         this.posY = posY;
@@ -31,8 +28,6 @@ public abstract class Entity {
 
         immunityList = new ImmunityList(200, this);
 
-        tag = counter;
-        counter++;
     }
 
     protected void savePrevPos(){
