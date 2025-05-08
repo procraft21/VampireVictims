@@ -9,25 +9,22 @@ import com.example.projectcyber.GameActivity.gameObjects.Projectile.ProjectileMo
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Random;
 
-public class MagicWand extends Weapon{
-
-    public MagicWand(HashMap<WeaponStatsType, Double> startingStats, GameView gameView){
-        super(startingStats, gameView);
-    }
-
-    public MagicWand(GameView gameView) {
+public class MagicCannon extends Weapon{
+    public MagicCannon(GameView gameView) {
         this.gameView = gameView;
 
         HashMap<WeaponStatsType, Double> startingStats = new HashMap<>();
         startingStats.put(WeaponStatsType.Duration, 0.0);
-        startingStats.put(WeaponStatsType.Damage, 10.0);
-        startingStats.put(WeaponStatsType.Cooldown, 1200.0);
-        startingStats.put(WeaponStatsType.Speed, 500.0);
+        startingStats.put(WeaponStatsType.Damage, 20.0);
+        startingStats.put(WeaponStatsType.Cooldown, 3000.0);
+        startingStats.put(WeaponStatsType.Speed, 300.0);
         startingStats.put(WeaponStatsType.Pierce, 1.0);
         startingStats.put(WeaponStatsType.Amount, 1.0);
         startingStats.put(WeaponStatsType.ProjectileInterval, 150.0);
-        startingStats.put(WeaponStatsType.Area, 50.0);
+        startingStats.put(WeaponStatsType.Area, 100.0);
+
 
         stats = new WeaponStatsContainer(startingStats, gameView);
 
@@ -46,18 +43,23 @@ public class MagicWand extends Weapon{
             public void update(long deltaTime, GameView gameView, Projectile projectile) {
                 if(!lockedOn){
                     HashSet<Enemy> enemies = gameView.getEnemies();
-                    double min = 1000;
-                    Enemy closest = null;
-                    for(Enemy enemy : enemies){
-                        double dist = enemy.distance(player);
-                        if(dist < min){
-                            closest = enemy;
-                            min =dist;
+                    Enemy randomEnemy = null;
+                    int size = enemies.size();
+                    if(size > 0){
+                        int item = new Random().nextInt(size);
+                        int i = 0;
+                        for(Enemy enemy : enemies){
+                            if(i == item){
+                                randomEnemy = enemy;
+                            }
+                            i++;
                         }
                     }
-                    if(closest != null){
-                        projectile.setVelX(projectile.getSpeed() * (closest.getPositionX() - player.getPositionX())/min);
-                        projectile.setVelY(projectile.getSpeed() * (closest.getPositionY() - player.getPositionY())/min);
+
+                    double dist = randomEnemy.distance(player);
+                    if(randomEnemy != null){
+                        projectile.setVelX(projectile.getSpeed() * (randomEnemy.getPositionX() - player.getPositionX())/dist);
+                        projectile.setVelY(projectile.getSpeed() * (randomEnemy.getPositionY() - player.getPositionY())/dist);
                     }else{
                         projectile.destroy();
                     }

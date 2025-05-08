@@ -11,20 +11,24 @@ import com.example.projectcyber.R;
 
 public class Projectile extends Entity {
 
-    protected static Bitmap bitmap;
+    protected static Bitmap baseBitmap;
+    protected Bitmap bitmap;
     protected ProjectileMovement projectileMovement;
 
     protected int penetration;
     protected double damage;
     protected double speed;
 
-    public Projectile(double posX, double posY, GameView gameView, int penetration, double damage, int speed, ProjectileMovement projectileMovement) {
+    public Projectile(double posX, double posY, GameView gameView, int penetration, double damage, int speed, int area, ProjectileMovement projectileMovement) {
         super(posX, posY, gameView);
-        if(bitmap == null){
-            Bitmap enemyBitmap = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.projectile_img);
-            enemyBitmap = Bitmap.createScaledBitmap(enemyBitmap,50,50, false);
-            this.bitmap = enemyBitmap;
+        if(baseBitmap == null){
+            baseBitmap = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.projectile_img);
+
         }
+
+        bitmap = Bitmap.createScaledBitmap(baseBitmap,area,area, false);
+
+
         this.projectileMovement = projectileMovement;
         this.penetration = penetration;
         this.damage = damage;
@@ -60,5 +64,13 @@ public class Projectile extends Entity {
     @Override
     public double getCollisionRadius(){
         return bitmap.getWidth()/2;
+    }
+
+    public double getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(double speed) {
+        this.speed = speed;
     }
 }

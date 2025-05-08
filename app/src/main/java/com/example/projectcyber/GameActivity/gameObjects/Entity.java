@@ -67,8 +67,8 @@ public abstract class Entity {
     }
 
     public void update(long deltaTime){
-        posX += velX * deltaTime/1000;
-        posY += velY * deltaTime/1000;
+        posX += velX * deltaTime/1000.0;
+        posY += velY * deltaTime/1000.0;
 
         HashSet<Entity> closeEntities = getCollisionList();
         assert closeEntities != null;

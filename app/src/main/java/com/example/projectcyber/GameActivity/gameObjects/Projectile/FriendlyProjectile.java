@@ -8,13 +8,14 @@ import com.example.projectcyber.GameActivity.gameObjects.Entity;
 
 public class FriendlyProjectile extends Projectile{
 
-    public FriendlyProjectile(double posX, double posY, GameView gameView, int penetration, double damage, int speed, ProjectileMovement projectileMovement) {
-        super(posX, posY, gameView, penetration, damage, speed, projectileMovement);
+    public FriendlyProjectile(double posX, double posY, GameView gameView, int penetration, double damage, int speed,int area, ProjectileMovement projectileMovement) {
+        super(posX, posY, gameView, penetration, damage, speed,area, projectileMovement);
     }
 
     @Override
     protected void resolveEntityCollision(Entity other) {
         if(other instanceof Enemy){
+            if(immunityList.inList(other)) return;
             Enemy enemy = (Enemy)other;
             enemy.takeDamage(damage);
             penetration--;

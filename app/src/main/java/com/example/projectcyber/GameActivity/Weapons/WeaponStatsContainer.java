@@ -34,6 +34,7 @@ public class WeaponStatsContainer {
         stats.put(WeaponStatsType.Amount, new Stat<>(WeaponStatsType.Amount, startingStats.get(WeaponStatsType.Amount)));
         stats.put(WeaponStatsType.Pierce, new Stat<>(WeaponStatsType.Pierce, startingStats.get(WeaponStatsType.Pierce)));
         stats.put(WeaponStatsType.ProjectileInterval, new Stat<>(WeaponStatsType.ProjectileInterval, startingStats.get(WeaponStatsType.ProjectileInterval)));
+        stats.put(WeaponStatsType.Area, new Stat<>(WeaponStatsType.Area, startingStats.get(WeaponStatsType.Area)));
     }
 
     private void setModifierTable(){

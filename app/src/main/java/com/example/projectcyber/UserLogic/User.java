@@ -78,9 +78,12 @@ public class User {
     public int getRecoveryLvl() {return stats.getStatLvl(PlayerStatsType.Recovery);}
     public void setRecoveryLvl(int level) {stats.setStatLvl(PlayerStatsType.Recovery, level);}
 
-    public int getProjectileSpd() {return stats.getStatLvl(PlayerStatsType.ProjectileSpd);}
-    public void setProjectileSpd(int level) {stats.setStatLvl(PlayerStatsType.ProjectileSpd, level);}
+    public int getProjectileSpdLvl() {return stats.getStatLvl(PlayerStatsType.ProjectileSpd);}
+    public void setProjectileSpdLvl(int level) {stats.setStatLvl(PlayerStatsType.ProjectileSpd, level);}
 
-    public int getCooldown() {return stats.getStatLvl(PlayerStatsType.Cooldown);}
-    public void setCooldown(int level) {stats.setStatLvl(PlayerStatsType.Cooldown, level);}
+    public int getCooldownLvl() {return stats.getStatLvl(PlayerStatsType.Cooldown);}
+    public void setCooldownLvl(int level) {stats.setStatLvl(PlayerStatsType.Cooldown, level);}
+
+    public int getMagnetLvl() {return stats.getStatLvl(PlayerStatsType.Magnet);}
+    public void setMagnetLvl(int level) {stats.setStatLvl(PlayerStatsType.Magnet, level);}
 }

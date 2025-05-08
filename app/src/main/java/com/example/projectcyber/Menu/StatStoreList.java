@@ -35,6 +35,8 @@ public class StatStoreList {
                 new Stat<>(PlayerStatsType.ProjectileSpd, 1), new StatModifier(StatModifier.Type.percentile, 10), this));
         stats.put(PlayerStatsType.Cooldown, new StatItem("Cooldown", 0, 2, 900,
                 new Stat<>(PlayerStatsType.Cooldown, 1), new StatModifier(StatModifier.Type.percentile, -5), this));
+        stats.put(PlayerStatsType.Magnet, new StatItem("Magnet", 0, 2, 300,
+                new Stat<>(PlayerStatsType.Magnet, 300), new StatModifier(StatModifier.Type.percentile, 25), this));
     }
 
     public ArrayList<StatItem> getList(){

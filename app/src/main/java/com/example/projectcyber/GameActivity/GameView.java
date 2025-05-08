@@ -15,10 +15,18 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import com.example.projectcyber.GameActivity.Stats.PlayerStatsType;
+import com.example.projectcyber.GameActivity.Weapons.EtherealSpike;
+import com.example.projectcyber.GameActivity.Weapons.MagicCannon;
+import com.example.projectcyber.GameActivity.Weapons.MagicWand;
+import com.example.projectcyber.GameActivity.Weapons.ManaBlaster;
+import com.example.projectcyber.GameActivity.Weapons.MysticOrbit;
+import com.example.projectcyber.GameActivity.Weapons.ViolentStar;
 import com.example.projectcyber.GameActivity.gameObjects.Enemy.Enemy;
 import com.example.projectcyber.GameActivity.gameObjects.Entity;
+import com.example.projectcyber.GameActivity.gameObjects.Pickups.Pickup;
 import com.example.projectcyber.GameActivity.gameObjects.Player;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.Projectile;
+import com.example.projectcyber.GameActivity.uiObjects.XpProgressBar;
 import com.example.projectcyber.R;
 import com.example.projectcyber.GameActivity.uiObjects.HealthBar;
 import com.example.projectcyber.GameActivity.uiObjects.Joystick;
@@ -31,16 +39,16 @@ import java.util.List;
 public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
     //Player variables -----------------------------------------------------------------
-    private static final int PLAYER_WIDTH = 150;
-    private static final int PLAYER_HEIGHT = 150;
-    Bitmap playerBitmap;
+
     Player player;
 
     HealthBar healthBar;
+    XpProgressBar xpProgressBar;
 
     HashMap<PlayerStatsType, Double> startingStats;
 
     HashSet<Projectile> projectiles;
+    HashSet<Pickup> pickups;
     //Enemies variables -----------------------------------------------------------------
     HashSet<Enemy> enemies;
 
@@ -62,6 +70,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
     HashSet<Entity> toBeRemoved;
 
+    private boolean isPaused;
 
     public GameView(Context context, HashMap<PlayerStatsType, Double> startingStats) {
         super(context);
@@ -82,17 +91,20 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
         entityGrid = new HashMap<>();
         player = new Player(this, startingStats);
-        playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.player_img);
-        playerBitmap = Bitmap.createScaledBitmap(playerBitmap,PLAYER_WIDTH, PLAYER_HEIGHT, false);
-        player.setBitmap(playerBitmap);
+
+        player.addWeapon(new ManaBlaster(this));
+        player.addWeapon(new ViolentStar(this));
+        player.addWeapon(new EtherealSpike(this));
 
         toBeRemoved = new HashSet<>();
 
         enemies = new HashSet<>();
         projectiles = new HashSet<>();
+        pickups = new HashSet<>();
 
         enemySummoner = new EnemySummoner(this);
         healthBar = new HealthBar(this);
+        xpProgressBar = new XpProgressBar(this);
 
         timer = new Timer(this);
 
@@ -103,7 +115,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         //Log.d("deltaTime", "deltaTime" + deltaTime);
         //add enemies from queue to main list
 
+
         joystick.update();
+
+        if(isPaused) return;
+
+
         player.update(deltaTime);
 
         enemySummoner.update(deltaTime);
@@ -115,6 +132,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
             projectile.update(deltaTime);
 
         }
+        for(Pickup pickup : pickups){
+            pickup.update(deltaTime);
+        }
 
         for(Entity remove : toBeRemoved){
             removeEntityCompletely(remove);
@@ -122,6 +142,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
         toBeRemoved = new HashSet<>();
 
+        xpProgressBar.update(deltaTime);
+        healthBar.update(deltaTime);
         timer.update(deltaTime);
 
         //Log.d("grid", entityGrid.toString());
@@ -146,11 +168,17 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
             projectile.draw(mainCanvas);
         }
 
+        for(Pickup pickup : pickups){
+            pickup.draw(mainCanvas);
+        }
+
         healthBar.draw(mainCanvas);
+        xpProgressBar.draw(mainCanvas);
 
         timer.draw(mainCanvas);
 
         joystick.draw(mainCanvas);
+
 
         drawUPS(mainCanvas);
         drawFPS(mainCanvas);
@@ -344,6 +372,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         addToGrid(projectile);
     }
 
+    public void addPickup(Pickup pickup){
+        pickups.add(pickup);
+        addToGrid(pickup);
+    }
+
     private void removeEntityCompletely(Entity entity){
         Pair<Integer, Integer> slot = new Pair<>(getGridPositionFromPositionX(entity.getPositionX()), getGridPositionFromPositionY(entity.getPositionY()));
         entityGrid.get(slot).remove(entity);
@@ -354,11 +387,29 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
             projectiles.remove(entity);
         if(entity instanceof Enemy)
             enemies.remove(entity);
+        if(entity instanceof Pickup)
+            pickups.remove(entity);
 
     }
 
     //Add to the set of entities to be removed, doesn't remove now.
     public void removeEntity(Entity entity){
         toBeRemoved.add(entity);
+    }
+
+    public void pauseGame(){
+        isPaused = true;
+    }
+
+    public void resumeGame(){
+        isPaused = false;
+    }
+
+    public int getScreenWidth() {
+        return screenWidth;
+    }
+
+    public int getScreenHeight() {
+        return screenHeight;
     }
 }

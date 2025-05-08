@@ -3,11 +3,13 @@ package com.example.projectcyber.GameActivity.gameObjects.Enemy;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
 import com.example.projectcyber.GameActivity.GameView;
 import com.example.projectcyber.GameActivity.gameObjects.Mob;
+import com.example.projectcyber.GameActivity.gameObjects.Pickups.Pickup;
 import com.example.projectcyber.R;
 
 public class Enemy extends Mob implements Cloneable{
@@ -21,6 +23,8 @@ public class Enemy extends Mob implements Cloneable{
 
     protected int maxHp = 1;
 
+    private static DropTable dropTable = null;
+
     public Enemy(GameView gameView, double posX, double posY){
         super(posX,posY, gameView);
         if(bitmap == null){
@@ -29,7 +33,11 @@ public class Enemy extends Mob implements Cloneable{
             this.bitmap = enemyBitmap;
 
         }
+        if(dropTable == null){
+            dropTable = new DropTable(gameView);
+        }
 
+        this.currHP = maxHp;
     }
 
     public Enemy(Enemy enemy, double posX, double posY){
@@ -86,5 +94,18 @@ public class Enemy extends Mob implements Cloneable{
 
     public int getMight(){
         return might;
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+
+        Pickup pickup = dropTable.getDrop();
+        if(pickup != null){
+            pickup.setPosX(posX);
+            pickup.setPosY(posY);
+            Log.d("pickUp", pickup.toString());
+            gameView.addPickup(pickup);
+        }
     }
 }

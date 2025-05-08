@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="LevelUpItemView">
+        <attr name="itemName" format="string"/>
+        <attr name="itemDescription" format="string"/>
+        <attr name="itemLevel" format="integer"/>
+    </declare-styleable>
+</resources>

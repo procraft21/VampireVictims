@@ -19,18 +19,23 @@ public class HealthBar {
 
     private GameView gameView;
 
+    double healthRatio;
+
     public HealthBar(GameView gameView){
        this.player = gameView.getPlayer();
        this.gameView = gameView;
+    }
+
+    public void update(long deltaTime){
+        healthRatio = player.getCurrentHP() / player.getMaxHP();
     }
 
     public void draw(Canvas canvas){
         int left = canvas.getWidth()/2 - WIDTH/2;
         int top = canvas.getHeight()/2 + player.getHeight()/2 + DISTANCE_FROM_PLAYER;
         int bottom = top + HEIGHT;
-
         int fullRight = left + WIDTH;
-        double healthRatio = (double)player.getCurrentHP() / player.getMaxHP();
+
         int currentRight = left + (int)(WIDTH * healthRatio);
 
         Rect full = new Rect(left, top, fullRight, bottom);

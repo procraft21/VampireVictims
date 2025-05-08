@@ -7,6 +7,9 @@ import android.view.SurfaceHolder;
 public class GameLoop extends Thread {
 
     private boolean isRunning = false;
+    private boolean isPaused = false;
+    private final Object pauseLock = new Object();
+
     private final GameView game;
     private final SurfaceHolder surfaceHolder;
 
@@ -39,39 +42,60 @@ public class GameLoop extends Thread {
         Canvas canvas = null;
 
         while (isRunning) {
+
+            // --- Pause Handling ---
+            synchronized (pauseLock) {
+                if (isPaused) {
+                    try {
+                        pauseLock.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        return;
+                    }
+                    previousTime = System.nanoTime(); // reset time after pause
+                    startTime = System.currentTimeMillis();
+                    updateCount = 0;
+                    frameCount = 0;
+                    continue;
+                }
+            }
+
+            // --- Timing ---
             currentTime = System.nanoTime();
-            deltaTime = (currentTime - previousTime) / 1_000_000;  // Convert to milliseconds
+            deltaTime = (currentTime - previousTime) / 1_000_000; // ms
             previousTime = currentTime;
 
-            // Update and draw
+            // --- Update and Draw ---
             try {
                 canvas = surfaceHolder.lockCanvas();
                 synchronized (surfaceHolder) {
-                    game.update(deltaTime); // deltaTime in milliseconds as long
+                    game.update(deltaTime);
                     updateCount++;
                     game.draw(canvas);
                 }
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
             } finally {
-                try {
-                    if (surfaceHolder.getSurface().isValid()) {
-                        surfaceHolder.unlockCanvasAndPost(canvas);
-                        frameCount++;
+                if(canvas != null){
+
+                    try {
+                        if (surfaceHolder.getSurface().isValid()) {
+                            surfaceHolder.unlockCanvasAndPost(canvas);
+                            frameCount++;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
             }
 
-            // Sleep to maintain target UPS
+            // --- UPS Throttling ---
             long elapsedTime = System.currentTimeMillis() - startTime;
             long sleepTime = (long) (updateCount * UPS_PERIOD - elapsedTime);
             if (sleepTime > 0) {
                 SystemClock.sleep(sleepTime);
             }
 
-            // Catch up on updates if behind
             while (sleepTime < 0 && updateCount < MAX_UPS - 1) {
                 currentTime = System.nanoTime();
                 deltaTime = (currentTime - previousTime) / 1_000_000;
@@ -84,17 +108,36 @@ public class GameLoop extends Thread {
                 sleepTime = (long) (updateCount * UPS_PERIOD - elapsedTime);
             }
 
-            // Update UPS and FPS once per second
             if (System.currentTimeMillis() - startTime >= 1000) {
-                long currentTimeMs = System.currentTimeMillis();
-                double elapsed = currentTimeMs - startTime;
-                averageUPS = updateCount / (elapsed / 1000.0);
-                averageFPS = frameCount / (elapsed / 1000.0);
+                long now = System.currentTimeMillis();
+                double secondsElapsed = now - startTime;
+                averageUPS = updateCount / (secondsElapsed / 1000.0);
+                averageFPS = frameCount / (secondsElapsed / 1000.0);
                 updateCount = 0;
                 frameCount = 0;
-                startTime = currentTimeMs;
+                startTime = now;
             }
         }
+    }
+
+    // --- Public API ---
+
+    public void pauseGame() {
+        synchronized (pauseLock) {
+            isPaused = true;
+        }
+    }
+
+    public void resumeGame() {
+        synchronized (pauseLock) {
+            isPaused = false;
+            pauseLock.notify();
+        }
+    }
+
+    public void stopGame() {
+        isRunning = false;
+        resumeGame(); // ensure thread can exit from wait()
     }
 
     public double getAverageUPS() {
