@@ -3,22 +3,20 @@ package com.example.projectcyber.GameActivity.gameObjects;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
+import android.util.Log;
 
 import com.example.projectcyber.GameActivity.GameView;
+import com.example.projectcyber.GameActivity.Stats.Items.CoffeeTorus;
+import com.example.projectcyber.GameActivity.Stats.Items.Item;
 import com.example.projectcyber.GameActivity.Stats.PlayerStatsType;
 import com.example.projectcyber.GameActivity.Stats.PlayerStatsContainer;
-import com.example.projectcyber.GameActivity.Stats.Stat;
-import com.example.projectcyber.GameActivity.Weapons.MagicWand;
-import com.example.projectcyber.GameActivity.Weapons.MysticOrbit;
 import com.example.projectcyber.GameActivity.Weapons.Weapon;
 import com.example.projectcyber.GameActivity.gameObjects.Enemy.Enemy;
 import com.example.projectcyber.GameActivity.uiObjects.Joystick;
 import com.example.projectcyber.R;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class Player extends Mob{
 
@@ -30,7 +28,8 @@ public class Player extends Mob{
 
     private PlayerStatsContainer stats;
 
-    private ArrayList<Weapon> weapons;
+    private HashSet<Weapon> weapons;
+    private HashMap<PlayerStatsType,Item> items;
 
     private long lastTimeSinceHeal = 0;
 
@@ -44,8 +43,11 @@ public class Player extends Mob{
         gameView.addToGrid(this);
         mass = Double.POSITIVE_INFINITY;
 
+        weapons = new HashSet<>();
+        items = new HashMap<>();
+
         stats = new PlayerStatsContainer(startingStats);
-        currHP = stats.getStat(PlayerStatsType.MaxHp).getFinalValue();
+        currHP = getStatValue(PlayerStatsType.MaxHp);
 
         this.level = 1;
         this.xpAcquired = 0;
@@ -56,7 +58,15 @@ public class Player extends Mob{
             bitmap = Bitmap.createScaledBitmap(bitmap,PLAYER_WIDTH, PLAYER_HEIGHT, false);
         }
 
-        weapons = new ArrayList<>();
+
+        Item item = new CoffeeTorus();
+        items.put(item.getStatType(), item);
+        item.raiseLevel();
+        item.raiseLevel();
+        item.raiseLevel();
+        item.raiseLevel();
+
+
 
     }
 
@@ -67,14 +77,15 @@ public class Player extends Mob{
     public void raiseXp(int xp){
         xpAcquired += xp;
         while(xpAcquired >= xpRequired){
-            levelUp();
+            //levelUp();
             xpAcquired-=xpRequired;
             xpRequired += level<=20 ? 10 : level<=40 ? 13 : 16;
         }
     }
 
     public void levelUp(){
-
+        gameView.pauseGame();
+        gameView.showLevelUpDialog();
     }
 
     public int getXpRequired(){
@@ -102,21 +113,21 @@ public class Player extends Mob{
     public void update(long deltaTime) {
         savePrevPos();
         Joystick joystick = gameView.getJoystick();
-        velX = joystick.getDirX() * stats.getStat(PlayerStatsType.MoveSpd).getFinalValue();
-        velY = joystick.getDirY() * stats.getStat(PlayerStatsType.MoveSpd).getFinalValue();
+        velX = joystick.getDirX() * getStatValue(PlayerStatsType.MoveSpd);
+        velY = joystick.getDirY() * getStatValue(PlayerStatsType.MoveSpd);
 
-        for(Weapon weapon : weapons){
-            weapon.update(deltaTime);
-        }
+
 
         lastTimeSinceHeal += deltaTime;
-        if(lastTimeSinceHeal > 1000){
-            heal(stats.getStat(PlayerStatsType.Recovery).getFinalValue());
+        while(lastTimeSinceHeal > 1000){
+            heal(getStatValue(PlayerStatsType.Recovery));
             lastTimeSinceHeal -= 1000;
         }
 
         super.update(deltaTime);
-
+        for(Weapon weapon : weapons){
+            weapon.update(deltaTime);
+        }
     }
 
     @Override
@@ -124,41 +135,50 @@ public class Player extends Mob{
         return bitmap.getWidth()/2;
     }
 
-
-
-
-
     @Override
     protected void resolveEntityCollision(Entity entity){
         super.resolveEntityCollision(entity);
         if(entity instanceof Enemy && !immunityList.inList(entity)){
             Enemy enemy = (Enemy)entity;
-            double damage = enemy.getMight() - stats.getStat(PlayerStatsType.Armor).getFinalValue();
+            double damage = enemy.getMight() - getStatValue(PlayerStatsType.Armor);
             if(damage > 0) takeDamage(damage);
         }
     }
 
     public void heal(double heal){
         currHP += heal;
-        if(currHP > stats.getStat(PlayerStatsType.MaxHp).getFinalValue()){
-            currHP = stats.getStat(PlayerStatsType.MaxHp).getFinalValue();
+        if(currHP > getStatValue(PlayerStatsType.MaxHp)){
+            currHP = getStatValue(PlayerStatsType.MaxHp);
         }
     }
 
-    public double getMaxHP(){
-        return stats.getStat(PlayerStatsType.MaxHp).getFinalValue();
-    }
 
     public double getCurrentHP(){
         return currHP;
     }
 
-    public Stat<PlayerStatsType> getStat(PlayerStatsType type){
-        return stats.getStat(type);
+    public double getStatValue(PlayerStatsType type) {
+
+        if(items.get(type) != null){
+            Item item = items.get(type);
+            switch (item.getModifier().getType()){
+                case percentile:
+                    return stats.getStat(type).getFinalValue() * item.getAmount();
+                case bonus:
+                    return stats.getStat(type).getFinalValue() + item.getAmount();
+
+            }
+        }
+        return stats.getStat(type).getFinalValue();
+
     }
 
     public void addWeapon(Weapon weapon){
         weapons.add(weapon);
+    }
+
+    public PlayerStatsContainer getStats(){
+        return stats;
     }
 }
 

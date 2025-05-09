@@ -1,6 +1,6 @@
 package com.example.projectcyber.GameActivity.Stats;
 
-public class Stat<T> {
+public class Stat<T extends StatType> {
     private T statType;
     private double value;
     private double percentileBonus;

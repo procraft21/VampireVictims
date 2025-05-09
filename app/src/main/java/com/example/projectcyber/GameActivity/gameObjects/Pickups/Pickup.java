@@ -20,7 +20,7 @@ public abstract class Pickup extends Entity implements Cloneable{
     public void update(long deltaTime){
         savePrevPos();
         Player player = gameView.getPlayer();
-        if(distance(player) < player.getStat(PlayerStatsType.Magnet).getFinalValue()){
+        if(distance(player) < player.getStatValue(PlayerStatsType.Magnet)){
             closeToPlayer = true;
         }
 

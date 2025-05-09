@@ -41,12 +41,10 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public void showLevelUpDialog(){
-        final Dialog dialog = new Dialog(GameActivity.this);
+        final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dialog_level_up);
-
-
 
         dialog.show();
         Window window = dialog.getWindow();

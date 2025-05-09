@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 
 import com.example.projectcyber.GameActivity.GameView;
+import com.example.projectcyber.GameActivity.Stats.PlayerStatsType;
 import com.example.projectcyber.R;
 import com.example.projectcyber.GameActivity.gameObjects.Player;
 
@@ -26,8 +27,10 @@ public class HealthBar {
        this.gameView = gameView;
     }
 
-    public void update(long deltaTime){
-        healthRatio = player.getCurrentHP() / player.getMaxHP();
+    public void update(){
+        double playerHealth = player.getCurrentHP();
+        double maxHealth = player.getStatValue(PlayerStatsType.MaxHp);
+        healthRatio = player.getCurrentHP() / player.getStatValue(PlayerStatsType.MaxHp);
     }
 
     public void draw(Canvas canvas){

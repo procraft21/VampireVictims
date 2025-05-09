@@ -1,5 +1,7 @@
 package com.example.projectcyber.GameActivity;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +12,8 @@ import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.Window;
+import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -72,9 +76,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
     private boolean isPaused;
 
-    public GameView(Context context, HashMap<PlayerStatsType, Double> startingStats) {
-        super(context);
-        this.context = context;
+    GameActivity activity;
+
+    public GameView(GameActivity activity, HashMap<PlayerStatsType, Double> startingStats) {
+        super(activity.getApplicationContext());
+        this.context = activity.getApplicationContext();
+        this.activity = activity;
         SurfaceHolder surfaceHolder = getHolder();
         surfaceHolder.addCallback(this);
         setFocusable(true);
@@ -92,9 +99,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         entityGrid = new HashMap<>();
         player = new Player(this, startingStats);
 
-        player.addWeapon(new ManaBlaster(this));
-        player.addWeapon(new ViolentStar(this));
         player.addWeapon(new EtherealSpike(this));
+        player.addWeapon(new ViolentStar(this));
 
         toBeRemoved = new HashSet<>();
 
@@ -110,6 +116,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
     }
 
+
+
     /** Updates the data of the game, called every update*/
     public void update(long deltaTime){
         //Log.d("deltaTime", "deltaTime" + deltaTime);
@@ -120,7 +128,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
         if(isPaused) return;
 
+        for(Projectile projectile : projectiles){
+            projectile.update(deltaTime);
 
+        }
         player.update(deltaTime);
 
         enemySummoner.update(deltaTime);
@@ -128,10 +139,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         for(Enemy enemy : enemies){
             enemy.update(deltaTime);
         }
-        for(Projectile projectile : projectiles){
-            projectile.update(deltaTime);
 
-        }
         for(Pickup pickup : pickups){
             pickup.update(deltaTime);
         }
@@ -142,8 +150,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
         toBeRemoved = new HashSet<>();
 
-        xpProgressBar.update(deltaTime);
-        healthBar.update(deltaTime);
+        xpProgressBar.update();
+        healthBar.update();
         timer.update(deltaTime);
 
         //Log.d("grid", entityGrid.toString());
@@ -412,4 +420,19 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     public int getScreenHeight() {
         return screenHeight;
     }
+
+    public void levelUpSequence(){
+        isPaused = true;
+
+    }
+
+    public void showLevelUpDialog(){
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                activity.showLevelUpDialog();
+            }
+        });
+    }
+
 }

@@ -1,12 +1,16 @@
 package com.example.projectcyber.GameActivity.Weapons;
 
 import com.example.projectcyber.GameActivity.GameView;
+import com.example.projectcyber.GameActivity.Stats.StatModifier;
 import com.example.projectcyber.GameActivity.gameObjects.Player;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.FriendlyProjectile;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.Projectile;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.ProjectileMovement;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Random;
 
 public class ViolentStar extends Weapon{
@@ -24,9 +28,30 @@ public class ViolentStar extends Weapon{
         startingStats.put(WeaponStatsType.ProjectileInterval, 200.0);
         startingStats.put(WeaponStatsType.Cooldown, 3000.0);
         startingStats.put(WeaponStatsType.Area, 75.0);
-
-
         stats = new WeaponStatsContainer(startingStats, gameView);
+
+        level = 8;
+        maxLevel = 8;
+
+        levelEffects = new ArrayList<>();
+        levelEffects.add(new HashSet<>(Arrays.asList(new LevelUpModifier(WeaponStatsType.Damage, new StatModifier(StatModifier.Type.bonus, 5))
+                ,new LevelUpModifier(WeaponStatsType.Speed, new StatModifier(StatModifier.Type.percentile, 20)))));
+        levelEffects.add(new HashSet<>(Arrays.asList(new LevelUpModifier(WeaponStatsType.Duration, new StatModifier(StatModifier.Type.bonus, 300))
+                ,new LevelUpModifier(WeaponStatsType.Damage, new StatModifier(StatModifier.Type.bonus, 5)))));
+        levelEffects.add(new HashSet<>(Arrays.asList(new LevelUpModifier(WeaponStatsType.Amount, new StatModifier(StatModifier.Type.bonus, 1)))));
+        levelEffects.add(new HashSet<>(Arrays.asList(new LevelUpModifier(WeaponStatsType.Damage, new StatModifier(StatModifier.Type.bonus, 5))
+                ,new LevelUpModifier(WeaponStatsType.Speed, new StatModifier(StatModifier.Type.percentile, 20)))));
+        levelEffects.add(new HashSet<>(Arrays.asList(new LevelUpModifier(WeaponStatsType.Duration, new StatModifier(StatModifier.Type.bonus, 300))
+                ,new LevelUpModifier(WeaponStatsType.Damage, new StatModifier(StatModifier.Type.bonus, 5)))));
+        levelEffects.add(new HashSet<>(Arrays.asList(new LevelUpModifier(WeaponStatsType.Amount, new StatModifier(StatModifier.Type.bonus, 1)))));
+        levelEffects.add(new HashSet<>(Arrays.asList(new LevelUpModifier(WeaponStatsType.Duration, new StatModifier(StatModifier.Type.bonus, 5000)))));
+
+        for(int i = 0; i<level-1; i++){
+            for(LevelUpModifier modifer : levelEffects.get(i))
+                modifer.apply(stats);
+        }
+
+
         timeLeftInWindow = (long) stats.getStatValue(WeaponStatsType.Cooldown);
         isActive = false;
         timeSinceLastShot = 0;

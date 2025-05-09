@@ -60,11 +60,15 @@ public class WeaponStatsContainer {
         if(modifierTable.get(type) != null && player != null){
             switch (typeTable.get(type)){
                 case percentile:
-                    return stats.get(type).getFinalValue() * player.getStat(modifierTable.get(type)).getFinalValue();
+                    return stats.get(type).getFinalValue() * player.getStatValue(modifierTable.get(type));
                 case bonus:
-                    return stats.get(type).getFinalValue() + player.getStat(modifierTable.get(type)).getFinalValue();
+                    return stats.get(type).getFinalValue() + player.getStatValue(modifierTable.get(type));
             }
         }
         return stats.get(type).getFinalValue();
+    }
+
+    public Stat<WeaponStatsType> getStat(WeaponStatsType type){
+        return stats.get(type);
     }
 }

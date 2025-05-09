@@ -1,12 +1,17 @@
 package com.example.projectcyber.GameActivity.Weapons;
 
+import android.util.Log;
+
 import com.example.projectcyber.GameActivity.GameView;
+import com.example.projectcyber.GameActivity.Stats.StatModifier;
 import com.example.projectcyber.GameActivity.gameObjects.Enemy.Enemy;
 import com.example.projectcyber.GameActivity.gameObjects.Player;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.FriendlyProjectile;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.Projectile;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.ProjectileMovement;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -23,7 +28,7 @@ public class MysticOrbit extends Weapon{
         HashMap<WeaponStatsType, Double> startingStats = new HashMap<>();
 
         startingStats.put(WeaponStatsType.Damage, 10.0);
-        startingStats.put(WeaponStatsType.Speed, 500.0);
+        startingStats.put(WeaponStatsType.Speed, 600.0);
         startingStats.put(WeaponStatsType.Duration, 3000.0);
         startingStats.put(WeaponStatsType.Amount, 1.0);
         startingStats.put(WeaponStatsType.Pierce, Double.POSITIVE_INFINITY);
@@ -34,8 +39,30 @@ public class MysticOrbit extends Weapon{
 
         this.stats = new WeaponStatsContainer(startingStats, gameView);
 
-        timeLeftInWindow = (long) stats.getStatValue(WeaponStatsType.Duration);
-        isActive = true;
+        level = 8;
+        maxLevel = 8;
+
+        levelEffects = new ArrayList<>();
+        levelEffects.add(new HashSet<>(Arrays.asList(new LevelUpModifier(WeaponStatsType.Amount, new StatModifier(StatModifier.Type.bonus, 1)))));
+        levelEffects.add(new HashSet<>(Arrays.asList(new LevelUpModifier(WeaponStatsType.Area, new StatModifier(StatModifier.Type.percentile, 25))
+            ,new LevelUpModifier(WeaponStatsType.Speed, new StatModifier(StatModifier.Type.percentile, 30)))));
+        levelEffects.add(new HashSet<>(Arrays.asList(new LevelUpModifier(WeaponStatsType.Duration, new StatModifier(StatModifier.Type.bonus, 500)),
+                new LevelUpModifier(WeaponStatsType.Damage, new StatModifier(StatModifier.Type.bonus, 10)))));
+        levelEffects.add(new HashSet<>(Arrays.asList(new LevelUpModifier(WeaponStatsType.Amount, new StatModifier(StatModifier.Type.bonus, 1)))));
+        levelEffects.add(new HashSet<>(Arrays.asList(new LevelUpModifier(WeaponStatsType.Area, new StatModifier(StatModifier.Type.percentile, 25))
+                ,new LevelUpModifier(WeaponStatsType.Speed, new StatModifier(StatModifier.Type.percentile, 30)))));
+        levelEffects.add(new HashSet<>(Arrays.asList(new LevelUpModifier(WeaponStatsType.Duration, new StatModifier(StatModifier.Type.bonus, 500)),
+                new LevelUpModifier(WeaponStatsType.Damage, new StatModifier(StatModifier.Type.bonus, 10)))));
+        levelEffects.add(new HashSet<>(Arrays.asList(new LevelUpModifier(WeaponStatsType.Amount, new StatModifier(StatModifier.Type.bonus, 1)))));
+
+        for(int i = 0; i<level-1; i++){
+            for(LevelUpModifier modifer : levelEffects.get(i))
+                modifer.apply(stats);
+        }
+
+
+        timeLeftInWindow = (long) stats.getStatValue(WeaponStatsType.Cooldown);
+        isActive = false;
         timeSinceLastShot = 0;
         amountShot = 0;
     }
@@ -43,7 +70,7 @@ public class MysticOrbit extends Weapon{
     @Override
     public Projectile createProjectile() {
         Player player = gameView.getPlayer();
-        double angle = amountShot * 2*Math.PI / stats.getStatValue(WeaponStatsType.Amount);
+        double angle = this.amountShot * 2*Math.PI / stats.getStatValue(WeaponStatsType.Amount);
         double radius = 300;
         return new FriendlyProjectile(player.getPositionX() + radius * Math.cos(angle), player.getPositionY() + radius * Math.sin(angle), gameView,
                 50000, stats.getStatValue(WeaponStatsType.Damage), (int) stats.getStatValue(WeaponStatsType.Speed),(int) stats.getStatValue(WeaponStatsType.Area), new ProjectileMovement() {
@@ -51,9 +78,21 @@ public class MysticOrbit extends Weapon{
 
             @Override
             public void update(long deltaTime, GameView gameView, Projectile projectile) {
-                projectile.setVelX(player.getVelX() + projectile.getSpeed() * ( -(projectile.getPositionY() - player.getPositionY())/radius));
-                projectile.setVelY(player.getVelY() + projectile.getSpeed() * ( (projectile.getPositionX() - player.getPositionX())/radius));
 
+                double startingTheta = Math.atan2(projectile.getPositionY() - player.getPositionY(), projectile.getPositionX() - player.getPositionX());
+
+                double deltaTheta = projectile.getSpeed()*deltaTime/1000/radius;
+                if(timeAlive == 0) Log.d("angle", deltaTheta + "");
+
+                double newTheta = startingTheta + deltaTheta;
+
+                double newX = player.getPositionX() + radius*Math.cos(newTheta);
+                double newY = player.getPositionY() + radius*Math.sin(newTheta);
+
+                projectile.setPosX(newX);
+                projectile.setPosY(newY);
+                projectile.setVelY(player.getVelY());
+                projectile.setVelX(player.getVelX());
                 timeAlive += deltaTime;
                 if(timeAlive > stats.getStatValue(WeaponStatsType.Duration)){
                     projectile.destroy();

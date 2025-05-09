@@ -3,9 +3,12 @@ package com.example.projectcyber.GameActivity.Weapons;
 import android.util.Log;
 
 import com.example.projectcyber.GameActivity.GameView;
+import com.example.projectcyber.GameActivity.Stats.StatModifier;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.Projectile;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public abstract class Weapon {
     WeaponStatsContainer stats;
@@ -17,6 +20,11 @@ public abstract class Weapon {
     protected long timeSinceLastShot;
 
     protected int amountShot;
+
+    int level;
+    int maxLevel;
+
+    ArrayList<HashSet<LevelUpModifier>> levelEffects;
 
     public Weapon(HashMap<WeaponStatsType, Double> startingStats, GameView gameView){
         stats = new WeaponStatsContainer(startingStats, gameView);
@@ -43,7 +51,7 @@ public abstract class Weapon {
         }
         timeSinceLastShot += deltaTime;
         if(isActive){
-            if(timeSinceLastShot > stats.getStatValue(WeaponStatsType.ProjectileInterval) && amountShot < stats.getStatValue(WeaponStatsType.Amount)){
+            while(timeSinceLastShot > stats.getStatValue(WeaponStatsType.ProjectileInterval) && amountShot < stats.getStatValue(WeaponStatsType.Amount)){
                 gameView.addProjectile(createProjectile());
                 amountShot++;
                 timeSinceLastShot -= (long) stats.getStatValue(WeaponStatsType.ProjectileInterval);
@@ -51,6 +59,14 @@ public abstract class Weapon {
             }
 
         }
+    }
+
+    public boolean raiseLevel(){
+        if(level >= maxLevel) return false;
+        level++;
+        for(LevelUpModifier modifier : levelEffects.get(level-1))
+            modifier.apply(stats);
+        return true;
     }
 
     public abstract Projectile createProjectile();

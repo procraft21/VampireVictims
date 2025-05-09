@@ -16,7 +16,7 @@ public class XpProgressBar {
         this.gameView = gameView;
     }
 
-    public void update(long deltaTime){
+    public void update(){
         xpRatio = (double)gameView.getPlayer().getXpAcquired()/gameView.getPlayer().getXpRequired();
     }
 

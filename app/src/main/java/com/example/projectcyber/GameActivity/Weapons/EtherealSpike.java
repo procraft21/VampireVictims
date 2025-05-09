@@ -3,13 +3,17 @@ package com.example.projectcyber.GameActivity.Weapons;
 import android.util.Log;
 
 import com.example.projectcyber.GameActivity.GameView;
+import com.example.projectcyber.GameActivity.Stats.StatModifier;
 import com.example.projectcyber.GameActivity.gameObjects.Player;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.FriendlyProjectile;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.Projectile;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.ProjectileMovement;
 import com.example.projectcyber.R;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Random;
 
 public class EtherealSpike extends Weapon{
@@ -29,11 +33,34 @@ public class EtherealSpike extends Weapon{
         startingStats.put(WeaponStatsType.Area, 40.0);
 
         stats = new WeaponStatsContainer(startingStats, gameView);
+
+        level = 8;
+        maxLevel = 8;
+
+        levelEffects = new ArrayList<>();
+        levelEffects.add(new HashSet<>(Arrays.asList(new LevelUpModifier(WeaponStatsType.Amount, new StatModifier(StatModifier.Type.bonus, 1)))));
+        levelEffects.add(new HashSet<>(Arrays.asList(new LevelUpModifier(WeaponStatsType.Cooldown, new StatModifier(StatModifier.Type.bonus, -200)))));
+        levelEffects.add(new HashSet<>(Arrays.asList(new LevelUpModifier(WeaponStatsType.Amount, new StatModifier(StatModifier.Type.bonus, 1)))));
+        levelEffects.add(new HashSet<>(Arrays.asList(new LevelUpModifier(WeaponStatsType.Damage, new StatModifier(StatModifier.Type.bonus, 10)))));
+        levelEffects.add(new HashSet<>(Arrays.asList(new LevelUpModifier(WeaponStatsType.Amount, new StatModifier(StatModifier.Type.bonus, 1)))));
+        levelEffects.add(new HashSet<>(Arrays.asList(new LevelUpModifier(WeaponStatsType.Pierce, new StatModifier(StatModifier.Type.bonus, 1)))));
+        levelEffects.add(new HashSet<>(Arrays.asList(new LevelUpModifier(WeaponStatsType.Damage, new StatModifier(StatModifier.Type.bonus, 10)))));
+
+        for(int i = 0; i<level-1; i++){
+            for(LevelUpModifier modifer : levelEffects.get(i))
+                modifer.apply(stats);
+        }
+
         timeLeftInWindow = (long) stats.getStatValue(WeaponStatsType.Cooldown);
         isActive = false;
         timeSinceLastShot = 0;
         amountShot = 0;
+
+
+
     }
+
+    int totalShot = 0;
 
     @Override
     public Projectile createProjectile() {
@@ -48,9 +75,13 @@ public class EtherealSpike extends Weapon{
                     double accelX = 0;
                     double accelY = 0;
                     boolean first = true;
+
+                    int tag;
                     @Override
                     public void update(long deltaTime, GameView gameView, Projectile projectile) {
                         if (first) {
+                            tag = totalShot;
+                            totalShot++;
 
                             double speed = projectile.getSpeed();
                             double vx0 = speed * Math.cos(angle);
@@ -69,6 +100,10 @@ public class EtherealSpike extends Weapon{
                             accelX = 0;
                             projectile.setVelY(0);
                             projectile.setVelX(0);
+                        }
+
+                        if(totalShot - tag > 50){
+                            projectile.destroy();
                         }
                     }
                 });
