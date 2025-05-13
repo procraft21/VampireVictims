@@ -28,8 +28,10 @@ public abstract class Mob extends Entity{
         if(damage < 0)
             return;
         currHP -= damage;
-        if(currHP < 0)
+        if(currHP <= 0){
             currHP = 0;
+            destroy();
+        }
     }
 
     @Override

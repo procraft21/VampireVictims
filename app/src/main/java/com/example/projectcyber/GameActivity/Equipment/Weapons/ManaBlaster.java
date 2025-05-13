@@ -1,8 +1,7 @@
-package com.example.projectcyber.GameActivity.Weapons;
+package com.example.projectcyber.GameActivity.Equipment.Weapons;
 
 import com.example.projectcyber.GameActivity.GameView;
 import com.example.projectcyber.GameActivity.Stats.StatModifier;
-import com.example.projectcyber.GameActivity.gameObjects.Pickups.Pickup;
 import com.example.projectcyber.GameActivity.gameObjects.Player;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.FriendlyProjectile;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.Projectile;
@@ -19,6 +18,9 @@ public class ManaBlaster extends Weapon{
     public ManaBlaster(GameView gameView){
         this.gameView = gameView;
 
+        this.name = "Mana Blaster";
+        this.initialDesc = "Fires up and lets gravity do its thing";
+
         HashMap<WeaponStatsType, Double> startingStats = new HashMap<>();
 
         startingStats.put(WeaponStatsType.Damage, 20.0);
@@ -31,7 +33,7 @@ public class ManaBlaster extends Weapon{
         startingStats.put(WeaponStatsType.Area, 150.0);
         stats = new WeaponStatsContainer(startingStats, gameView);
 
-        level = 8;
+        level = 0;
         maxLevel = 8;
 
         levelEffects = new ArrayList<>();

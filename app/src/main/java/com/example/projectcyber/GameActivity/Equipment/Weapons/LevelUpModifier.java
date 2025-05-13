@@ -1,9 +1,6 @@
-package com.example.projectcyber.GameActivity.Weapons;
+package com.example.projectcyber.GameActivity.Equipment.Weapons;
 
 import com.example.projectcyber.GameActivity.Stats.StatModifier;
-import com.google.android.gms.common.api.internal.IStatusCallback;
-
-import java.util.HashSet;
 
 public class LevelUpModifier {
     WeaponStatsType statType;

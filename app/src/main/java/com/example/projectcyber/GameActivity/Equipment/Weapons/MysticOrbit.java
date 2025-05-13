@@ -1,10 +1,9 @@
-package com.example.projectcyber.GameActivity.Weapons;
+package com.example.projectcyber.GameActivity.Equipment.Weapons;
 
 import android.util.Log;
 
 import com.example.projectcyber.GameActivity.GameView;
 import com.example.projectcyber.GameActivity.Stats.StatModifier;
-import com.example.projectcyber.GameActivity.gameObjects.Enemy.Enemy;
 import com.example.projectcyber.GameActivity.gameObjects.Player;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.FriendlyProjectile;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.Projectile;
@@ -25,6 +24,9 @@ public class MysticOrbit extends Weapon{
     public MysticOrbit(GameView gameView){
         this.gameView = gameView;
 
+        this.name = "Mystic Orbit";
+        this.initialDesc = "Orbits around the player";
+
         HashMap<WeaponStatsType, Double> startingStats = new HashMap<>();
 
         startingStats.put(WeaponStatsType.Damage, 10.0);
@@ -39,7 +41,7 @@ public class MysticOrbit extends Weapon{
 
         this.stats = new WeaponStatsContainer(startingStats, gameView);
 
-        level = 8;
+        level = 0;
         maxLevel = 8;
 
         levelEffects = new ArrayList<>();

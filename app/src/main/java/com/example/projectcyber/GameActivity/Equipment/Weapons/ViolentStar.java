@@ -1,4 +1,4 @@
-package com.example.projectcyber.GameActivity.Weapons;
+package com.example.projectcyber.GameActivity.Equipment.Weapons;
 
 import com.example.projectcyber.GameActivity.GameView;
 import com.example.projectcyber.GameActivity.Stats.StatModifier;
@@ -18,6 +18,9 @@ public class ViolentStar extends Weapon{
     public ViolentStar(GameView gameView){
         this.gameView = gameView;
 
+        this.name = "Violent Star";
+        this.initialDesc = "Bounces around in screen";
+
         HashMap<WeaponStatsType, Double> startingStats = new HashMap<>();
 
         startingStats.put(WeaponStatsType.Damage, 10.0);
@@ -30,7 +33,7 @@ public class ViolentStar extends Weapon{
         startingStats.put(WeaponStatsType.Area, 75.0);
         stats = new WeaponStatsContainer(startingStats, gameView);
 
-        level = 8;
+        level = 0;
         maxLevel = 8;
 
         levelEffects = new ArrayList<>();

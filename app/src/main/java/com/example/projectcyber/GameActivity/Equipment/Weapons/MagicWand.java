@@ -1,4 +1,4 @@
-package com.example.projectcyber.GameActivity.Weapons;
+package com.example.projectcyber.GameActivity.Equipment.Weapons;
 
 import com.example.projectcyber.GameActivity.GameView;
 import com.example.projectcyber.GameActivity.Stats.StatModifier;
@@ -22,6 +22,9 @@ public class MagicWand extends Weapon{
     public MagicWand(GameView gameView) {
         this.gameView = gameView;
 
+        this.name = "Magic Wand";
+        this.initialDesc = "Target the closest enemy";
+
         HashMap<WeaponStatsType, Double> startingStats = new HashMap<>();
         startingStats.put(WeaponStatsType.Duration, 0.0);
         startingStats.put(WeaponStatsType.Damage, 10.0);
@@ -34,7 +37,7 @@ public class MagicWand extends Weapon{
 
         stats = new WeaponStatsContainer(startingStats, gameView);
 
-        level = 8;
+        level = 0;
         maxLevel = 8;
 
         levelEffects = new ArrayList<>();

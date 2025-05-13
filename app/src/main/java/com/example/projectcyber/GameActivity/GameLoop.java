@@ -122,12 +122,6 @@ public class GameLoop extends Thread {
 
     // --- Public API ---
 
-    public void pauseGame() {
-        synchronized (pauseLock) {
-            isPaused = true;
-        }
-    }
-
     public void resumeGame() {
         synchronized (pauseLock) {
             isPaused = false;

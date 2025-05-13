@@ -104,7 +104,6 @@ public class Enemy extends Mob implements Cloneable{
         if(pickup != null){
             pickup.setPosX(posX);
             pickup.setPosY(posY);
-            Log.d("pickUp", pickup.toString());
             gameView.addPickup(pickup);
         }
     }

@@ -1,16 +1,17 @@
-package com.example.projectcyber.GameActivity.Weapons;
+package com.example.projectcyber.GameActivity.Equipment.Weapons;
 
 import android.util.Log;
 
+import com.example.projectcyber.GameActivity.Equipment.Equipment;
+import com.example.projectcyber.GameActivity.Equipment.LevelDesc;
 import com.example.projectcyber.GameActivity.GameView;
-import com.example.projectcyber.GameActivity.Stats.StatModifier;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.Projectile;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public abstract class Weapon {
+public abstract class Weapon extends Equipment {
     WeaponStatsContainer stats;
     GameView gameView;
 
@@ -21,8 +22,6 @@ public abstract class Weapon {
 
     protected int amountShot;
 
-    int level;
-    int maxLevel;
 
     ArrayList<HashSet<LevelUpModifier>> levelEffects;
 
@@ -61,6 +60,7 @@ public abstract class Weapon {
         }
     }
 
+    @Override
     public boolean raiseLevel(){
         if(level >= maxLevel) return false;
         level++;
@@ -70,5 +70,15 @@ public abstract class Weapon {
     }
 
     public abstract Projectile createProjectile();
+
+    @Override
+    protected String getNextLevelStatsDescription() {
+        String desc = "";
+        for(LevelUpModifier modifier : levelEffects.get(level)){
+            desc += modifier.modifier.getDesc(modifier.statType) + "\n";
+        }
+        return desc;
+    }
+
 
 }

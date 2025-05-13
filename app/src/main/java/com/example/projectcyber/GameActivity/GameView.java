@@ -1,10 +1,6 @@
 package com.example.projectcyber.GameActivity;
 
-import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.Log;
@@ -12,24 +8,20 @@ import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.Window;
-import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
+import com.example.projectcyber.GameActivity.Equipment.Equipment;
+import com.example.projectcyber.GameActivity.Equipment.LevelUpEquipmentTable;
+import com.example.projectcyber.GameActivity.Equipment.Weapons.MagicWand;
 import com.example.projectcyber.GameActivity.Stats.PlayerStatsType;
-import com.example.projectcyber.GameActivity.Weapons.EtherealSpike;
-import com.example.projectcyber.GameActivity.Weapons.MagicCannon;
-import com.example.projectcyber.GameActivity.Weapons.MagicWand;
-import com.example.projectcyber.GameActivity.Weapons.ManaBlaster;
-import com.example.projectcyber.GameActivity.Weapons.MysticOrbit;
-import com.example.projectcyber.GameActivity.Weapons.ViolentStar;
 import com.example.projectcyber.GameActivity.gameObjects.Enemy.Enemy;
 import com.example.projectcyber.GameActivity.gameObjects.Entity;
 import com.example.projectcyber.GameActivity.gameObjects.Pickups.Pickup;
 import com.example.projectcyber.GameActivity.gameObjects.Player;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.Projectile;
+import com.example.projectcyber.GameActivity.uiObjects.CoinCounter;
 import com.example.projectcyber.GameActivity.uiObjects.XpProgressBar;
 import com.example.projectcyber.R;
 import com.example.projectcyber.GameActivity.uiObjects.HealthBar;
@@ -53,6 +45,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
     HashSet<Projectile> projectiles;
     HashSet<Pickup> pickups;
+
+    LevelUpEquipmentTable levelUpEquipmentTable;
+
     //Enemies variables -----------------------------------------------------------------
     HashSet<Enemy> enemies;
 
@@ -78,6 +73,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
     GameActivity activity;
 
+    private int coinsAmount;
+    private CoinCounter coinCounter;
+
     public GameView(GameActivity activity, HashMap<PlayerStatsType, Double> startingStats) {
         super(activity.getApplicationContext());
         this.context = activity.getApplicationContext();
@@ -87,6 +85,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         setFocusable(true);
 
         this.startingStats = startingStats;
+
+
     }
 
 
@@ -99,14 +99,18 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         entityGrid = new HashMap<>();
         player = new Player(this, startingStats);
 
-        player.addWeapon(new EtherealSpike(this));
-        player.addWeapon(new ViolentStar(this));
+        levelUpEquipmentTable = new LevelUpEquipmentTable(this);
+
+        player.addWeapon(levelUpEquipmentTable.getWeapon(new MagicWand(this)));
 
         toBeRemoved = new HashSet<>();
 
         enemies = new HashSet<>();
         projectiles = new HashSet<>();
         pickups = new HashSet<>();
+
+        coinsAmount = 0;
+        coinCounter = new CoinCounter(this);
 
         enemySummoner = new EnemySummoner(this);
         healthBar = new HealthBar(this);
@@ -152,6 +156,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
         xpProgressBar.update();
         healthBar.update();
+        coinCounter.update();
         timer.update(deltaTime);
 
         //Log.d("grid", entityGrid.toString());
@@ -182,17 +187,18 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
         healthBar.draw(mainCanvas);
         xpProgressBar.draw(mainCanvas);
+        coinCounter.draw(mainCanvas);
 
         timer.draw(mainCanvas);
 
         joystick.draw(mainCanvas);
 
 
-        drawUPS(mainCanvas);
-        drawFPS(mainCanvas);
-        drawPlayerPosition(mainCanvas);
-        drawPlayerSpeed(mainCanvas);
-        drawPlayerHp(mainCanvas);
+        //drawUPS(mainCanvas);
+        //drawFPS(mainCanvas);
+        //drawPlayerPosition(mainCanvas);
+        //drawPlayerSpeed(mainCanvas);
+        //drawPlayerHp(mainCanvas);
     }
 
     public void startGame(SurfaceHolder surfaceHolder){
@@ -430,9 +436,30 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                activity.showLevelUpDialog();
+                HashSet<Equipment> equipmentOptions = levelUpEquipmentTable.getOptions();
+                activity.showLevelUpDialog(equipmentOptions);
             }
         });
     }
 
+    public int getCoins() {
+        return coinsAmount;
+    }
+
+    public void addCoins(int coins){
+        this.coinsAmount += coins;
+    }
+
+    public void showResultDialog(boolean won){
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                activity.showResultDialog(won);
+            }
+        });
+    }
+
+    public void stopLoop(){
+        gameLoop.stopGame();
+    }
 }

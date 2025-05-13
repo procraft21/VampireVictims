@@ -1,16 +1,14 @@
-package com.example.projectcyber.GameActivity.gameObjects;
+package com.example.projectcyber.GameActivity;
 
 import android.content.Context;
-import android.content.res.TypedArray;
-import android.graphics.Canvas;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.projectcyber.GameActivity.Equipment.Equipment;
+import com.example.projectcyber.GameActivity.Equipment.LevelDesc;
 import com.example.projectcyber.R;
 
 public class LevelUpItemView extends FrameLayout {
@@ -18,6 +16,8 @@ public class LevelUpItemView extends FrameLayout {
     TextView itemNameTextView;
     TextView itemDescTextView;
     TextView levelTextView;
+
+    Equipment equipment;
 
     public LevelUpItemView(Context context) {
         super(context);
@@ -59,4 +59,31 @@ public class LevelUpItemView extends FrameLayout {
         return levelTextView;
     }
 
+    public void setName(String name){
+        itemNameTextView.setText(name);
+    }
+
+    public void setLevel(int level){
+        levelTextView.setText("level : " + level);
+    }
+
+    public void setDesc(String desc){
+        itemDescTextView.setText(desc);
+    }
+
+    private void setLevelUpItemView(String name, int level, String desc){
+        setName(name);
+        setLevel(level);
+        setDesc(desc);
+    }
+
+    public void set(Equipment equipment){
+        this.equipment = equipment;
+        LevelDesc desc = equipment.getNextLevelDescription();
+        setLevelUpItemView(desc.getName(), desc.getLevel(), desc.getDesc());
+    }
+
+    public Equipment getEquipment(){
+        return equipment;
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.projectcyber.GameActivity.gameObjects.Enemy;
 
 import com.example.projectcyber.GameActivity.GameView;
+import com.example.projectcyber.GameActivity.gameObjects.Pickups.Coin;
 import com.example.projectcyber.GameActivity.gameObjects.Pickups.Pickup;
 import com.example.projectcyber.GameActivity.gameObjects.Pickups.XpGem;
 
@@ -20,8 +21,9 @@ public class DropTable {
         if(weightTable == null){
             weightTable = new HashMap<>();
             weightTable.put(new XpGem(0,0, gameView), 100);
+            weightTable.put(new Coin(0,0,gameView), 50);
 
-            totalWeight = 100; //the weight for nothing.
+            totalWeight = 200; //the weight for nothing.
             for(Pickup pickup : weightTable.keySet()){
                 totalWeight += weightTable.get(pickup);
             }

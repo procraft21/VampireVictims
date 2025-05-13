@@ -1,6 +1,4 @@
-package com.example.projectcyber.GameActivity.Weapons;
-
-import android.util.Log;
+package com.example.projectcyber.GameActivity.Equipment.Weapons;
 
 import com.example.projectcyber.GameActivity.GameView;
 import com.example.projectcyber.GameActivity.Stats.PlayerStatsType;

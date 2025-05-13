@@ -1,6 +1,4 @@
-package com.example.projectcyber.GameActivity.Weapons;
-
-import android.util.Log;
+package com.example.projectcyber.GameActivity.Equipment.Weapons;
 
 import com.example.projectcyber.GameActivity.GameView;
 import com.example.projectcyber.GameActivity.Stats.StatModifier;
@@ -8,7 +6,6 @@ import com.example.projectcyber.GameActivity.gameObjects.Player;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.FriendlyProjectile;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.Projectile;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.ProjectileMovement;
-import com.example.projectcyber.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +17,9 @@ public class EtherealSpike extends Weapon{
 
     public EtherealSpike(GameView gameView){
         this.gameView = gameView;
+
+        this.name = "Ethereal Spike";
+        this.initialDesc = "Lays spikes near the player";
 
         HashMap<WeaponStatsType, Double> startingStats = new HashMap<>();
 
@@ -34,7 +34,7 @@ public class EtherealSpike extends Weapon{
 
         stats = new WeaponStatsContainer(startingStats, gameView);
 
-        level = 8;
+        level = 0;
         maxLevel = 8;
 
         levelEffects = new ArrayList<>();

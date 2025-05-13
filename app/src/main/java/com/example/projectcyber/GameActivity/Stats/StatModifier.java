@@ -1,6 +1,7 @@
 package com.example.projectcyber.GameActivity.Stats;
 
-import com.example.projectcyber.GameActivity.Weapons.WeaponStatsType;
+import com.example.projectcyber.GameActivity.Equipment.Weapons.WeaponStatsType;
+import com.example.projectcyber.GameActivity.gameObjects.Player;
 
 public class StatModifier {
 
@@ -21,15 +22,29 @@ public class StatModifier {
         return type;
     }
 
-    public String getDesc(WeaponStatsType statType){
-        switch(type){
-            case percentile:
-                return "Raises " + statType.name() + " by " + amount + "%";
-            case bonus:
-                return "Raises " + statType.name() + " by " + amount;
+    public String getDesc(StatType statType){
+        String name = statType.getName();
+
+        if(amount > 0){
+            switch(type){
+                case percentile:
+                    return "Raises " + name + " by " + amount + "%";
+                case bonus:
+                    return "Raises " + name + " by " + amount;
+            }
+        }else{
+            switch(type){
+                case percentile:
+                    return "Lowers " + name + " by " + -amount + "%";
+                case bonus:
+                    return "Lowers " + name + " by " + -amount;
+            }
         }
+
         return null;
     }
+
+
 
     public double getAmount() {
         return amount;
