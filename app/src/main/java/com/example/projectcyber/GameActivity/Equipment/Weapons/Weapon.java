@@ -64,7 +64,8 @@ public abstract class Weapon extends Equipment {
     public boolean raiseLevel(){
         if(level >= maxLevel) return false;
         level++;
-        for(LevelUpModifier modifier : levelEffects.get(level-1))
+        if(level == 1) return true;
+        for(LevelUpModifier modifier : levelEffects.get(level-2))
             modifier.apply(stats);
         return true;
     }
@@ -74,7 +75,7 @@ public abstract class Weapon extends Equipment {
     @Override
     protected String getNextLevelStatsDescription() {
         String desc = "";
-        for(LevelUpModifier modifier : levelEffects.get(level)){
+        for(LevelUpModifier modifier : levelEffects.get(level-1)){
             desc += modifier.modifier.getDesc(modifier.statType) + "\n";
         }
         return desc;

@@ -1,7 +1,6 @@
 package com.example.projectcyber.Menu;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,7 +79,7 @@ public class StatUpgradeRecyclerAdapter extends RecyclerView.Adapter<StatUpgrade
                 user.setCoins(user.getCoins() - price);
                 statItem.raiseLevel();
 
-                activity.setCoins(user.getCoins());
+                activity.setCoinsText(user.getCoins());
                 notifyDataSetChanged(); //all the data set changes once we buy something because the price...
             }
 

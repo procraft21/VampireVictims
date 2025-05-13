@@ -31,6 +31,8 @@ public class User {
         this.coins = coins;
     }
 
+    public void addCoins(int coins) {setCoins(getCoins() + coins);}
+
     //The getters and setters for the firebase
 
     public int getMaxHpLvl() {

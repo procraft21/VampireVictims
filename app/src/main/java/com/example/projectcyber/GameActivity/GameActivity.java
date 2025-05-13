@@ -1,6 +1,8 @@
 package com.example.projectcyber.GameActivity;
 
 import android.app.Dialog;
+import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -14,6 +16,7 @@ import com.example.projectcyber.GameActivity.Equipment.Equipment;
 import com.example.projectcyber.GameActivity.Equipment.Items.Item;
 import com.example.projectcyber.GameActivity.Equipment.Weapons.Weapon;
 import com.example.projectcyber.GameActivity.Stats.PlayerStatsType;
+import com.example.projectcyber.Menu.MenuActivity;
 import com.example.projectcyber.R;
 
 import org.w3c.dom.Text;
@@ -106,6 +109,9 @@ public class GameActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 gameView.stopLoop();
+                Intent intent = new Intent(GameActivity.this, MenuActivity.class);
+                intent.putExtra("Coins", gameView.getCoins());
+                setResult(RESULT_OK, intent);
                 finish();
             }
         });
