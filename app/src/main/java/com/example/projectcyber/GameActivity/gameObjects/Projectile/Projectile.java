@@ -19,15 +19,14 @@ public class Projectile extends Entity {
     protected double damage;
     protected double speed;
 
-    public Projectile(double posX, double posY, GameView gameView, int penetration, double damage, int speed, int area, ProjectileMovement projectileMovement) {
+    public Projectile(double posX, double posY, GameView gameView, int penetration, double damage, int speed, int area,Bitmap bitmap, ProjectileMovement projectileMovement) {
         super(posX, posY, gameView);
         if(baseBitmap == null){
             baseBitmap = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.projectile_img);
 
         }
 
-        bitmap = Bitmap.createScaledBitmap(baseBitmap,area,area, false);
-
+        this.bitmap = Bitmap.createScaledBitmap(bitmap == null ? baseBitmap : bitmap,area,area, false);
 
         this.projectileMovement = projectileMovement;
         this.penetration = penetration;

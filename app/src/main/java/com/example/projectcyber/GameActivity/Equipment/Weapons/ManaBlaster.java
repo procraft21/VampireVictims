@@ -1,11 +1,14 @@
 package com.example.projectcyber.GameActivity.Equipment.Weapons;
 
+import android.graphics.BitmapFactory;
+
 import com.example.projectcyber.GameActivity.GameView;
 import com.example.projectcyber.GameActivity.Stats.StatModifier;
 import com.example.projectcyber.GameActivity.gameObjects.Player;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.FriendlyProjectile;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.Projectile;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.ProjectileMovement;
+import com.example.projectcyber.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +23,9 @@ public class ManaBlaster extends Weapon{
 
         this.name = "Mana Blaster";
         this.initialDesc = "Fires up and lets gravity do its thing";
+
+        equipmentBitmap = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.weapon_mana_blaster);
+        projectileBitmap = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.projectile_mana_blaster);
 
         HashMap<WeaponStatsType, Double> startingStats = new HashMap<>();
 
@@ -61,7 +67,7 @@ public class ManaBlaster extends Weapon{
         Player player = gameView.getPlayer();
         return new FriendlyProjectile(player.getPositionX(), player.getPositionY(), gameView,
                 (int) stats.getStatValue(WeaponStatsType.Pierce), stats.getStatValue(WeaponStatsType.Damage), (int) stats.getStatValue(WeaponStatsType.Speed),
-                (int) stats.getStatValue(WeaponStatsType.Area),new ProjectileMovement(amountShot) {
+                (int) stats.getStatValue(WeaponStatsType.Area),projectileBitmap,new ProjectileMovement(amountShot) {
                     final double accelY = 1;
                     boolean first = true;
                     @Override

@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import com.example.projectcyber.GameActivity.GameView;
 import com.example.projectcyber.GameActivity.gameObjects.Mob;
 import com.example.projectcyber.GameActivity.gameObjects.Pickups.Pickup;
+import com.example.projectcyber.GameActivity.gameObjects.Pickups.XpGem;
 import com.example.projectcyber.R;
 
 public class Enemy extends Mob implements Cloneable{
@@ -22,6 +23,8 @@ public class Enemy extends Mob implements Cloneable{
     protected int might = 5;
 
     protected int maxHp = 1;
+
+    private int xpDrop = 10;
 
     private static DropTable dropTable = null;
 
@@ -104,6 +107,8 @@ public class Enemy extends Mob implements Cloneable{
         if(pickup != null){
             pickup.setPosX(posX);
             pickup.setPosY(posY);
+            if(pickup instanceof XpGem)
+                ((XpGem) pickup).setAmount(xpDrop);
             gameView.addPickup(pickup);
         }
     }

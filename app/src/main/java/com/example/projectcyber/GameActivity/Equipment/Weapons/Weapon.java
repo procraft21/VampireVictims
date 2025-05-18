@@ -1,9 +1,9 @@
 package com.example.projectcyber.GameActivity.Equipment.Weapons;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.example.projectcyber.GameActivity.Equipment.Equipment;
-import com.example.projectcyber.GameActivity.Equipment.LevelDesc;
 import com.example.projectcyber.GameActivity.GameView;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.Projectile;
 
@@ -21,6 +21,8 @@ public abstract class Weapon extends Equipment {
     protected long timeSinceLastShot;
 
     protected int amountShot;
+
+    protected Bitmap projectileBitmap;
 
 
     ArrayList<HashSet<LevelUpModifier>> levelEffects;

@@ -1,11 +1,14 @@
 package com.example.projectcyber.GameActivity.Equipment.Weapons;
 
+import android.graphics.BitmapFactory;
+
 import com.example.projectcyber.GameActivity.GameView;
 import com.example.projectcyber.GameActivity.Stats.StatModifier;
 import com.example.projectcyber.GameActivity.gameObjects.Player;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.FriendlyProjectile;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.Projectile;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.ProjectileMovement;
+import com.example.projectcyber.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,6 +20,9 @@ public class ViolentStar extends Weapon{
 
     public ViolentStar(GameView gameView){
         this.gameView = gameView;
+
+        equipmentBitmap = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.projectile_violent_star);
+        projectileBitmap = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.projectile_violent_star);
 
         this.name = "Violent Star";
         this.initialDesc = "Bounces around in screen";
@@ -65,7 +71,7 @@ public class ViolentStar extends Weapon{
     public Projectile createProjectile() {
         Player player = gameView.getPlayer();
         return new FriendlyProjectile(player.getPositionX(), player.getPositionY(), gameView, (int)stats.getStatValue(WeaponStatsType.Pierce), stats.getStatValue(WeaponStatsType.Damage), (int) stats.getStatValue(WeaponStatsType.Speed),
-                (int) stats.getStatValue(WeaponStatsType.Area),new ProjectileMovement(){
+                (int) stats.getStatValue(WeaponStatsType.Area), projectileBitmap,new ProjectileMovement(){
 
             boolean first = true;
             double angle;

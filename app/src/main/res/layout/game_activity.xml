@@ -6,4 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".GameActivity.GameActivity"
-    style="@style/Base.Theme.ProjectCyber"/>
+    style="@style/Base.Theme.ProjectCyber">
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/pauseButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@android:drawable/ic_media_pause" />
+</androidx.constraintlayout.widget.ConstraintLayout>

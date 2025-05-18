@@ -7,7 +7,6 @@ import android.graphics.Canvas;
 import com.example.projectcyber.GameActivity.GameView;
 import com.example.projectcyber.GameActivity.gameObjects.Entity;
 import com.example.projectcyber.GameActivity.gameObjects.Player;
-import com.example.projectcyber.GameActivity.uiObjects.XpProgressBar;
 import com.example.projectcyber.R;
 
 public class XpGem extends Pickup {
@@ -18,7 +17,7 @@ public class XpGem extends Pickup {
     public XpGem(double posX, double posY, GameView gameView){
         super(posX, posY, gameView);
         if(bitmap == null){
-            Bitmap xpgemBitmap = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.xpgem_img);
+            Bitmap xpgemBitmap = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.pickup_xpgem);
             xpgemBitmap = Bitmap.createScaledBitmap(xpgemBitmap,45,45, false);
             this.bitmap = xpgemBitmap;
 
@@ -31,6 +30,7 @@ public class XpGem extends Pickup {
     @Override
     protected void drawRelative(Canvas canvas, double relX, double relY) {
         canvas.drawBitmap(bitmap, (int)(relX - bitmap.getWidth()/2),(int)(relY - bitmap.getHeight()/2), null);
+        //Log.d("drawXp", relX + " " + posX + "\n" + relY + " " + posY);
     }
 
     @Override
@@ -46,4 +46,7 @@ public class XpGem extends Pickup {
         }
     }
 
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
 }

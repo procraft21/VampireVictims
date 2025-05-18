@@ -5,8 +5,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
 import com.example.projectcyber.GameActivity.GameView;
-import com.example.projectcyber.GameActivity.gameObjects.Entity;
-import com.example.projectcyber.GameActivity.gameObjects.Player;
 import com.example.projectcyber.R;
 
 public class Coin extends MoneyDrop{
@@ -16,7 +14,7 @@ public class Coin extends MoneyDrop{
     public Coin(double posX, double posY, GameView gameView) {
         super(posX, posY, gameView);
         if(bitmap == null){
-            Bitmap xpgemBitmap = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.coin_img);
+            Bitmap xpgemBitmap = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.pickup_coin);
             xpgemBitmap = Bitmap.createScaledBitmap(xpgemBitmap,50,50, false);
             this.bitmap = xpgemBitmap;
 

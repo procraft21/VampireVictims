@@ -1,7 +1,5 @@
 package com.example.projectcyber.GameActivity.Equipment;
 
-import android.text.style.UpdateLayout;
-
 import com.example.projectcyber.GameActivity.Equipment.Items.*;
 import com.example.projectcyber.GameActivity.Equipment.Weapons.*;
 
@@ -32,7 +30,7 @@ public class LevelUpEquipmentTable {
 
     private void addAllWeapons(){
         allWeapons.add(new EtherealSpike(gameView));
-        allWeapons.add(new MagicCannon(gameView));
+        allWeapons.add(new MagmaShot(gameView));
         allWeapons.add(new MagicWand(gameView));
         allWeapons.add(new ManaBlaster(gameView));
         allWeapons.add(new MysticOrbit(gameView));
@@ -40,16 +38,16 @@ public class LevelUpEquipmentTable {
     }
 
     private void addAllItems(){
-        allItems.add(new CoffeeTorus());
-        allItems.add(new CompoundW());
-        allItems.add(new DiamondArmor());
-        allItems.add(new Duplicator());
-        allItems.add(new Electromagnet());
-        allItems.add(new Gauntlets());
-        allItems.add(new GoldenCarrot());
-        allItems.add(new GreenBull());
-        allItems.add(new Grimoire());
-        allItems.add(new WirelessTransmitter());
+        allItems.add(new CoffeeDonut(gameView));
+        allItems.add(new CompoundW(gameView));
+        allItems.add(new DiamondArmor(gameView));
+        allItems.add(new Duplicator(gameView));
+        allItems.add(new Electromagnet(gameView));
+        allItems.add(new Gauntlets(gameView));
+        allItems.add(new GoldenCarrot(gameView));
+        allItems.add(new GreenBull(gameView));
+        allItems.add(new Grimoire(gameView));
+        allItems.add(new WirelessTransmitter(gameView));
     }
 
     public HashSet<Equipment> getOptions(){

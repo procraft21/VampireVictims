@@ -1,5 +1,7 @@
 package com.example.projectcyber.GameActivity.gameObjects.Pickups;
 
+import android.util.Log;
+
 import com.example.projectcyber.GameActivity.GameView;
 import com.example.projectcyber.GameActivity.Stats.PlayerStatsType;
 import com.example.projectcyber.GameActivity.Utils;
@@ -18,6 +20,7 @@ public abstract class Pickup extends Entity implements Cloneable{
     }
 
     public void update(long deltaTime){
+        //Log.d("pos", posX + " " + posY);
         savePrevPos();
         Player player = gameView.getPlayer();
         if(distance(player) < player.getStatValue(PlayerStatsType.Magnet)){

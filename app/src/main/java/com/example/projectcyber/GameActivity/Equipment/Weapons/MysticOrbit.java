@@ -1,5 +1,6 @@
 package com.example.projectcyber.GameActivity.Equipment.Weapons;
 
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.example.projectcyber.GameActivity.GameView;
@@ -8,6 +9,7 @@ import com.example.projectcyber.GameActivity.gameObjects.Player;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.FriendlyProjectile;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.Projectile;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.ProjectileMovement;
+import com.example.projectcyber.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +26,9 @@ public class MysticOrbit extends Weapon{
     public MysticOrbit(GameView gameView){
         this.gameView = gameView;
 
+        equipmentBitmap = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.weapon_orbit);
+        projectileBitmap = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.projectile_orbit);
+
         this.name = "Mystic Orbit";
         this.initialDesc = "Orbits around the player";
 
@@ -37,7 +42,6 @@ public class MysticOrbit extends Weapon{
         startingStats.put(WeaponStatsType.ProjectileInterval, 0.0);
         startingStats.put(WeaponStatsType.Cooldown, 3000.0);
         startingStats.put(WeaponStatsType.Area, 75.0);
-
 
         this.stats = new WeaponStatsContainer(startingStats, gameView);
 
@@ -57,11 +61,6 @@ public class MysticOrbit extends Weapon{
                 new LevelUpModifier(WeaponStatsType.Damage, new StatModifier(StatModifier.Type.bonus, 10)))));
         levelEffects.add(new HashSet<>(Arrays.asList(new LevelUpModifier(WeaponStatsType.Amount, new StatModifier(StatModifier.Type.bonus, 1)))));
 
-        for(int i = 0; i<level-1; i++){
-            for(LevelUpModifier modifer : levelEffects.get(i))
-                modifer.apply(stats);
-        }
-
 
         timeLeftInWindow = (long) stats.getStatValue(WeaponStatsType.Cooldown);
         isActive = false;
@@ -75,7 +74,7 @@ public class MysticOrbit extends Weapon{
         double angle = this.amountShot * 2*Math.PI / stats.getStatValue(WeaponStatsType.Amount);
         double radius = 300;
         return new FriendlyProjectile(player.getPositionX() + radius * Math.cos(angle), player.getPositionY() + radius * Math.sin(angle), gameView,
-                50000, stats.getStatValue(WeaponStatsType.Damage), (int) stats.getStatValue(WeaponStatsType.Speed),(int) stats.getStatValue(WeaponStatsType.Area), new ProjectileMovement() {
+                50000, stats.getStatValue(WeaponStatsType.Damage), (int) stats.getStatValue(WeaponStatsType.Speed),(int) stats.getStatValue(WeaponStatsType.Area),projectileBitmap, new ProjectileMovement() {
             long timeAlive = 0;
 
             @Override

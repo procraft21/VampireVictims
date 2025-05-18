@@ -1,11 +1,14 @@
 package com.example.projectcyber.GameActivity.Equipment.Weapons;
 
+import android.graphics.BitmapFactory;
+
 import com.example.projectcyber.GameActivity.GameView;
 import com.example.projectcyber.GameActivity.Stats.StatModifier;
 import com.example.projectcyber.GameActivity.gameObjects.Player;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.FriendlyProjectile;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.Projectile;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.ProjectileMovement;
+import com.example.projectcyber.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +23,9 @@ public class EtherealSpike extends Weapon{
 
         this.name = "Ethereal Spike";
         this.initialDesc = "Lays spikes near the player";
+
+        equipmentBitmap = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.weapon_spikes);
+        projectileBitmap = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.projectile_spike);
 
         HashMap<WeaponStatsType, Double> startingStats = new HashMap<>();
 
@@ -68,7 +74,7 @@ public class EtherealSpike extends Weapon{
         Player player = gameView.getPlayer();
         return new FriendlyProjectile(player.getPositionX(), player.getPositionY(), gameView, (int) stats.getStatValue(WeaponStatsType.Pierce),
                 stats.getStatValue(WeaponStatsType.Damage), (int)stats.getStatValue(WeaponStatsType.Speed) + rnd.nextInt(200) + 100,(int) stats.getStatValue(WeaponStatsType.Area),
-                new ProjectileMovement() {
+                projectileBitmap, new ProjectileMovement() {
                     double angle = 2*Math.PI*rnd.nextDouble();
                     long time = rnd.nextInt(301) +100;
 

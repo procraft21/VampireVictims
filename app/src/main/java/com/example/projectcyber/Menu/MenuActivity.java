@@ -45,6 +45,8 @@ public class MenuActivity extends AppCompatActivity {
 
     FloatingActionButton logoutButton;
 
+    ActivityResultLauncher<Intent> launcher;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,29 +71,30 @@ public class MenuActivity extends AppCompatActivity {
         String uid = firebaseAuth.getCurrentUser().getUid();
 
         logoutButton = findViewById(R.id.logoutButton);
+        final User[] user = new User[1];
 
         DB.collection(getString(R.string.usersCollection)).document(uid).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                User user = documentSnapshot.toObject(User.class);
+                user[0] = documentSnapshot.toObject(User.class);
 
-                assert user!=null;
+                assert user[0] !=null;
 
-                long coins = user.getCoins();
-                stats = user.getStats();
+                long coins = user[0].getCoins();
+                stats = user[0].getStats();
 
                 coinTextView.setText("Coins : " + coins);
 
-                StatUpgradeRecyclerAdapter adapter = new StatUpgradeRecyclerAdapter(user, activity);
+                StatUpgradeRecyclerAdapter adapter = new StatUpgradeRecyclerAdapter(user[0], activity);
                 statShop.setAdapter(adapter);
                 statShop.setLayoutManager(new GridLayoutManager(getApplicationContext(), 3));
 
                 playButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Log.d("user", user.getMaxHpLvl() + "");
-                        saveUserToDatabase(user);
-                        startGame(user);
+                        Log.d("user", user[0].getMaxHpLvl() + "");
+                        saveUserToDatabase(user[0]);
+                        startGame(user[0]);
                     }
                 });
 
@@ -102,8 +105,26 @@ public class MenuActivity extends AppCompatActivity {
                         activity.finish();
                     }
                 });
+
+
             }
         });
+
+        launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult o) {
+                        if(o.getResultCode() == RESULT_OK){
+
+
+
+                            Intent data = o.getData();
+                            user[0].addCoins(data.getIntExtra("Coins", 0));
+                            setCoinsText(user[0].getCoins());
+                            saveUserToDatabase(user[0]);
+                        }
+                    }
+                });
 
     }
 
@@ -113,17 +134,6 @@ public class MenuActivity extends AppCompatActivity {
             intent.putExtra(item.getType().name(), item.getFinalValue());
         }
 
-        ActivityResultLauncher<Intent> launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult o) {
-                        if(o.getResultCode() == RESULT_OK){
-                            Intent data = o.getData();
-                            user.addCoins(data.getIntExtra("Coins", 0));
-                            saveUserToDatabase(user);
-                        }
-                    }
-                });
 
         launcher.launch(intent);
     }

@@ -16,7 +16,7 @@ public class CoinCounter{
     public CoinCounter(GameView gameView){
         this.gameView = gameView;
         if(coinBitmap == null){
-            Bitmap xpgemBitmap = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.coin_img);
+            Bitmap xpgemBitmap = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.pickup_coin);
             xpgemBitmap = Bitmap.createScaledBitmap(xpgemBitmap,75,75, false);
             this.coinBitmap = xpgemBitmap;
         }

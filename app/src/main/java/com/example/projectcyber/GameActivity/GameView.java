@@ -14,7 +14,12 @@ import androidx.core.content.ContextCompat;
 
 import com.example.projectcyber.GameActivity.Equipment.Equipment;
 import com.example.projectcyber.GameActivity.Equipment.LevelUpEquipmentTable;
+import com.example.projectcyber.GameActivity.Equipment.Weapons.EtherealSpike;
 import com.example.projectcyber.GameActivity.Equipment.Weapons.MagicWand;
+import com.example.projectcyber.GameActivity.Equipment.Weapons.MagmaShot;
+import com.example.projectcyber.GameActivity.Equipment.Weapons.ManaBlaster;
+import com.example.projectcyber.GameActivity.Equipment.Weapons.MysticOrbit;
+import com.example.projectcyber.GameActivity.Equipment.Weapons.ViolentStar;
 import com.example.projectcyber.GameActivity.Stats.PlayerStatsType;
 import com.example.projectcyber.GameActivity.gameObjects.Enemy.Enemy;
 import com.example.projectcyber.GameActivity.gameObjects.Entity;
@@ -132,13 +137,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
         if(isPaused) return;
 
+        player.update(deltaTime);
+        enemySummoner.update(deltaTime);
+
         for(Projectile projectile : projectiles){
             projectile.update(deltaTime);
 
         }
-        player.update(deltaTime);
-
-        enemySummoner.update(deltaTime);
 
         for(Enemy enemy : enemies){
             enemy.update(deltaTime);
@@ -151,7 +156,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         for(Entity remove : toBeRemoved){
             removeEntityCompletely(remove);
         }
-
         toBeRemoved = new HashSet<>();
 
         xpProgressBar.update();
@@ -245,20 +249,30 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         paint.setTextSize(50);
         canvas.drawText("CurrHealth : " + player.getCurrentHP(), 100, 340, paint);
     }
+
     // functions from SurfaceHolder.Callback
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
-        startGame(surfaceHolder);
+        Log.d("GameView.java", "surfaceCreated()");
+        if(gameLoop != null && gameLoop.getState().equals(Thread.State.TERMINATED)){
+            SurfaceHolder holder = getHolder();
+            holder.addCallback(this);
+
+            gameLoop = new GameLoop(this,surfaceHolder);
+            gameLoop.startLoop();
+        }else{
+            startGame(surfaceHolder);
+        }
     }
 
     @Override
     public void surfaceChanged(@NonNull SurfaceHolder surfaceHolder, int i, int i1, int i2) {
-
+        Log.d("GameView.java", "surfaceChanged()");
     }
 
     @Override
     public void surfaceDestroyed(@NonNull SurfaceHolder surfaceHolder) {
-
+        Log.d("GameView.java", "surfaceDestroyed()");
     }
 
 
@@ -322,7 +336,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
 
         if(prevEntitySlot == null){
-            Log.d("wrong", "wrong");
+           entity.destroy();
+           return true;
         }
 
         //tries to remove the entity
@@ -411,14 +426,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         toBeRemoved.add(entity);
     }
 
-    public void pauseGame(){
-        isPaused = true;
-    }
-
-    public void resumeGame(){
-        isPaused = false;
-    }
-
     public int getScreenWidth() {
         return screenWidth;
     }
@@ -459,7 +466,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         });
     }
 
-    public void stopLoop(){
+    public void pauseEntities(){
+        isPaused = true;
+    }
+
+    public void resumeGame(){
+        isPaused = false;
+    }
+
+    public void stopGame(){
         gameLoop.stopGame();
     }
 }

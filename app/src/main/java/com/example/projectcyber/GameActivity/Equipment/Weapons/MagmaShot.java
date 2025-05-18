@@ -1,5 +1,7 @@
 package com.example.projectcyber.GameActivity.Equipment.Weapons;
 
+import android.graphics.BitmapFactory;
+
 import com.example.projectcyber.GameActivity.GameView;
 import com.example.projectcyber.GameActivity.Stats.StatModifier;
 import com.example.projectcyber.GameActivity.gameObjects.Enemy.Enemy;
@@ -7,6 +9,7 @@ import com.example.projectcyber.GameActivity.gameObjects.Player;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.FriendlyProjectile;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.Projectile;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.ProjectileMovement;
+import com.example.projectcyber.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,15 +17,18 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 
-public class MagicCannon extends Weapon{
+public class MagmaShot extends Weapon{
 
 
 
-    public MagicCannon(GameView gameView) {
+    public MagmaShot(GameView gameView) {
         this.gameView = gameView;
 
-        this.name = "Magic Cannon";
+        this.name = "Magma Shot";
         this.initialDesc = "Shoots an arc of heavy shots at a random enemy";
+
+        equipmentBitmap = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.weapon_magma_shot);
+        projectileBitmap = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.weapon_magma_shot);
 
         HashMap<WeaponStatsType, Double> startingStats = new HashMap<>();
         startingStats.put(WeaponStatsType.Duration, 0.0);
@@ -71,7 +77,7 @@ public class MagicCannon extends Weapon{
     @Override
     public Projectile createProjectile() {
         Player player = gameView.getPlayer();
-        Projectile projectile = new FriendlyProjectile(player.getPositionX(), player.getPositionY(), gameView, (int)stats.getStatValue(WeaponStatsType.Pierce), stats.getStatValue(WeaponStatsType.Damage), (int) stats.getStatValue(WeaponStatsType.Speed),(int) stats.getStatValue(WeaponStatsType.Area), new ProjectileMovement(amountShot) {
+        Projectile projectile = new FriendlyProjectile(player.getPositionX(), player.getPositionY(), gameView, (int)stats.getStatValue(WeaponStatsType.Pierce), stats.getStatValue(WeaponStatsType.Damage), (int) stats.getStatValue(WeaponStatsType.Speed),(int) stats.getStatValue(WeaponStatsType.Area),projectileBitmap, new ProjectileMovement(amountShot) {
             boolean lockedOn = false;
             @Override
             public void update(long deltaTime, GameView gameView, Projectile projectile) {

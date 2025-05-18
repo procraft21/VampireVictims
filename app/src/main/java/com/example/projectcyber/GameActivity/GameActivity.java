@@ -1,33 +1,44 @@
 package com.example.projectcyber.GameActivity;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Layout;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.projectcyber.GameActivity.Equipment.Equipment;
 import com.example.projectcyber.GameActivity.Equipment.Items.Item;
 import com.example.projectcyber.GameActivity.Equipment.Weapons.Weapon;
+import com.example.projectcyber.GameActivity.PauseMenu.EquipmentAdapter;
 import com.example.projectcyber.GameActivity.Stats.PlayerStatsType;
 import com.example.projectcyber.Menu.MenuActivity;
 import com.example.projectcyber.R;
-
-import org.w3c.dom.Text;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.concurrent.Callable;
 
 public class GameActivity extends AppCompatActivity {
 
     GameView gameView;
+    FloatingActionButton pauseButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +57,24 @@ public class GameActivity extends AppCompatActivity {
             startingStats.put(PlayerStatsType.valueOf(name),bundle.getDouble(name));
 
         gameView = new GameView(this, startingStats);
-        window.setContentView(gameView);
+        gameView.setLayoutParams(new WindowManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        ConstraintLayout main = findViewById(R.id.main);
+        main.addView(gameView);
+
+        pauseButton = findViewById(R.id.pauseButton);
+
+        pauseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                gameView.pauseEntities();
+                try {
+                    showPauseDialog();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            }
+        });
     }
 
     public void showLevelUpDialog(HashSet<Equipment> options){
@@ -96,8 +124,11 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public void showResultDialog(boolean won){
+
+
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.result_dialog);
+        dialog.setCancelable(false);
 
         TextView resultText = dialog.findViewById(R.id.resultTextView);
         TextView coinText = dialog.findViewById(R.id.coinTextView);
@@ -108,7 +139,7 @@ public class GameActivity extends AppCompatActivity {
         returnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                gameView.stopLoop();
+                gameView.stopGame();
                 Intent intent = new Intent(GameActivity.this, MenuActivity.class);
                 intent.putExtra("Coins", gameView.getCoins());
                 setResult(RESULT_OK, intent);
@@ -119,16 +150,57 @@ public class GameActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    @Override
-    protected void onStop() {
-        gameView.stopLoop();
-        super.onStop();
+    public void showPauseDialog() throws Exception {
+
+        Callable<LinearLayoutManager> getManager = () -> {
+            return new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false) {
+                @Override
+                public boolean canScrollHorizontally() {
+                    return false;
+                }
+
+                @Override
+                public boolean checkLayoutParams(RecyclerView.LayoutParams lp) {
+                    lp.width = getWidth() / 3;
+                    return true;
+                }
+            };
+        };
+
+        HashSet<Weapon> weapons = gameView.getPlayer().getWeapons();
+        Collection<Item> items = gameView.getPlayer().getItems();
+
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.pause_dialog);
+        Window window = dialog.getWindow();
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, getWindow().getWindowManager().getCurrentWindowMetrics().getBounds().bottom/2);
+
+        RecyclerView weaponsRecycler = dialog.findViewById(R.id.weaponsRecycler);
+        weaponsRecycler.setAdapter(new EquipmentAdapter(weapons));
+        weaponsRecycler.setLayoutManager(getManager.call());
+
+        RecyclerView itemsRecycler = dialog.findViewById(R.id.itemsRecycler);
+        itemsRecycler.setAdapter(new EquipmentAdapter(items));
+        itemsRecycler.setLayoutManager(getManager.call());
+
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                gameView.resumeGame();
+            }
+        });
+        dialog.show();
+
+
+
     }
+
 
     @Override
     protected void onPause() {
+        Log.d("pause", "pause");
+        gameView.stopGame();
         super.onPause();
-        gameView.pauseGame();
     }
 
     @Override
@@ -136,4 +208,12 @@ public class GameActivity extends AppCompatActivity {
         super.onResume();
         gameView.resumeGame();
     }
+
+    //cancel back pressing to avoid closing game.
+    @Override
+    public void onBackPressed() {
+
+    }
+
+
 }

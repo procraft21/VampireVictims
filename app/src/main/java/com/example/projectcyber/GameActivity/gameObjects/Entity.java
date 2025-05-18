@@ -61,8 +61,8 @@ public abstract class Entity {
     public void draw(Canvas canvas){
         double playerPosX = gameView.getPlayer().getPositionX();
         double playerPosY = gameView.getPlayer().getPositionY();
-        double relX = posX - playerPosX + canvas.getWidth()/2;
-        double relY = posY - playerPosY + canvas.getHeight()/2;
+        double relX = posX - playerPosX + canvas.getWidth() /2.0;
+        double relY = posY - playerPosY + canvas.getHeight()/2.0;
         drawRelative(canvas, relX, relY);
     }
 

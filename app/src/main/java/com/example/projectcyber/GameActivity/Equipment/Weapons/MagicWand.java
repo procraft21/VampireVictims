@@ -1,5 +1,7 @@
 package com.example.projectcyber.GameActivity.Equipment.Weapons;
 
+import android.graphics.BitmapFactory;
+
 import com.example.projectcyber.GameActivity.GameView;
 import com.example.projectcyber.GameActivity.Stats.StatModifier;
 import com.example.projectcyber.GameActivity.gameObjects.Enemy.Enemy;
@@ -7,6 +9,7 @@ import com.example.projectcyber.GameActivity.gameObjects.Player;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.FriendlyProjectile;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.Projectile;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.ProjectileMovement;
+import com.example.projectcyber.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +27,8 @@ public class MagicWand extends Weapon{
 
         this.name = "Magic Wand";
         this.initialDesc = "Target the closest enemy";
+        equipmentBitmap = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.weapon_magic_wand);
+        projectileBitmap = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.projectile_magic_wand);
 
         HashMap<WeaponStatsType, Double> startingStats = new HashMap<>();
         startingStats.put(WeaponStatsType.Duration, 0.0);
@@ -63,7 +68,7 @@ public class MagicWand extends Weapon{
     @Override
     public Projectile createProjectile() {
         Player player = gameView.getPlayer();
-        Projectile projectile = new FriendlyProjectile(player.getPositionX(), player.getPositionY(), gameView, (int)stats.getStatValue(WeaponStatsType.Pierce), stats.getStatValue(WeaponStatsType.Damage), (int) stats.getStatValue(WeaponStatsType.Speed),(int) stats.getStatValue(WeaponStatsType.Area), new ProjectileMovement() {
+        Projectile projectile = new FriendlyProjectile(player.getPositionX(), player.getPositionY(), gameView, (int)stats.getStatValue(WeaponStatsType.Pierce), stats.getStatValue(WeaponStatsType.Damage), (int) stats.getStatValue(WeaponStatsType.Speed),(int) stats.getStatValue(WeaponStatsType.Area),projectileBitmap, new ProjectileMovement() {
             boolean lockedOn = false;
             @Override
             public void update(long deltaTime, GameView gameView, Projectile projectile) {

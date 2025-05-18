@@ -5,9 +5,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.util.Log;
 
-import com.example.projectcyber.GameActivity.Equipment.LevelUpEquipmentTable;
 import com.example.projectcyber.GameActivity.GameView;
-import com.example.projectcyber.GameActivity.Equipment.Items.CoffeeTorus;
 import com.example.projectcyber.GameActivity.Equipment.Items.Item;
 import com.example.projectcyber.GameActivity.Stats.PlayerStatsType;
 import com.example.projectcyber.GameActivity.Stats.PlayerStatsContainer;
@@ -82,7 +80,7 @@ public class Player extends Mob{
     }
 
     public void levelUp(){
-        gameView.pauseGame();
+        gameView.pauseEntities();
         gameView.showLevelUpDialog();
     }
 
@@ -251,7 +249,7 @@ public class Player extends Mob{
     }
 
     private void playerDeath(){
-        gameView.pauseGame();
+        gameView.pauseEntities();
         gameView.showResultDialog(false);
     }
 }
