@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/levelUpLinearLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -15,20 +16,5 @@
         android:padding="10dp"
         android:text="Level Up!"
         android:textSize="34sp" />
-
-    <com.example.projectcyber.GameActivity.LevelUpItemView
-        android:id="@+id/levelUpItemView1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <com.example.projectcyber.GameActivity.LevelUpItemView
-        android:id="@+id/levelUpItemView2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <com.example.projectcyber.GameActivity.LevelUpItemView
-        android:id="@+id/levelUpItemView3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
 </LinearLayout>

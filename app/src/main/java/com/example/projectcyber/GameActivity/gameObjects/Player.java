@@ -220,8 +220,11 @@ public class Player extends Mob{
         return MAX_ITEMS - getItems().size();
     }
 
-    public boolean haveSpace(){
-        return getOpenItemSlots() + getOpenWeaponSlots() > 0;
+    public boolean haveWeaponSpace(){
+        return getOpenWeaponSlots() > 0;
+    }
+    public boolean haveItemSpace(){
+        return getOpenItemSlots() > 0;
     }
 
     public void printEquipment(){

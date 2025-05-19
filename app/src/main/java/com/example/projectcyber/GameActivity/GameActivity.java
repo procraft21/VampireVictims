@@ -83,15 +83,6 @@ public class GameActivity extends AppCompatActivity {
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dialog_level_up);
 
-        LevelUpItemView view1 = dialog.findViewById(R.id.levelUpItemView1);
-        LevelUpItemView view2 = dialog.findViewById(R.id.levelUpItemView2);
-        LevelUpItemView view3 = dialog.findViewById(R.id.levelUpItemView3);
-
-        ArrayList<Equipment> oppArr = new ArrayList<>(options);
-
-        view1.set(oppArr.get(0));
-        view2.set(oppArr.get(1));
-        view3.set(oppArr.get(2));
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
@@ -113,9 +104,14 @@ public class GameActivity extends AppCompatActivity {
             }
         };
 
-        view1.setOnClickListener(onClickListener);
-        view2.setOnClickListener(onClickListener);
-        view3.setOnClickListener(onClickListener);
+        LinearLayout layout = dialog.findViewById(R.id.levelUpLinearLayout);
+        Log.d("options", options.toString());
+        for(Equipment option : options){
+            LevelUpItemView itemView = new LevelUpItemView(this);
+            itemView.set(option);
+            layout.addView(itemView);
+            itemView.setOnClickListener(onClickListener);
+        }
 
         dialog.show();
         Window window = dialog.getWindow();
@@ -139,17 +135,19 @@ public class GameActivity extends AppCompatActivity {
         returnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                gameView.stopGame();
-                Intent intent = new Intent(GameActivity.this, MenuActivity.class);
-                intent.putExtra("Coins", gameView.getCoins());
-                setResult(RESULT_OK, intent);
-                finish();
+                closeGame();
             }
         });
 
         dialog.show();
     }
-
+    private void closeGame(){
+        gameView.stopGame();
+        Intent intent = new Intent(GameActivity.this, MenuActivity.class);
+        intent.putExtra("Coins", gameView.getCoins());
+        setResult(RESULT_OK, intent);
+        finish();
+    }
     public void showPauseDialog() throws Exception {
 
         Callable<LinearLayoutManager> getManager = () -> {
@@ -189,6 +187,14 @@ public class GameActivity extends AppCompatActivity {
                 gameView.resumeGame();
             }
         });
+
+        Button leaveButton = dialog.findViewById(R.id.leaveButton);
+        leaveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                closeGame();
+            }
+        });
         dialog.show();
 
 
@@ -201,12 +207,6 @@ public class GameActivity extends AppCompatActivity {
         Log.d("pause", "pause");
         gameView.stopGame();
         super.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        gameView.resumeGame();
     }
 
     //cancel back pressing to avoid closing game.

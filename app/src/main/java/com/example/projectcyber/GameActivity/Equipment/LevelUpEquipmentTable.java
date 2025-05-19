@@ -1,5 +1,7 @@
 package com.example.projectcyber.GameActivity.Equipment;
 
+import android.media.audiofx.DynamicsProcessing;
+
 import com.example.projectcyber.GameActivity.Equipment.Items.*;
 import com.example.projectcyber.GameActivity.Equipment.Weapons.*;
 
@@ -7,7 +9,9 @@ import com.example.projectcyber.GameActivity.GameView;
 import com.example.projectcyber.GameActivity.gameObjects.Player;
 
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Random;
 
 public class LevelUpEquipmentTable {
@@ -53,111 +57,92 @@ public class LevelUpEquipmentTable {
     public HashSet<Equipment> getOptions(){
         HashSet<Equipment> options = new HashSet<>();
 
+        ArrayList<Equipment> ownedEligibleEquipment = new ArrayList<>();
+
+        ArrayList<Weapon> eligibleWeapons = new ArrayList<>();
+        for(Weapon weapon : allWeapons){
+            if(weapon.canRaiseLevel()){
+                eligibleWeapons.add(weapon);
+                if(weapon.level > 0)
+                    ownedEligibleEquipment.add(weapon);
+            }
+        }
+
+        ArrayList<Item> eligibleItems = new ArrayList<>();
+        for(Item item : allItems){
+            if(item.canRaiseLevel()){
+                eligibleItems.add(item);
+                if(item.level > 0)
+                    ownedEligibleEquipment.add(item);
+            }
+        }
+
         Player player =gameView.getPlayer();
         for(int i = 0; i< MAX_CHOICES; i++){
 
             boolean owned = rnd.nextDouble() <= 0.2; //20% for owned items.
 
-
-            Equipment picked;
-            if(owned && canAnythingLevelUp())
-                picked = pickOwned();
-            else if(player.haveSpace())
-                picked = pickUnOwned();
-            else
+            if(ownedEligibleEquipment.size() == 0 && !player.haveItemSpace() && !player.haveWeaponSpace()){
                 return options;
+            }
 
-
-            if(options.contains(picked))
-                i--;
-            else
+            if(owned && ownedEligibleEquipment.size() > 0){
+                Equipment picked = pickFromArray(ownedEligibleEquipment);
                 options.add(picked);
+                if(picked instanceof Weapon) {
+                    eligibleWeapons.remove(picked);
+                }else if(picked instanceof Item){
+                    eligibleItems.remove(picked);
+                }
+                ownedEligibleEquipment.remove(picked);
+            }else{
+                if(player.haveWeaponSpace()){
+                    if(player.haveItemSpace()){
+                        //have both weapon and item space
+                        ArrayList<Equipment> combined = new ArrayList<>();
+                        combined.addAll(eligibleWeapons);
+                        combined.addAll(eligibleItems);
+                        Equipment picked = pickFromArray(combined);
+                        options.add(picked);
+                        if(picked instanceof Weapon) {
+                            eligibleWeapons.remove(picked);
+                        }else if(picked instanceof Item){
+                            eligibleItems.remove(picked);
+                        }
+                    }else{
+                        //have only  weapon space
+                        Equipment picked = pickFromArray(eligibleWeapons);
+                        options.add(picked);
+                        eligibleWeapons.remove(picked);
+                        ownedEligibleEquipment.remove(picked);
+                    }
+                }else{
+                    if(player.haveItemSpace()){
+                        //have only item space
+                        Equipment picked = pickFromArray(eligibleItems);
+                        options.add(picked);
+                        eligibleItems.remove(picked);
+                        ownedEligibleEquipment.remove(picked);
+                    }else{
+                        //have no space
+                        Equipment picked = pickFromArray(ownedEligibleEquipment);
+                        options.add(picked);
+                        if(picked instanceof Weapon) {
+                            eligibleWeapons.remove(picked);
+                        }else if(picked instanceof Item){
+                            eligibleItems.remove(picked);
+                        }
+                        ownedEligibleEquipment.remove(picked);
+                    }
+                }
+            }
         }
 
         return options;
     }
 
-    private boolean canAnythingLevelUp(){
-        Player player = gameView.getPlayer();
-        for(Weapon weapon : player.getWeapons())
-            if(weapon.canRaiseLevel())return true;
-        for(Item item : player.getItems())
-            if(item.canRaiseLevel()) return true;
-        return false;
-    }
-
-    private Equipment pickOwned(){
-
-        Player player = gameView.getPlayer();
-
-        int pick = rnd.nextInt(player.getAmountOfUpgradableWeapons() + player.getAmountOfUpgradableItems());
-        int k = 0;
-        for(Weapon weapon : player.getWeapons()){
-            if(k==pick){
-                if(!weapon.canRaiseLevel()) continue;
-                return weapon;
-            }
-            k++;
-        }
-        for(Item item : player.getItems()){
-            if(k == pick){
-                if(!item.canRaiseLevel()) continue;
-                return item;
-            }
-            k++;
-        }
-
-        return pickUnOwned();
-    }
-
-    private Equipment pickUnOwned(){
-        int pick = rnd.nextInt(allWeapons.size() + allItems.size());
-        int k = 0;
-        for(Weapon weapon : allWeapons){
-            if(k==pick){
-                return weapon;
-            }
-            k++;
-        }
-        for(Item item : allItems){
-            if(k == pick){
-                return item;
-            }
-            k++;
-        }
-        return null;
-    }
-
-    private Weapon pickFromAllLevelUpableWeapons(){
-        int pick = rnd.nextInt(allWeapons.size());
-        int k = 0;
-        for(Weapon weapon : allWeapons){
-            if(k==pick){
-                if(weapon.canRaiseLevel())
-                    return weapon;
-                else{
-                    return pickFromAllLevelUpableWeapons();
-                }
-            }
-            k++;
-        }
-        return null;
-    }
-
-    private Item pickFromAllLevelUpableItems(){
-        int pick = rnd.nextInt(allItems.size());
-        int k = 0;
-        for(Item item : allItems){
-            if(k==pick){
-                if(item.canRaiseLevel())
-                    return item;
-                else{
-                    return pickFromAllLevelUpableItems();
-                }
-            }
-            k++;
-        }
-        return null;
+    private Equipment pickFromArray(ArrayList<? extends Equipment> list){
+        return list.get(rnd.nextInt(list.size()));
     }
 
     public Weapon getWeapon(Weapon weapon){

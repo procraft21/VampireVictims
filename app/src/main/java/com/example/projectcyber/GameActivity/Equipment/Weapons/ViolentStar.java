@@ -88,15 +88,19 @@ public class ViolentStar extends Weapon{
                 }
 
                 if(projectile.getPositionX() - player.getPositionX() > gameView.getScreenWidth()/2) {
+                    projectile.setPosX(gameView.getScreenWidth()/2 + player.getPositionX());
                     projectile.setVelX(-projectile.getVelX());
                 }
                 if(projectile.getPositionX() - player.getPositionX() < -gameView.getScreenWidth()/2){
+                    projectile.setPosX(-gameView.getScreenWidth()/2 + player.getPositionX());
                     projectile.setVelX(-projectile.getVelX());
                 }
                 if(projectile.getPositionY() - player.getPositionY() > gameView.getScreenHeight()/2){
+                    projectile.setPosY(gameView.getScreenHeight()/2 + player.getPositionY());
                     projectile.setVelY(-projectile.getVelY());
                 }
                 if(projectile.getPositionY() - player.getPositionY() < -gameView.getScreenHeight()/2){
+                    projectile.setPosY(gameView.getScreenHeight()/2 + player.getPositionY());
                     projectile.setVelY(-projectile.getVelY());
                 }
 
