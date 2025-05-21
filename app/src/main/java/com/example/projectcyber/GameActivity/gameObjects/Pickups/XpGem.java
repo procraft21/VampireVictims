@@ -3,6 +3,7 @@ package com.example.projectcyber.GameActivity.gameObjects.Pickups;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 
 import com.example.projectcyber.GameActivity.GameView;
 import com.example.projectcyber.GameActivity.gameObjects.Entity;
@@ -30,6 +31,9 @@ public class XpGem extends Pickup {
     @Override
     protected void drawRelative(Canvas canvas, double relX, double relY) {
         canvas.drawBitmap(bitmap, (int)(relX - bitmap.getWidth()/2),(int)(relY - bitmap.getHeight()/2), null);
+        Paint paint = new Paint();
+        paint.setTextSize(30);
+        canvas.drawText((int) gameView.getPlayer().getPositionX()  + " " + (int) gameView.getPlayer().getPositionY(), (int)relX, (int)relY, paint);
         //Log.d("drawXp", relX + " " + posX + "\n" + relY + " " + posY);
     }
 

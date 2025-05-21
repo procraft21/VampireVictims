@@ -21,6 +21,7 @@ import com.example.projectcyber.GameActivity.Equipment.Weapons.ManaBlaster;
 import com.example.projectcyber.GameActivity.Equipment.Weapons.MysticOrbit;
 import com.example.projectcyber.GameActivity.Equipment.Weapons.ViolentStar;
 import com.example.projectcyber.GameActivity.Stats.PlayerStatsType;
+import com.example.projectcyber.GameActivity.gameObjects.Enemy.DropTable;
 import com.example.projectcyber.GameActivity.gameObjects.Enemy.Enemy;
 import com.example.projectcyber.GameActivity.gameObjects.Entity;
 import com.example.projectcyber.GameActivity.gameObjects.Pickups.Pickup;
@@ -57,6 +58,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     HashSet<Enemy> enemies;
 
     EnemySummoner enemySummoner;
+
+    DropTable dropTable;
 
     //grid of the entities. will only check collisions between entities in the same square.
     HashMap<Pair<Integer, Integer>, HashSet<Entity>> entityGrid;
@@ -98,6 +101,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
     private void init(SurfaceHolder surfaceHolder){
 
+
+        Log.d("create", "init");
         gameLoop = new GameLoop(this, surfaceHolder);
         joystick = new Joystick();
 
@@ -111,6 +116,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         toBeRemoved = new HashSet<>();
 
         enemies = new HashSet<>();
+        dropTable = new DropTable(this);
+
         projectiles = new HashSet<>();
         pickups = new HashSet<>();
 
@@ -177,6 +184,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
         player.draw(mainCanvas);
 
+        for(Pickup pickup : pickups){
+            pickup.draw(mainCanvas);
+        }
+
         for(Enemy enemy : enemies){
             enemy.draw(mainCanvas);
         }
@@ -185,9 +196,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
             projectile.draw(mainCanvas);
         }
 
-        for(Pickup pickup : pickups){
-            pickup.draw(mainCanvas);
-        }
 
         healthBar.draw(mainCanvas);
         xpProgressBar.draw(mainCanvas);
@@ -198,11 +206,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         joystick.draw(mainCanvas);
 
 
-        //drawUPS(mainCanvas);
-        //drawFPS(mainCanvas);
-        //drawPlayerPosition(mainCanvas);
-        //drawPlayerSpeed(mainCanvas);
-        //drawPlayerHp(mainCanvas);
+        drawUPS(mainCanvas);
+        drawFPS(mainCanvas);
+        drawPlayerPosition(mainCanvas);
+        drawPlayerSpeed(mainCanvas);
+        drawPlayerHp(mainCanvas);
     }
 
     public void startGame(SurfaceHolder surfaceHolder){
@@ -455,6 +463,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
     public void addCoins(int coins){
         this.coinsAmount += coins;
+    }
+
+    public DropTable getDropTable() {
+        return dropTable;
     }
 
     public void showResultDialog(boolean won){

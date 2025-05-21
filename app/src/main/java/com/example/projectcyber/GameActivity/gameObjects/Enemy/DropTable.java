@@ -10,24 +10,21 @@ import java.util.Random;
 
 public class DropTable {
 
-    static HashMap<Pickup, Integer> weightTable;
+    HashMap<Pickup, Integer> weightTable;
     int totalWeight;
-    GameView gameView;
 
 
     public DropTable(GameView gameView){
-        this.gameView = gameView;
 
-        if(weightTable == null){
-            weightTable = new HashMap<>();
-            weightTable.put(new XpGem(0,0, gameView), 100);
-            weightTable.put(new Coin(0,0,gameView), 50);
+        weightTable = new HashMap<>();
+        weightTable.put(new XpGem(0,0, gameView), 100);
+        weightTable.put(new Coin(0,0,gameView), 50);
 
-            totalWeight = 200; //the weight for nothing.
-            for(Pickup pickup : weightTable.keySet()){
-                totalWeight += weightTable.get(pickup);
-            }
+        totalWeight = 200; //the weight for nothing.
+        for(Pickup pickup : weightTable.keySet()){
+            totalWeight += weightTable.get(pickup);
         }
+
 
     }
 

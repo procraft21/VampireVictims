@@ -26,7 +26,6 @@ public class Enemy extends Mob implements Cloneable{
 
     private int xpDrop = 10;
 
-    private static DropTable dropTable = null;
 
     public Enemy(GameView gameView, double posX, double posY){
         super(posX,posY, gameView);
@@ -35,9 +34,6 @@ public class Enemy extends Mob implements Cloneable{
             enemyBitmap = Bitmap.createScaledBitmap(enemyBitmap,75,75, false);
             this.bitmap = enemyBitmap;
 
-        }
-        if(dropTable == null){
-            dropTable = new DropTable(gameView);
         }
 
         this.currHP = maxHp;
@@ -103,7 +99,7 @@ public class Enemy extends Mob implements Cloneable{
     public void destroy() {
         super.destroy();
 
-        Pickup pickup = dropTable.getDrop();
+        Pickup pickup = gameView.getDropTable().getDrop();
         if(pickup != null){
             pickup.setPosX(posX);
             pickup.setPosY(posY);
