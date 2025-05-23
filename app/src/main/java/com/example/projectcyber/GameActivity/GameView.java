@@ -206,11 +206,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         joystick.draw(mainCanvas);
 
 
-        drawUPS(mainCanvas);
-        drawFPS(mainCanvas);
-        drawPlayerPosition(mainCanvas);
-        drawPlayerSpeed(mainCanvas);
-        drawPlayerHp(mainCanvas);
+        //drawUPS(mainCanvas);
+        //drawFPS(mainCanvas);
+        //drawPlayerPosition(mainCanvas);
+        //drawPlayerSpeed(mainCanvas);
+        //drawPlayerHp(mainCanvas);
     }
 
     public void startGame(SurfaceHolder surfaceHolder){
@@ -470,6 +470,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     }
 
     public void showResultDialog(boolean won){
+        pauseEntities();
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {

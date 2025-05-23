@@ -4,6 +4,7 @@ import android.util.Log;
 import android.util.Pair;
 
 import com.example.projectcyber.GameActivity.gameObjects.Enemy.Enemy;
+import com.example.projectcyber.GameActivity.gameObjects.Enemy.EnemyBat;
 import com.example.projectcyber.GameActivity.gameObjects.Enemy.FollowerEnemy;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class EnemySummoner {
         int minimumEnemies;
 
         Set<Enemy> enemies;
+
 
         public SummoningSlot(long length, long summoningInterval, int minimumEnemies, Set<Enemy> enemies){
             this.length = length;
@@ -42,24 +44,33 @@ public class EnemySummoner {
     private int currSlotIndex = 0;
     private ArrayList<SummoningSlot> summoningList;
 
+    boolean active = true;
+
     public EnemySummoner(GameView gameView){
         this.gameView = gameView;
 
         summoningList = new ArrayList<>();
         HashSet<Enemy> enemies = new HashSet<Enemy>();
-        enemies.add(new FollowerEnemy(gameView, 0,0));
-        summoningList.add(new SummoningSlot(10000000, 500,30, enemies));
+        enemies.add(new EnemyBat(gameView, 0,0));
+        summoningList.add(new SummoningSlot(10000, 500,30, enemies));
     }
 
     public void update(long deltaTime){
+
         timeSinceSlotStarted += deltaTime;
         timeSinceLastSummon += deltaTime;
+
 
         SummoningSlot currentSlot = summoningList.get(currSlotIndex);
 
         if(timeSinceSlotStarted >= currentSlot.length){
             currSlotIndex++;
             timeSinceSlotStarted = 0;
+        }
+
+        if(currSlotIndex >= summoningList.size()){
+            gameView.showResultDialog(true);
+            return;
         }
 
         ArrayList<Enemy> enemiesToSpawn = new ArrayList<>();

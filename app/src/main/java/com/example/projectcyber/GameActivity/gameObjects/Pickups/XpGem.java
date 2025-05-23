@@ -12,35 +12,26 @@ import com.example.projectcyber.R;
 
 public class XpGem extends Pickup {
 
-    private static Bitmap bitmap;
+    private static Bitmap baseImg;
     private int amount;
 
     public XpGem(double posX, double posY, GameView gameView){
         super(posX, posY, gameView);
-        if(bitmap == null){
+        if(baseImg == null){
             Bitmap xpgemBitmap = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.pickup_xpgem);
             xpgemBitmap = Bitmap.createScaledBitmap(xpgemBitmap,45,45, false);
-            this.bitmap = xpgemBitmap;
-
+            baseImg = xpgemBitmap;
         }
+
+        bitmap = baseImg;
+
+
         amount = 1;
     }
 
 
 
-    @Override
-    protected void drawRelative(Canvas canvas, double relX, double relY) {
-        canvas.drawBitmap(bitmap, (int)(relX - bitmap.getWidth()/2),(int)(relY - bitmap.getHeight()/2), null);
-        Paint paint = new Paint();
-        paint.setTextSize(30);
-        canvas.drawText((int) gameView.getPlayer().getPositionX()  + " " + (int) gameView.getPlayer().getPositionY(), (int)relX, (int)relY, paint);
-        //Log.d("drawXp", relX + " " + posX + "\n" + relY + " " + posY);
-    }
 
-    @Override
-    public void setBitmap(Bitmap bitmap) {
-        this.bitmap = bitmap;
-    }
 
     @Override
     protected void resolveEntityCollision(Entity other) {

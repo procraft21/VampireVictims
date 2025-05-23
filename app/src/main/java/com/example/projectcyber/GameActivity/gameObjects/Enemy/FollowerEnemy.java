@@ -29,7 +29,8 @@ public class FollowerEnemy extends Enemy{
         savePrevPos();
         lerpWithIdealVel();
         super.update(deltaTime);
-
+        if(player.getPositionX() > posX) direction = Direction.Right;
+        if(player.getPositionX() < posX) direction = Direction.Left;
     }
 
     /**lerp with ideal velocity(towards the player)*/

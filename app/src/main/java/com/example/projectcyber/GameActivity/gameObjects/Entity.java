@@ -21,11 +21,13 @@ public abstract class Entity {
 
     protected ImmunityList immunityList;
 
+    protected Bitmap bitmap;
+
     public Entity(double posX, double posY, GameView gameView){
         this.posX = posX;
         this.posY = posY;
         this.gameView = gameView;
-
+        //this.bitmap = Bitmap.createBitmap(0,0, Bitmap.Config.ALPHA_8);
         immunityList = new ImmunityList(200, this);
 
     }
@@ -48,7 +50,10 @@ public abstract class Entity {
         return velY;
     }
 
-    protected abstract void drawRelative(Canvas canvas, double relX, double relY);
+    protected void drawRelative(Canvas canvas, double relX, double relY){
+        if(bitmap == null) return;
+        canvas.drawBitmap(bitmap, (int)(relX - bitmap.getWidth()/2),(int)(relY - bitmap.getHeight()/2), null);
+    }
 
     public void setPosX(double posX) {
         this.posX = posX;
@@ -65,6 +70,8 @@ public abstract class Entity {
         double relY = posY - playerPosY + canvas.getHeight()/2.0;
         drawRelative(canvas, relX, relY);
     }
+
+
 
     public void update(long deltaTime){
         posX += velX * deltaTime/1000.0;
@@ -85,7 +92,9 @@ public abstract class Entity {
         immunityList.update(deltaTime);
     }
 
-    public abstract void setBitmap(Bitmap bitmap);
+    public void setBitmap(Bitmap bitmap){
+        this.bitmap = bitmap;
+    }
 
     public double distance(Entity other){
         return Utils.distance(this.posX, this.posY, other.posX, other.posY);

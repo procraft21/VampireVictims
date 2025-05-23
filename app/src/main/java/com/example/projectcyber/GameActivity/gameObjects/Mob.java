@@ -1,6 +1,10 @@
 package com.example.projectcyber.GameActivity.gameObjects;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.util.Log;
 
 import com.example.projectcyber.GameActivity.GameView;
 import com.example.projectcyber.GameActivity.Utils;
@@ -10,14 +14,30 @@ import java.util.HashSet;
 public abstract class Mob extends Entity{
 
 
-    protected Bitmap bitmap;
+    protected Bitmap baseImg; //base image without the rotation according to movement
 
-    protected double mass = 1;
+    protected double mass = 1; //mass used for collision
+
     protected double currHP;
+
+    protected enum Direction{
+        Left, Right
+    }
+
+    protected Direction direction; //the direction the mob is currently moving.
 
     public Mob(double posX, double posY, GameView gameView) {
         super(posX, posY, gameView);
+        direction = Direction.Right;
 
+    }
+
+    @Override
+    public void update(long deltaTime) {
+        super.update(deltaTime);
+
+        if(velX > 0) direction = Direction.Right;
+        if(velX < 0) direction = Direction.Left;
     }
 
     public void addToGrid(){
@@ -32,6 +52,19 @@ public abstract class Mob extends Entity{
             currHP = 0;
             destroy();
         }
+    }
+
+    @Override
+    protected void drawRelative(Canvas canvas, double relX, double relY) {
+        if(baseImg == null) return;
+        if(direction == Direction.Left){
+            Matrix matrix = new Matrix();
+            matrix.postScale(-1,1);
+            bitmap = Bitmap.createBitmap(baseImg, 0, 0, baseImg.getWidth(), baseImg.getHeight(), matrix, true);
+        }else{
+            bitmap = baseImg;
+        }
+        super.drawRelative(canvas,relX,relY);
     }
 
     @Override

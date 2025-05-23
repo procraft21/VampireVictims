@@ -12,7 +12,7 @@ import com.example.projectcyber.R;
 public class Projectile extends Entity {
 
     protected static Bitmap baseBitmap;
-    protected Bitmap bitmap;
+
     protected ProjectileMovement projectileMovement;
 
     protected int penetration;
@@ -34,15 +34,6 @@ public class Projectile extends Entity {
         this.speed = speed;
     }
 
-    @Override
-    protected void drawRelative(Canvas canvas, double relX, double relY) {
-        canvas.drawBitmap(bitmap,(int)(relX - bitmap.getWidth()/2), (int)(relY - bitmap.getHeight()/2), null );
-    }
-
-    @Override
-    public void setBitmap(Bitmap bitmap) {
-        this.bitmap = bitmap;
-    }
 
     @Override
     protected void resolveEntityCollision(Entity other) {

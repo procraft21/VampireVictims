@@ -24,8 +24,6 @@ public class Player extends Mob{
     private static final int PLAYER_WIDTH = 150;
     private static final int PLAYER_HEIGHT = 150;
 
-    private Bitmap bitmap;
-
     private PlayerStatsContainer stats;
 
     private HashSet<Weapon> weapons;
@@ -53,22 +51,16 @@ public class Player extends Mob{
         stats = new PlayerStatsContainer(startingStats);
         currHP = getStatValue(PlayerStatsType.MaxHp);
 
-
-
         this.level = 1;
         this.xpAcquired = 0;
         this.xpRequired = 5;
 
-        if(bitmap == null){
-            bitmap = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.player_img);
-            bitmap = Bitmap.createScaledBitmap(bitmap,PLAYER_WIDTH, PLAYER_HEIGHT, false);
-        }
+        baseImg = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.player_img);
+        baseImg = Bitmap.createScaledBitmap(baseImg,PLAYER_WIDTH, PLAYER_HEIGHT, false);
+
 
     }
 
-    public void setBitmap(Bitmap bitmap){
-        this.bitmap = bitmap;
-    }
 
     public void raiseXp(int xp){
         xpAcquired += xp;
@@ -92,10 +84,7 @@ public class Player extends Mob{
         return xpAcquired;
     }
 
-    @Override
-    protected void drawRelative(Canvas canvas, double relX, double relY) {
-        canvas.drawBitmap(bitmap, (int)(relX - bitmap.getWidth()/2),(int)(relY - bitmap.getHeight()/2), null);
-    }
+
 
     public int getHeight(){
         return bitmap.getHeight();
@@ -131,7 +120,7 @@ public class Player extends Mob{
 
     @Override
     public double getCollisionRadius() {
-        return bitmap.getWidth()/2;
+        return baseImg.getWidth()/2;
     }
 
     @Override
@@ -252,7 +241,6 @@ public class Player extends Mob{
     }
 
     private void playerDeath(){
-        gameView.pauseEntities();
         gameView.showResultDialog(false);
     }
 }

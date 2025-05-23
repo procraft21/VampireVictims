@@ -8,7 +8,4 @@ public class StationaryEnemy extends Enemy {
         super(gameView, posX, posY);
     }
 
-    public StationaryEnemy(Enemy enemy, double posX, double posY) {
-        super(enemy, posX, posY);
-    }
 }
