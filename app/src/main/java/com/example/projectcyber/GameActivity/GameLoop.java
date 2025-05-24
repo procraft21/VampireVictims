@@ -2,6 +2,7 @@ package com.example.projectcyber.GameActivity;
 
 import android.graphics.Canvas;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.SurfaceHolder;
 
 public class GameLoop extends Thread {
@@ -11,10 +12,13 @@ public class GameLoop extends Thread {
     private final SurfaceHolder surfaceHolder;
 
     private static final double MAX_UPS = 60.0;
-    private static final double UPS_PERIOD = 1000.0 / MAX_UPS;  // in milliseconds
+    private static final double MAX_FPS = 60.0;
 
-    private double averageFPS;
+    private static final long UPDATE_PERIOD_NS = (long) (1_000_000_000 / MAX_UPS);
+    private static final long DRAW_PERIOD_NS = (long) (1_000_000_000 / MAX_FPS);
+
     private double averageUPS;
+    private double averageFPS;
 
     public GameLoop(GameView game, SurfaceHolder surfaceHolder) {
         this.game = game;
@@ -28,74 +32,61 @@ public class GameLoop extends Thread {
 
     @Override
     public void run() {
+        long previousUpdateTime = System.nanoTime();
+        long previousDrawTime = System.nanoTime();
+
         int updateCount = 0;
         int frameCount = 0;
 
-        long startTime = System.currentTimeMillis();
-        long previousTime = System.nanoTime();
-        long currentTime;
-        long deltaTime;
-
-        Canvas canvas = null;
+        long startTimeMs = System.currentTimeMillis();
 
         while (isRunning) {
-            currentTime = System.nanoTime();
-            deltaTime = (currentTime - previousTime) / 1_000_000;  // Convert to milliseconds
-            previousTime = currentTime;
+            long currentTime = System.nanoTime();
 
-            // Update and draw
+            // Game update (fixed UPS)
+            if (currentTime - previousUpdateTime >= UPDATE_PERIOD_NS) {
+                long deltaTimeMs = (currentTime - previousUpdateTime) / 1_000_000;
+                previousUpdateTime = currentTime;
+
+                game.update(deltaTimeMs);
+                updateCount++;
+            }
+
+            // Always try to render (uncapped FPS or optionally capped at higher rate)
+            Canvas canvas;
             try {
                 canvas = surfaceHolder.lockCanvas();
-                synchronized (surfaceHolder) {
-                    game.update(deltaTime); // deltaTime in milliseconds as long
-                    updateCount++;
-                    game.draw(canvas);
-                }
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    if (surfaceHolder.getSurface().isValid()) {
-                        surfaceHolder.unlockCanvasAndPost(canvas);
-                        frameCount++;
+                if (canvas != null) {
+                    synchronized (surfaceHolder) {
+                        game.draw(canvas);
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    surfaceHolder.unlockCanvasAndPost(canvas);
+                    frameCount++;
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
-            // Sleep to maintain target UPS
-            long elapsedTime = System.currentTimeMillis() - startTime;
-            long sleepTime = (long) (updateCount * UPS_PERIOD - elapsedTime);
-            if (sleepTime > 0) {
-                SystemClock.sleep(sleepTime);
+
+            // Sleep a tiny bit to yield CPU
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
 
-            // Catch up on updates if behind
-            while (sleepTime < 0 && updateCount < MAX_UPS - 1) {
-                currentTime = System.nanoTime();
-                deltaTime = (currentTime - previousTime) / 1_000_000;
-                previousTime = currentTime;
-
-                game.update(deltaTime);
-                updateCount++;
-
-                elapsedTime = System.currentTimeMillis() - startTime;
-                sleepTime = (long) (updateCount * UPS_PERIOD - elapsedTime);
-            }
-
-            // Update UPS and FPS once per second
-            if (System.currentTimeMillis() - startTime >= 1000) {
-                long currentTimeMs = System.currentTimeMillis();
-                double elapsed = currentTimeMs - startTime;
-                averageUPS = updateCount / (elapsed / 1000.0);
-                averageFPS = frameCount / (elapsed / 1000.0);
+            // Update stats every second
+            long elapsedTimeMs = System.currentTimeMillis() - startTimeMs;
+            if (elapsedTimeMs >= 1000) {
+                averageUPS = updateCount / (elapsedTimeMs / 1000.0);
+                averageFPS = frameCount / (elapsedTimeMs / 1000.0);
                 updateCount = 0;
                 frameCount = 0;
-                startTime = currentTimeMs;
+                startTimeMs = System.currentTimeMillis();
             }
         }
     }
+
 
     public double getAverageUPS() {
         return averageUPS;
@@ -105,9 +96,9 @@ public class GameLoop extends Thread {
         return averageFPS;
     }
 
-    public void stopGame(){
+    public void stopGame() {
         isRunning = false;
-        try{
+        try {
             join();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);

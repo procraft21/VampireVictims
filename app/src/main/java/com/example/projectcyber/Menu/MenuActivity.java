@@ -115,9 +115,6 @@ public class MenuActivity extends AppCompatActivity {
                     @Override
                     public void onActivityResult(ActivityResult o) {
                         if(o.getResultCode() == RESULT_OK){
-
-
-
                             Intent data = o.getData();
                             user[0].addCoins(data.getIntExtra("Coins", 0));
                             setCoinsText(user[0].getCoins());

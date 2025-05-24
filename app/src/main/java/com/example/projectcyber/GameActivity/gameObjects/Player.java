@@ -2,7 +2,6 @@ package com.example.projectcyber.GameActivity.gameObjects;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.util.Log;
 
 import com.example.projectcyber.GameActivity.GameView;
@@ -55,9 +54,8 @@ public class Player extends Mob{
         this.xpAcquired = 0;
         this.xpRequired = 5;
 
-        baseImg = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.player_img);
-        baseImg = Bitmap.createScaledBitmap(baseImg,PLAYER_WIDTH, PLAYER_HEIGHT, false);
-
+        imgRight = BitmapFactory.decodeResource(gameView.getResources(), R.drawable.player_img);
+        imgRight = Bitmap.createScaledBitmap(imgRight,PLAYER_WIDTH, PLAYER_HEIGHT, false);
 
     }
 
@@ -120,7 +118,7 @@ public class Player extends Mob{
 
     @Override
     public double getCollisionRadius() {
-        return baseImg.getWidth()/2;
+        return imgRight.getWidth()/2;
     }
 
     @Override

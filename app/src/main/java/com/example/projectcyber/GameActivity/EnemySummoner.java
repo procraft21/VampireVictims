@@ -52,7 +52,7 @@ public class EnemySummoner {
         summoningList = new ArrayList<>();
         HashSet<Enemy> enemies = new HashSet<Enemy>();
         enemies.add(new EnemyBat(gameView, 0,0));
-        summoningList.add(new SummoningSlot(10000, 500,30, enemies));
+        summoningList.add(new SummoningSlot(120000, 500,30, enemies));
     }
 
     public void update(long deltaTime){

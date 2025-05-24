@@ -1,20 +1,16 @@
 package com.example.projectcyber.GameActivity.gameObjects;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.util.Log;
 
 import com.example.projectcyber.GameActivity.GameView;
 import com.example.projectcyber.GameActivity.Utils;
 
-import java.util.HashSet;
-
 public abstract class Mob extends Entity{
 
 
-    protected Bitmap baseImg; //base image without the rotation according to movement
+    protected Bitmap imgRight; //base image looking right
 
     protected double mass = 1; //mass used for collision
 
@@ -25,11 +21,12 @@ public abstract class Mob extends Entity{
     }
 
     protected Direction direction; //the direction the mob is currently moving.
+    private Direction lastDrawnDirection; //the direction the mob was the last time he was drawn.
 
     public Mob(double posX, double posY, GameView gameView) {
         super(posX, posY, gameView);
         direction = Direction.Right;
-
+        lastDrawnDirection = Direction.Right;
     }
 
     @Override
@@ -56,14 +53,14 @@ public abstract class Mob extends Entity{
 
     @Override
     protected void drawRelative(Canvas canvas, double relX, double relY) {
-        if(baseImg == null) return;
-        if(direction == Direction.Left){
-            Matrix matrix = new Matrix();
-            matrix.postScale(-1,1);
-            bitmap = Bitmap.createBitmap(baseImg, 0, 0, baseImg.getWidth(), baseImg.getHeight(), matrix, true);
-        }else{
-            bitmap = baseImg;
+        if(imgRight == null) return;
+        if(bitmap == null) bitmap = imgRight;
+        if(direction == Direction.Right){
+            bitmap = imgRight;
+        }else if(lastDrawnDirection == Direction.Right){
+            bitmap = getImageHorizontalFlip(bitmap);
         }
+        lastDrawnDirection = direction;
         super.drawRelative(canvas,relX,relY);
     }
 
@@ -116,6 +113,12 @@ public abstract class Mob extends Entity{
         if(bitmap == null)
             return 75/2.0;
         return bitmap.getWidth()/2;
+    }
+
+    protected Bitmap getImageHorizontalFlip(Bitmap bitmap){
+        Matrix matrix = new Matrix();
+        matrix.postScale(-1,1);
+        return Bitmap.createBitmap(bitmap, 0, 0, imgRight.getWidth(), imgRight.getHeight(), matrix, true);
     }
 
     public double getCurrHP(){

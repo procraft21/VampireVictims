@@ -1,8 +1,10 @@
 package com.example.projectcyber.GameActivity;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -16,6 +18,7 @@ public class LevelUpItemView extends FrameLayout {
     TextView itemNameTextView;
     TextView itemDescTextView;
     TextView levelTextView;
+    ImageView equipmentImage;
 
     Equipment equipment;
 
@@ -44,6 +47,7 @@ public class LevelUpItemView extends FrameLayout {
         itemNameTextView = findViewById(R.id.levelupItemName);
         itemDescTextView = findViewById(R.id.levelupItemDesc);
         levelTextView = findViewById(R.id.levelupItemLevel);
+        equipmentImage = findViewById(R.id.levelUpImage);
 
     }
 
@@ -59,28 +63,31 @@ public class LevelUpItemView extends FrameLayout {
         return levelTextView;
     }
 
-    public void setName(String name){
+    private void setName(String name){
         itemNameTextView.setText(name);
     }
 
-    public void setLevel(int level){
+    private void setLevel(int level){
         levelTextView.setText("level : " + level);
     }
 
-    public void setDesc(String desc){
+    private void setDesc(String desc){
         itemDescTextView.setText(desc);
     }
 
-    private void setLevelUpItemView(String name, int level, String desc){
+    private void setBitmap(Bitmap bitmap){ equipmentImage.setImageBitmap(bitmap);}
+
+    private void setLevelUpItemView(String name, int level, String desc, Bitmap bitmap){
         setName(name);
         setLevel(level);
         setDesc(desc);
+        setBitmap(bitmap);
     }
 
     public void set(Equipment equipment){
         this.equipment = equipment;
         LevelDesc desc = equipment.getNextLevelDescription();
-        setLevelUpItemView(desc.getName(), desc.getLevel(), desc.getDesc());
+        setLevelUpItemView(desc.getName(), desc.getLevel(), desc.getDesc(), equipment.getEquipmentBitmap());
     }
 
     public Equipment getEquipment(){

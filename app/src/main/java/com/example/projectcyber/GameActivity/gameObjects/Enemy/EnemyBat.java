@@ -17,7 +17,7 @@ public class EnemyBat extends FollowerEnemy{
             batImg = BitmapFactory.decodeResource(gameView.getResources(),R.drawable.enemy_bat);
             batImg = Bitmap.createScaledBitmap(batImg, 75, 75, false);
         }
-        baseImg = batImg;
+        imgRight = batImg;
         this.maxHp = 1;
         this.speed = 100;
         this.might = 5;

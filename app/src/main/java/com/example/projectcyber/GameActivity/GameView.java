@@ -84,6 +84,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     private int coinsAmount;
     private CoinCounter coinCounter;
 
+    private GameBackground gameBackground;
+
     public GameView(GameActivity activity, HashMap<PlayerStatsType, Double> startingStats) {
         super(activity.getApplicationContext());
         this.context = activity.getApplicationContext();
@@ -130,12 +132,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
         timer = new Timer(this);
 
+        gameBackground = new GameBackground(this);
+
     }
 
 
 
     /** Updates the data of the game, called every update*/
     public void update(long deltaTime){
+        long timeStarted = System.nanoTime();
         //Log.d("deltaTime", "deltaTime" + deltaTime);
         //add enemies from queue to main list
 
@@ -169,15 +174,20 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         healthBar.update();
         coinCounter.update();
         timer.update(deltaTime);
+        gameBackground.update();
+
 
         //Log.d("grid", entityGrid.toString());
-
+        long timeEnded = System.nanoTime();
+        Log.d("draw", "time took to update : " + (timeEnded-timeStarted)/1_000_000);
     }
 
     /** Draws the game onto the canvas, called every update*/
     public void draw(Canvas mainCanvas){
         super.draw(mainCanvas);
         mainCanvas.drawColor(0xFF006600);
+
+        gameBackground.draw(mainCanvas);
 
         screenWidth = getWidth();
         screenHeight = getHeight();
@@ -206,8 +216,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         joystick.draw(mainCanvas);
 
 
-        //drawUPS(mainCanvas);
-        //drawFPS(mainCanvas);
+        drawUPS(mainCanvas);
+        drawFPS(mainCanvas);
         //drawPlayerPosition(mainCanvas);
         //drawPlayerSpeed(mainCanvas);
         //drawPlayerHp(mainCanvas);

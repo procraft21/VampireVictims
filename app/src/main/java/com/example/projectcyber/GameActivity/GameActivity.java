@@ -108,7 +108,6 @@ public class GameActivity extends AppCompatActivity {
         };
 
         LinearLayout layout = dialog.findViewById(R.id.levelUpLinearLayout);
-        Log.d("options", options.toString());
         for(Equipment option : options){
             LevelUpItemView itemView = new LevelUpItemView(this);
             itemView.set(option);
