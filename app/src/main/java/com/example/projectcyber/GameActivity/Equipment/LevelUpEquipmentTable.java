@@ -152,4 +152,5 @@ public class LevelUpEquipmentTable {
         }
         return null;
     }
+
 }

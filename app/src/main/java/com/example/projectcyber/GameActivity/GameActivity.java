@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -152,17 +153,11 @@ public class GameActivity extends AppCompatActivity {
     }
     public void showPauseDialog() throws Exception {
 
-        Callable<LinearLayoutManager> getManager = () -> {
-            return new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false) {
+        Callable<GridLayoutManager> getManager = () -> {
+            return new GridLayoutManager(this,gameView.getPlayer().getMaxEquipmentPerType()){
                 @Override
-                public boolean canScrollHorizontally() {
+                public boolean canScrollVertically() {
                     return false;
-                }
-
-                @Override
-                public boolean checkLayoutParams(RecyclerView.LayoutParams lp) {
-                    lp.width = getWidth() / 3;
-                    return true;
                 }
             };
         };
@@ -195,6 +190,14 @@ public class GameActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 closeGame();
+            }
+        });
+
+        Button resumeButton = dialog.findViewById(R.id.resumeButton);
+        resumeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.cancel();
             }
         });
         dialog.show();

@@ -28,8 +28,7 @@ public class Player extends Mob{
     private HashSet<Weapon> weapons;
     private HashMap<PlayerStatsType,Item> items;
 
-    private final int MAX_WEAPONS = 3;
-    private final int MAX_ITEMS = 3;
+    private final int MAX_EQUIPMENT_PER_TYPE = 3;
 
     private long lastTimeSinceHeal = 0;
 
@@ -72,6 +71,10 @@ public class Player extends Mob{
     public void levelUp(){
         gameView.pauseEntities();
         gameView.showLevelUpDialog();
+    }
+
+    public int getMaxEquipmentPerType(){
+        return MAX_EQUIPMENT_PER_TYPE;
     }
 
     public int getXpRequired(){
@@ -200,11 +203,11 @@ public class Player extends Mob{
     }
 
     public int getOpenWeaponSlots(){
-        return this.MAX_WEAPONS - getWeapons().size();
+        return this.MAX_EQUIPMENT_PER_TYPE - getWeapons().size();
     }
 
     public int getOpenItemSlots(){
-        return MAX_ITEMS - getItems().size();
+        return MAX_EQUIPMENT_PER_TYPE - getItems().size();
     }
 
     public boolean haveWeaponSpace(){
