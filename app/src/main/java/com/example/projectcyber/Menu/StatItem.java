@@ -6,7 +6,9 @@ import com.example.projectcyber.GameActivity.Stats.Stat;
 import com.example.projectcyber.GameActivity.Stats.StatModifier;
 import com.example.projectcyber.GameActivity.Stats.PlayerStatsType;
 
-public class StatItem {
+import java.io.Serializable;
+
+public class StatItem implements Serializable {
     private String name;
     private int level;
     private int maxLevel;

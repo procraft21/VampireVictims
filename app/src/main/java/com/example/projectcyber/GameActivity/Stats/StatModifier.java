@@ -3,7 +3,9 @@ package com.example.projectcyber.GameActivity.Stats;
 import com.example.projectcyber.GameActivity.Equipment.Weapons.WeaponStatsType;
 import com.example.projectcyber.GameActivity.gameObjects.Player;
 
-public class StatModifier {
+import java.io.Serializable;
+
+public class StatModifier implements Serializable {
 
     public enum Type{
         percentile, bonus

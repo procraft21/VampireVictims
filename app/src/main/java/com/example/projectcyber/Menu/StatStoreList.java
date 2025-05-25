@@ -6,10 +6,11 @@ import com.example.projectcyber.GameActivity.Stats.Stat;
 import com.example.projectcyber.GameActivity.Stats.StatModifier;
 import com.example.projectcyber.GameActivity.Stats.PlayerStatsType;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class StatStoreList {
+public class StatStoreList implements Serializable {
 
     private HashMap<PlayerStatsType, StatItem> stats;
     protected int totalBought;

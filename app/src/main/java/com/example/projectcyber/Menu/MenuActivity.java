@@ -68,45 +68,36 @@ public class MenuActivity extends AppCompatActivity {
 
         playButton = findViewById(R.id.playButton);
 
-        String uid = firebaseAuth.getCurrentUser().getUid();
-
         logoutButton = findViewById(R.id.logoutButton);
         final User[] user = new User[1];
 
-        DB.collection(getString(R.string.usersCollection)).document(uid).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        user[0] = (User) getIntent().getSerializableExtra("User");
+
+        assert user[0] != null;
+
+        long coins = user[0].getCoins();
+        stats = user[0].getStats();
+
+        coinTextView.setText("Coins : " + coins);
+
+        StatUpgradeRecyclerAdapter adapter = new StatUpgradeRecyclerAdapter(user[0], activity);
+        statShop.setAdapter(adapter);
+        statShop.setLayoutManager(new GridLayoutManager(getApplicationContext(), 3));
+
+        playButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                user[0] = documentSnapshot.toObject(User.class);
+            public void onClick(View view) {
+                Log.d("user", user[0].getMaxHpLvl() + "");
+                saveUserToDatabase(user[0]);
+                startGame(user[0]);
+            }
+        });
 
-                assert user[0] !=null;
-
-                long coins = user[0].getCoins();
-                stats = user[0].getStats();
-
-                coinTextView.setText("Coins : " + coins);
-
-                StatUpgradeRecyclerAdapter adapter = new StatUpgradeRecyclerAdapter(user[0], activity);
-                statShop.setAdapter(adapter);
-                statShop.setLayoutManager(new GridLayoutManager(getApplicationContext(), 3));
-
-                playButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Log.d("user", user[0].getMaxHpLvl() + "");
-                        saveUserToDatabase(user[0]);
-                        startGame(user[0]);
-                    }
-                });
-
-                logoutButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        firebaseAuth.signOut();
-                        activity.finish();
-                    }
-                });
-
-
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                firebaseAuth.signOut();
+                activity.finish();
             }
         });
 

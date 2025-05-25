@@ -3,12 +3,13 @@ package com.example.projectcyber.UserLogic;
 import com.example.projectcyber.GameActivity.Stats.PlayerStatsType;
 import com.google.firebase.firestore.Exclude;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import com.example.projectcyber.Menu.StatItem;
 import com.example.projectcyber.Menu.StatStoreList;
 
-public class User {
+public class User implements Serializable {
     private int coins;
     private StatStoreList stats;
 

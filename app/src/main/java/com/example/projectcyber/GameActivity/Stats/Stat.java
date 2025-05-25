@@ -1,6 +1,8 @@
 package com.example.projectcyber.GameActivity.Stats;
 
-public class Stat<T extends StatType> {
+import java.io.Serializable;
+
+public class Stat<T extends StatType> implements Serializable {
     private T statType;
     private double value;
     private double percentileBonus;
