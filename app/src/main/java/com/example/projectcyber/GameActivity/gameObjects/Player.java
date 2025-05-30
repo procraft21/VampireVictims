@@ -120,11 +120,6 @@ public class Player extends Mob{
     }
 
     @Override
-    public double getCollisionRadius() {
-        return imgRight.getWidth()/2;
-    }
-
-    @Override
     protected void resolveEntityCollision(Entity entity){
         super.resolveEntityCollision(entity);
         if(entity instanceof Enemy && !immunityList.inList(entity)){

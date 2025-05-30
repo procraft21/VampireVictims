@@ -333,8 +333,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     public void summonEnemies(List<Enemy> enemies){
 
         this.enemies.addAll(enemies);
-        for(Enemy enemy : enemies)
+        for(Enemy enemy : enemies){
+            if(enemy == null){
+                Log.d("fatal", "added null");
+            }
             addToGrid(enemy);
+        }
     }
 
     public HashSet<Enemy> getEnemies(){

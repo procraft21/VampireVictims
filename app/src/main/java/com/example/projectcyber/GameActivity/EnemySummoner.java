@@ -5,6 +5,7 @@ import android.util.Pair;
 
 import com.example.projectcyber.GameActivity.gameObjects.Enemy.Enemy;
 import com.example.projectcyber.GameActivity.gameObjects.Enemy.EnemyBat;
+import com.example.projectcyber.GameActivity.gameObjects.Enemy.EnemyBatKnight;
 import com.example.projectcyber.GameActivity.gameObjects.Enemy.FollowerEnemy;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class EnemySummoner {
             this.length = length;
             this.summoningInterval = summoningInterval;
             this.minimumEnemies = minimumEnemies;
-            this.enemies = enemies;
+            this.enemies = new HashSet<>(enemies);
         }
     }
 
@@ -44,15 +45,22 @@ public class EnemySummoner {
     private int currSlotIndex = 0;
     private ArrayList<SummoningSlot> summoningList;
 
-    boolean active = true;
-
     public EnemySummoner(GameView gameView){
         this.gameView = gameView;
 
         summoningList = new ArrayList<>();
-        HashSet<Enemy> enemies = new HashSet<Enemy>();
+
+        HashSet<Enemy> enemies = new HashSet<>();
         enemies.add(new EnemyBat(gameView, 0,0));
-        summoningList.add(new SummoningSlot(120000, 500,30, enemies));
+        summoningList.add(new SummoningSlot(120_000, 500,30, enemies));
+
+        enemies.add(new EnemyBatKnight(gameView, 0, 0));
+        summoningList.add(new SummoningSlot(60_000, 500, 40, enemies));
+
+        enemies.clear();
+        enemies.add(new EnemyBatKnight(gameView, 0, 0));
+        summoningList.add(new SummoningSlot(120_000, 250, 50, enemies));
+
     }
 
     public void update(long deltaTime){
@@ -104,8 +112,8 @@ public class EnemySummoner {
                     throw new RuntimeException(e);
                 }
             }
+            i++;
         }
-        Log.d("a","a");
         return null;
     }
 
