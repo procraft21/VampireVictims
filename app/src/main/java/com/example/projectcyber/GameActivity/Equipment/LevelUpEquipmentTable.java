@@ -8,22 +8,37 @@ import com.example.projectcyber.GameActivity.Equipment.Weapons.*;
 import com.example.projectcyber.GameActivity.GameView;
 import com.example.projectcyber.GameActivity.gameObjects.Player;
 
-
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Random;
 
+/**
+ * Handles generation of equipment choices during level-up.
+ * Offers the player a set of upgrade options based on what they own,
+ * what is available, and their inventory space.
+ */
 public class LevelUpEquipmentTable {
 
+    /** Maximum number of equipment choices to offer on level-up. */
     public static final int MAX_CHOICES = 3;
+
+    /** Random number generator for equipment selection. */
     Random rnd = new Random();
 
+    /** Set of all possible weapons available to the player. */
     HashSet<Weapon> allWeapons;
+
+    /** Set of all possible items available to the player. */
     HashSet<Item> allItems;
 
+    /** Reference to the GameView containing game context. */
     GameView gameView;
 
+    /**
+     * Constructs a new LevelUpEquipmentTable.
+     *
+     * @param gameView the current game view instance
+     */
     public LevelUpEquipmentTable(GameView gameView){
         this.gameView = gameView;
         allWeapons = new HashSet<>();
@@ -32,6 +47,9 @@ public class LevelUpEquipmentTable {
         addAllWeapons();
     }
 
+    /**
+     * Populates the internal set with all weapon types.
+     */
     private void addAllWeapons(){
         allWeapons.add(new EtherealSpike(gameView));
         allWeapons.add(new MagmaShot(gameView));
@@ -41,6 +59,9 @@ public class LevelUpEquipmentTable {
         allWeapons.add(new ViolentStar(gameView));
     }
 
+    /**
+     * Populates the internal set with all item types.
+     */
     private void addAllItems(){
         allItems.add(new CoffeeDonut(gameView));
         allItems.add(new CompoundW(gameView));
@@ -54,6 +75,12 @@ public class LevelUpEquipmentTable {
         allItems.add(new WirelessTransmitter(gameView));
     }
 
+    /**
+     * Retrieves a random selection of equipment options for the player.
+     * Takes into account current equipment, space for new equipment, and level-up potential.
+     *
+     * @return a set of up to MAX_CHOICES equipment options
+     */
     public HashSet<Equipment> getOptions(){
         HashSet<Equipment> options = new HashSet<>();
 
@@ -77,13 +104,13 @@ public class LevelUpEquipmentTable {
             }
         }
 
-        Player player =gameView.getPlayer();
-        for(int i = 0; i< MAX_CHOICES; i++){
+        Player player = gameView.getPlayer();
 
-            boolean owned = rnd.nextDouble() <= 0.2; //20% for owned items.
+        for(int i = 0; i < MAX_CHOICES; i++){
+            boolean owned = rnd.nextDouble() <= 0.2; // 20% chance to pick an already owned equipment
 
             if(ownedEligibleEquipment.size() == 0 && !player.haveItemSpace() && !player.haveWeaponSpace()){
-                return options;
+                return options; // No options possible
             }
 
             if(owned && ownedEligibleEquipment.size() > 0){
@@ -91,14 +118,13 @@ public class LevelUpEquipmentTable {
                 options.add(picked);
                 if(picked instanceof Weapon) {
                     eligibleWeapons.remove(picked);
-                }else if(picked instanceof Item){
+                } else if(picked instanceof Item){
                     eligibleItems.remove(picked);
                 }
                 ownedEligibleEquipment.remove(picked);
-            }else{
+            } else {
                 if(player.haveWeaponSpace()){
                     if(player.haveItemSpace()){
-                        //have both weapon and item space
                         ArrayList<Equipment> combined = new ArrayList<>();
                         combined.addAll(eligibleWeapons);
                         combined.addAll(eligibleItems);
@@ -106,30 +132,27 @@ public class LevelUpEquipmentTable {
                         options.add(picked);
                         if(picked instanceof Weapon) {
                             eligibleWeapons.remove(picked);
-                        }else if(picked instanceof Item){
+                        } else if(picked instanceof Item){
                             eligibleItems.remove(picked);
                         }
-                    }else{
-                        //have only  weapon space
+                    } else {
                         Equipment picked = pickFromArray(eligibleWeapons);
                         options.add(picked);
                         eligibleWeapons.remove(picked);
                         ownedEligibleEquipment.remove(picked);
                     }
-                }else{
+                } else {
                     if(player.haveItemSpace()){
-                        //have only item space
                         Equipment picked = pickFromArray(eligibleItems);
                         options.add(picked);
                         eligibleItems.remove(picked);
                         ownedEligibleEquipment.remove(picked);
-                    }else{
-                        //have no space
+                    } else {
                         Equipment picked = pickFromArray(ownedEligibleEquipment);
                         options.add(picked);
                         if(picked instanceof Weapon) {
                             eligibleWeapons.remove(picked);
-                        }else if(picked instanceof Item){
+                        } else if(picked instanceof Item){
                             eligibleItems.remove(picked);
                         }
                         ownedEligibleEquipment.remove(picked);
@@ -141,10 +164,23 @@ public class LevelUpEquipmentTable {
         return options;
     }
 
-    private Equipment pickFromArray(ArrayList<? extends Equipment> list){
+    /**
+     * Selects a random element from the given list.
+     *
+     * @param list list to select from
+     * @param <T>  subtype of Equipment
+     * @return randomly selected element
+     */
+    private <T extends Equipment> T pickFromArray(ArrayList<T> list){
         return list.get(rnd.nextInt(list.size()));
     }
 
+    /**
+     * Retrieves the canonical instance of a weapon by matching name.
+     *
+     * @param weapon the weapon to look for
+     * @return matching weapon instance from the pool or null if not found
+     */
     public Weapon getWeapon(Weapon weapon){
         for(Weapon weaponItr : allWeapons){
             if(weaponItr.name == weapon.name)
@@ -152,5 +188,4 @@ public class LevelUpEquipmentTable {
         }
         return null;
     }
-
 }

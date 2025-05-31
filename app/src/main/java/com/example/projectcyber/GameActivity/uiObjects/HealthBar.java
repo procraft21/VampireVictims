@@ -28,8 +28,7 @@ public class HealthBar {
     }
 
     public void update(){
-        double playerHealth = player.getCurrentHP();
-        double maxHealth = player.getStatValue(PlayerStatsType.MaxHp);
+        //updates the current health to max health ratio.
         healthRatio = player.getCurrentHP() / player.getStatValue(PlayerStatsType.MaxHp);
     }
 

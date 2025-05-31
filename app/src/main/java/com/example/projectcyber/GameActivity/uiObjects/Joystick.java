@@ -11,7 +11,6 @@ public class Joystick {
     private static final int JOYSTICK_BASE_RADIUS = 100;
     private static final int JOYSTICK_HANDLE_RADIUS = 50;
     private static final int JOYSTICK_BASE_COLOR = 0x60FFFFFF,JOYSTICK_HANDLE_COLOR = 0xF0FFFFFF; //2 opacities of white
-    private static final int JOYSTICK_DEAD_RADIUS = JOYSTICK_BASE_RADIUS/4;
 
     private Paint joystickBasePaint, joystickHandlePaint;
 

@@ -20,27 +20,25 @@ public class User implements Serializable {
 
     @Exclude
     public ArrayList<StatItem> getStats(){
-
         return stats.getList();
-    }
-
-    public int getCoins() {
-        return coins;
-    }
-
-    public void setCoins(int coins) {
-        this.coins = coins;
     }
 
     public void addCoins(int coins) {setCoins(getCoins() + coins);}
 
     //The getters and setters for the firebase
 
+    public int getCoins() {
+        return coins;
+    }
+    public void setCoins(int coins) {
+        this.coins = coins;
+    }
+
     public int getMaxHpLvl() {
         return stats.getStatLvl(PlayerStatsType.MaxHp);
     }
     public void setMaxHpLvl(int maxHpLvl) {
-        this.stats.setStatLvl(PlayerStatsType.MaxHp, maxHpLvl);
+        stats.setStatLvl(PlayerStatsType.MaxHp, maxHpLvl);
     }
 
     public int getMoveSpdLvl() {

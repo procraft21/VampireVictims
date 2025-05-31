@@ -1,59 +1,65 @@
 package com.example.projectcyber.GameActivity.gameObjects.Pickups;
 
-import android.util.Log;
-
 import com.example.projectcyber.GameActivity.GameView;
 import com.example.projectcyber.GameActivity.Stats.PlayerStatsType;
 import com.example.projectcyber.GameActivity.Utils;
 import com.example.projectcyber.GameActivity.gameObjects.Entity;
 import com.example.projectcyber.GameActivity.gameObjects.Player;
 
-public abstract class Pickup extends Entity implements Cloneable{
+/**
+ * Base class for all in-game pickups (e.g., XP, coins, health).
+ * Handles auto-attract behavior when within range of the player.
+ */
+public abstract class Pickup extends Entity implements Cloneable {
 
     private boolean closeToPlayer;
-
-    private final double SPEED = 300;
+    private static final double SPEED = 300;
 
     public Pickup(double posX, double posY, GameView gameView) {
         super(posX, posY, gameView);
         closeToPlayer = false;
     }
 
-    public void update(long deltaTime){
-        //Log.d("pos", posX + " " + posY);
+    @Override
+    public void update(long deltaTime) {
         savePrevPos();
         Player player = gameView.getPlayer();
-        if(distance(player) < player.getStatValue(PlayerStatsType.Magnet)){
+
+        // Check if player is within magnetic range
+        if (!closeToPlayer && distance(player) < player.getStatValue(PlayerStatsType.Magnet)) {
             closeToPlayer = true;
         }
 
-        if(closeToPlayer){
-            lerpWithIdealVel();
+        // Attract towards player
+        if (closeToPlayer) {
+            moveTowardPlayer(player);
         }
+
         super.update(deltaTime);
     }
 
-    /**lerp with ideal velocity(towards the player)*/
-    private void lerpWithIdealVel(){
-        Player player = gameView.getPlayer();
+    /**
+     * Smoothly adjusts velocity to move towards the player.
+     */
+    private void moveTowardPlayer(Player player) {
+        double dx = player.getPositionX() - posX;
+        double dy = player.getPositionY() - posY;
+        double distance = Math.max(Utils.distance(0, 0, dx, dy), 1e-5); // avoid div-by-zero
 
-        double length = distance(player);
-        double idealVelX = SPEED *(player.getPositionX()-posX)/length;
-        double idealVelY = SPEED *(player.getPositionY()-posY)/length;
+        double idealVelX = SPEED * dx / distance;
+        double idealVelY = SPEED * dy / distance;
 
-        double idealWeight = 0.5;
-        velX = Utils.lerp(idealVelX, velX, idealWeight);
-        velY = Utils.lerp(idealVelY, velY, idealWeight);
+        double smoothingFactor = 0.5;
+        velX = Utils.lerp(idealVelX, velX, smoothingFactor);
+        velY = Utils.lerp(idealVelY, velY, smoothingFactor);
     }
 
     @Override
     public Pickup clone() {
         try {
-            Pickup clone = (Pickup) super.clone();
-            // TODO: copy mutable state here, so the clone can't change the internals of the original
-            return clone;
+            return (Pickup) super.clone();
         } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
+            throw new AssertionError("Pickup cloning failed", e);
         }
     }
 }

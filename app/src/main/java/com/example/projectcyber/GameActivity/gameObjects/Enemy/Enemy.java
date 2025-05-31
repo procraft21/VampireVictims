@@ -21,8 +21,10 @@ public abstract class  Enemy extends Mob implements Cloneable{
     //raw damage to player without armor.
     protected int might = 5;
 
+    //max hp
     protected int maxHp = 1;
 
+    //xpDrop when dead
     protected int xpDrop = 10;
 
 
@@ -30,14 +32,6 @@ public abstract class  Enemy extends Mob implements Cloneable{
         super(posX,posY, gameView);
 
         this.currHP = maxHp;
-    }
-
-    @Override
-    public void takeDamage(double damage) {
-        super.takeDamage(damage);
-        if(currHP <= 0){
-            destroy();
-        }
     }
 
     @Override

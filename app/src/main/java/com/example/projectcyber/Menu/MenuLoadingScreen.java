@@ -11,7 +11,6 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.projectcyber.R;
 import com.example.projectcyber.UserLogic.User;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -35,16 +34,17 @@ public class MenuLoadingScreen extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         DB = FirebaseFirestore.getInstance();
 
-        String uid = auth.getCurrentUser().getUid();
-        DB.collection(getString(R.string.usersCollection)).document(uid).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                User user = documentSnapshot.toObject(User.class);
-                Intent intent = new Intent(MenuLoadingScreen.this, MenuActivity.class);
-                intent.putExtra("User", user);
-                startActivity(intent);
-                finish();
-            }
-        });
+        DB.collection(getString(R.string.usersCollection)).document(auth.getCurrentUser().getUid())
+                .get()
+                .addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        User user = documentSnapshot.toObject(User.class);
+                        Intent intent = new Intent(MenuLoadingScreen.this, MenuActivity.class);
+                        intent.putExtra("User", user);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
     }
 }

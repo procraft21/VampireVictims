@@ -17,16 +17,14 @@ import com.example.projectcyber.UserLogic.User;
 
 public class StatUpgradeRecyclerAdapter extends RecyclerView.Adapter<StatUpgradeRecyclerAdapter.ViewHolder> {
 
-    User user;
 
-    ArrayList<StatItem> statItemList;
-
-    MenuActivity activity;
+    private User user;
+    private ArrayList<StatItem> statItemList;
+    private MenuActivity activity;
 
     public StatUpgradeRecyclerAdapter(User user, MenuActivity activity){
         this.user = user;
         this.statItemList = user.getStats();
-
         this.activity = activity;
     }
 
@@ -43,7 +41,7 @@ public class StatUpgradeRecyclerAdapter extends RecyclerView.Adapter<StatUpgrade
         holder.statNameTextView.setText(item.getName());
         holder.statLvlTextView.setText("level : " + item.getLevel());
         int price = item.getPrice();
-        if(price == -1){
+        if(price == StatItem.MAX_LEVEL_PRICE){
             holder.priceTextView.setText("Max level!");
         }else{
             holder.priceTextView.setText("cost : " + item.getPrice());
@@ -69,21 +67,30 @@ public class StatUpgradeRecyclerAdapter extends RecyclerView.Adapter<StatUpgrade
             itemView.setOnClickListener(this);
         }
 
+        /**
+         * when clicking on a stat item, level up the stat if can.
+         */
         @SuppressLint("NotifyDataSetChanged")
         @Override
         public void onClick(View v){
             StatItem statItem =statItemList.get(getAdapterPosition());
             int price = statItem.getPrice();
+
+            //check if the user has enough coins and the stat didn't reach max level.
             if(user.getCoins() > price && statItem.canLevelUp()){
 
+                //remove the price from the amount the user has.
                 user.setCoins(user.getCoins() - price);
+
+                //raise the stat level.
                 statItem.raiseLevel();
 
+                //update the coins in the text view.
                 activity.setCoinsText(user.getCoins());
-                notifyDataSetChanged(); //all the data set changes once we buy something because the price...
-            }
 
-            //Log.d("stat", statItemList.get(getAdapterPosition()).getLevel() + "");
+                //all the data set changes once we buy something because of the price.
+                notifyDataSetChanged();
+            }
 
         }
     }

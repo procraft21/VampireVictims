@@ -1,51 +1,60 @@
 package com.example.projectcyber.GameActivity.gameObjects.Enemy;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import com.example.projectcyber.GameActivity.GameView;
 import com.example.projectcyber.GameActivity.Utils;
 import com.example.projectcyber.GameActivity.gameObjects.Player;
 
-public class FollowerEnemy extends Enemy{
-    Player player;
+public class FollowerEnemy extends Enemy {
+
+    private final Player player;
 
     public FollowerEnemy(GameView gameView, double posX, double posY) {
         super(gameView, posX, posY);
-        player = gameView.getPlayer();
+        this.player = gameView.getPlayer();
+
+        // Initial velocity pointing toward the player
         double length = distance(player);
-        if(length > 0){
-            Log.d("startingVel", "startingVel");
-            velX = (posX - player.getPositionX())/length;
-            velY = (posY - player.getPositionY())/length;
+        if (length > 0) {
+            velX = (player.getPositionX() - posX) / length;
+            velY = (player.getPositionY() - posY) / length;
         }
-
-
     }
 
     @Override
     public void update(long deltaTime) {
         savePrevPos();
-        lerpWithIdealVel();
+
+        lerpTowardPlayer();
+
+        // Set direction for sprite flipping or animation
+        if (player.getPositionX() > posX) direction = Direction.Right;
+        else if (player.getPositionX() < posX) direction = Direction.Left;
+
         super.update(deltaTime);
-        if(player.getPositionX() > posX) direction = Direction.Right;
-        if(player.getPositionX() < posX) direction = Direction.Left;
     }
 
-    /**lerp with ideal velocity(towards the player)*/
-    private void lerpWithIdealVel(){
+    /** Lerp current velocity toward the ideal velocity pointing at the player */
+    private void lerpTowardPlayer() {
         double length = distance(player);
-        double idealVelX = speed*(player.getPositionX()-posX)/length;
-        double idealVelY = speed*(player.getPositionY()-posY)/length;
+        if (length == 0) return;
 
-        double idealWeight = 0.5;
+        double idealVelX = speed * (player.getPositionX() - posX) / length;
+        double idealVelY = speed * (player.getPositionY() - posY) / length;
+
+        final double idealWeight = 0.5;
         velX = Utils.lerp(idealVelX, velX, idealWeight);
         velY = Utils.lerp(idealVelY, velY, idealWeight);
     }
+
     @NonNull
     @Override
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
+    public FollowerEnemy clone() {
+        try {
+            return (FollowerEnemy) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError("FollowerEnemy clone failed", e);
+        }
     }
 }

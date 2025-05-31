@@ -61,16 +61,19 @@ public class LoginActivity extends AppCompatActivity {
                 auth.signInWithEmailAndPassword(email,password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
+                        //if succeeded, move to menu activity
                         moveToMenu();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        //if failed, show the user that the login failed.
                         Toast.makeText(emailEditText.getContext(), "Login Failed!", Toast.LENGTH_LONG).show();
                     }
                 }).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        //anyway, turn the progress bar invisible again.
                         progressBar.setVisibility(View.INVISIBLE);
                     }
                 });
@@ -80,12 +83,16 @@ public class LoginActivity extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //move to register activity.
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
             }
         });
     }
 
+    /**
+     * Move to the menu activity.
+     */
     private void moveToMenu(){
         Intent intent = new Intent(LoginActivity.this, MenuLoadingScreen.class);
         startActivity(intent);

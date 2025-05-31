@@ -22,6 +22,6 @@ public class EnemyBat extends FollowerEnemy{
         currHP = maxHp;
         this.speed = 100;
         this.might = 5;
-        this.xpDrop = 1;
+        this.xpDrop = 2;
     }
 }

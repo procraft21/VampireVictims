@@ -15,6 +15,10 @@ public class StatStoreList implements Serializable {
     private HashMap<PlayerStatsType, StatItem> stats;
     protected int totalBought;
 
+    /**
+     * The constructor for the StatStoreList.
+     * Creates a new HashMap for the stats, and fills each type with the appropriate StatItem.
+     */
     public StatStoreList(){
         totalBought = 0;
         stats = new HashMap<>();
@@ -40,17 +44,26 @@ public class StatStoreList implements Serializable {
                 new Stat<>(PlayerStatsType.Magnet, 300), new StatModifier(StatModifier.Type.percentile, 25), this));
     }
 
+    /**
+     * get the stats as a list for the recyclerView.
+     * @return the stats as a list
+     */
     public ArrayList<StatItem> getList(){
         return new ArrayList<>(stats.values());
 
     }
 
+    /**
+     * @param type the type of the stat you want to get.
+     * @return the level of the stat
+     */
     public int getStatLvl(PlayerStatsType type) { return stats.get(type).getLevel();}
-    public void setStatLvl(PlayerStatsType type, int level) {stats.get(type).setLevel(level);}
 
-    public int getTotalBought(){
-        return totalBought;
-    }
+    /**
+     * @param type the stat type you want to change the level of.
+     * @param level the level you want to change the stat to.
+     */
+    public void setStatLvl(PlayerStatsType type, int level) {stats.get(type).setLevel(level);}
 
 
 

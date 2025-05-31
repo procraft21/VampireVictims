@@ -38,10 +38,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-public class GameView extends SurfaceView implements SurfaceHolder.Callback{
+/**
+ * GameView is the main SurfaceView that handles rendering and updating
+ * the core game loop, game objects (player, enemies, projectiles, pickups),
+ * UI elements, and collision logic via grid-based partitioning.
+ */
+public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
-    //Player variables -----------------------------------------------------------------
-
+    // ----------------- Player variables -----------------
     Player player;
 
     HealthBar healthBar;
@@ -54,22 +58,19 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
     LevelUpEquipmentTable levelUpEquipmentTable;
 
-    //Enemies variables -----------------------------------------------------------------
+    // ----------------- Enemies variables -----------------
     HashSet<Enemy> enemies;
-
     EnemySummoner enemySummoner;
-
     DropTable dropTable;
 
-    //grid of the entities. will only check collisions between entities in the same square.
+    // Grid for spatial partitioning, improves collision detection performance
     HashMap<Pair<Integer, Integer>, HashSet<Entity>> entityGrid;
 
-    //Game stuff------------------------------------------------------------------------
+    // ----------------- Game mechanics -----------------
     private GameLoop gameLoop;
     private Context context;
 
     private Timer timer;
-
     private Joystick joystick;
 
     private int screenWidth;
@@ -86,6 +87,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
     private GameBackground gameBackground;
 
+    /**
+     * Constructor for GameView
+     * @param activity Reference to GameActivity
+     * @param startingStats Player's initial stats
+     */
     public GameView(GameActivity activity, HashMap<PlayerStatsType, Double> startingStats) {
         super(activity.getApplicationContext());
         this.context = activity.getApplicationContext();
@@ -95,28 +101,24 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         setFocusable(true);
 
         this.startingStats = startingStats;
-
-
     }
 
-
-
-    private void init(SurfaceHolder surfaceHolder){
-
-
+    /**
+     * Initializes all game components and state.
+     * Called when the game is first started.
+     */
+    private void init(SurfaceHolder surfaceHolder) {
         Log.d("create", "init");
+
         gameLoop = new GameLoop(this, surfaceHolder);
         joystick = new Joystick();
 
         entityGrid = new HashMap<>();
         player = new Player(this, startingStats);
-
         levelUpEquipmentTable = new LevelUpEquipmentTable(this);
-
         player.addWeapon(levelUpEquipmentTable.getWeapon(new MagicWand(this)));
 
         toBeRemoved = new HashSet<>();
-
         enemies = new HashSet<>();
         dropTable = new DropTable(this);
 
@@ -129,43 +131,37 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         enemySummoner = new EnemySummoner(this);
         healthBar = new HealthBar(this);
         xpProgressBar = new XpProgressBar(this);
-
         timer = new Timer(this);
-
         gameBackground = new GameBackground(this);
-
     }
 
-
-
-    /** Updates the data of the game, called every update*/
-    public void update(long deltaTime){
+    /**
+     * Updates the game state every frame.
+     * @param deltaTime Time passed since last update (ms)
+     */
+    public void update(long deltaTime) {
         long timeStarted = System.nanoTime();
-        //Log.d("deltaTime", "deltaTime" + deltaTime);
-        //add enemies from queue to main list
-
 
         joystick.update();
 
-        if(isPaused) return;
+        if (isPaused) return;
 
         player.update(deltaTime);
         enemySummoner.update(deltaTime);
 
-        for(Projectile projectile : projectiles){
+        for (Projectile projectile : projectiles) {
             projectile.update(deltaTime);
-
         }
 
-        for(Enemy enemy : enemies){
+        for (Enemy enemy : enemies) {
             enemy.update(deltaTime);
         }
 
-        for(Pickup pickup : pickups){
+        for (Pickup pickup : pickups) {
             pickup.update(deltaTime);
         }
 
-        for(Entity remove : toBeRemoved){
+        for (Entity remove : toBeRemoved) {
             removeEntityCompletely(remove);
         }
         toBeRemoved = new HashSet<>();
@@ -176,16 +172,17 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         timer.update(deltaTime);
         gameBackground.update();
 
-
-        //Log.d("grid", entityGrid.toString());
         long timeEnded = System.nanoTime();
-        Log.d("draw", "time took to update : " + (timeEnded-timeStarted)/1_000_000);
+        Log.d("draw", "time took to update : " + (timeEnded - timeStarted) / 1_000_000);
     }
 
-    /** Draws the game onto the canvas, called every update*/
-    public void draw(Canvas mainCanvas){
+    /**
+     * Draws the game view to the provided canvas.
+     * @param mainCanvas Canvas to draw on
+     */
+    public void draw(Canvas mainCanvas) {
         super.draw(mainCanvas);
-        mainCanvas.drawColor(0xFF006600);
+        mainCanvas.drawColor(0xFF006600); // background color
 
         gameBackground.draw(mainCanvas);
 
@@ -194,41 +191,39 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
         player.draw(mainCanvas);
 
-        for(Pickup pickup : pickups){
+        for (Pickup pickup : pickups) {
             pickup.draw(mainCanvas);
         }
 
-        for(Enemy enemy : enemies){
+        for (Enemy enemy : enemies) {
             enemy.draw(mainCanvas);
         }
 
-        for(Projectile projectile : projectiles){
+        for (Projectile projectile : projectiles) {
             projectile.draw(mainCanvas);
         }
-
 
         healthBar.draw(mainCanvas);
         xpProgressBar.draw(mainCanvas);
         coinCounter.draw(mainCanvas);
-
         timer.draw(mainCanvas);
-
         joystick.draw(mainCanvas);
 
-
-        drawUPS(mainCanvas);
         drawFPS(mainCanvas);
-        //drawPlayerPosition(mainCanvas);
-        //drawPlayerSpeed(mainCanvas);
-        //drawPlayerHp(mainCanvas);
+        drawUPS(mainCanvas);
     }
 
-    public void startGame(SurfaceHolder surfaceHolder){
+    /**
+     * Starts the game loop.
+     */
+    public void startGame(SurfaceHolder surfaceHolder) {
         init(surfaceHolder);
         gameLoop.startLoop();
     }
 
-    public void drawUPS(Canvas canvas){
+    // Debugging draw functions -------------------------------------------------
+
+    public void drawUPS(Canvas canvas) {
         double averageUPS = gameLoop.getAverageUPS();
         int color = ContextCompat.getColor(context, R.color.magenta);
         Paint paint = new Paint();
@@ -236,7 +231,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         paint.setTextSize(50);
         canvas.drawText("UPS : " + averageUPS, 100, 40, paint);
     }
-    public void drawFPS(Canvas canvas){
+
+    public void drawFPS(Canvas canvas) {
         double averageFPS = gameLoop.getAverageFPS();
         int color = ContextCompat.getColor(context, R.color.magenta);
         Paint paint = new Paint();
@@ -244,23 +240,25 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         paint.setTextSize(50);
         canvas.drawText("FPS : " + averageFPS, 100, 100, paint);
     }
-    public void drawPlayerPosition(Canvas canvas){
+
+    public void drawPlayerPosition(Canvas canvas) {
         int color = ContextCompat.getColor(context, R.color.magenta);
         Paint paint = new Paint();
         paint.setColor(color);
         paint.setTextSize(50);
         canvas.drawText("X : " + player.getPositionX() + "Y : " + player.getPositionY(), 100, 160, paint);
     }
-    public void drawPlayerSpeed(Canvas canvas){
+
+    public void drawPlayerSpeed(Canvas canvas) {
         int color = ContextCompat.getColor(context, R.color.magenta);
         Paint paint = new Paint();
         paint.setColor(color);
         paint.setTextSize(50);
-        canvas.drawText("velX :" + player.getVelX() + " velY : " + player.getVelY(),100, 220, paint);
+        canvas.drawText("velX :" + player.getVelX() + " velY : " + player.getVelY(), 100, 220, paint);
         canvas.drawText("velSize : " + Utils.distance(player.getVelX(), player.getVelY(), 0, 0), 100, 280, paint);
     }
 
-    public void drawPlayerHp(Canvas canvas){
+    public void drawPlayerHp(Canvas canvas) {
         int color = ContextCompat.getColor(context, R.color.magenta);
         Paint paint = new Paint();
         paint.setColor(color);
@@ -268,17 +266,18 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         canvas.drawText("CurrHealth : " + player.getCurrentHP(), 100, 340, paint);
     }
 
-    // functions from SurfaceHolder.Callback
+    // SurfaceHolder.Callback implementation ----------------------------------
+
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
         Log.d("GameView.java", "surfaceCreated()");
-        if(gameLoop != null && gameLoop.getState().equals(Thread.State.TERMINATED)){
+        if (gameLoop != null && gameLoop.getState().equals(Thread.State.TERMINATED)) {
             SurfaceHolder holder = getHolder();
             holder.addCallback(this);
 
-            gameLoop = new GameLoop(this,surfaceHolder);
+            gameLoop = new GameLoop(this, surfaceHolder);
             gameLoop.startLoop();
-        }else{
+        } else {
             startGame(surfaceHolder);
         }
     }
@@ -293,15 +292,17 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         Log.d("GameView.java", "surfaceDestroyed()");
     }
 
-
+    /**
+     * Handles touch events for the joystick.
+     */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        int x = (int)event.getX(), y = (int)event.getY();
+        int x = (int) event.getX(), y = (int) event.getY();
 
-        switch (event.getAction()){
+        switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                joystick.setIsJoystickOn(true); //turns on the joystick.
-                joystick.setBase(x,y);
+                joystick.setIsJoystickOn(true);
+                joystick.setBase(x, y);
                 joystick.resetActuator();
                 break;
 
@@ -311,77 +312,78 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
                 break;
 
             case MotionEvent.ACTION_MOVE:
-                joystick.setActuator(x,y);
+                joystick.setActuator(x, y);
                 break;
         }
         return true;
     }
 
-    public Player getPlayer(){
+    // ----------------- Getters and Setters -----------------
+    public Player getPlayer() {
         return player;
     }
 
-    public Joystick getJoystick(){
+    public Joystick getJoystick() {
         return joystick;
     }
 
-    public long getTime(){
+    public long getTime() {
         return timer.getTime();
     }
 
-    /**Summons all enemies in the list to the game*/
-    public void summonEnemies(List<Enemy> enemies){
-
+    /**
+     * Summons all enemies in the given list.
+     * @param enemies the list of enemies to summon.
+     */
+    public void summonEnemies(List<Enemy> enemies) {
         this.enemies.addAll(enemies);
-        for(Enemy enemy : enemies){
-            if(enemy == null){
+        for (Enemy enemy : enemies) {
+            if (enemy == null) {
                 Log.d("fatal", "added null");
             }
             addToGrid(enemy);
         }
     }
 
-    public HashSet<Enemy> getEnemies(){
+    public HashSet<Enemy> getEnemies() {
         return enemies;
     }
 
-    public int getNumberOfEnemies(){
+    public int getNumberOfEnemies() {
         return enemies.size();
     }
 
-    public boolean updateGridPlacement(@NonNull Entity entity, double prevX, double prevY){
-        //the prev slot index
-        Pair<Integer, Integer> prevSlotIndex = new Pair<>(getGridPositionFromPositionX(prevX),getGridPositionFromPositionY(prevY));
-
-        //the set of the enemies in the prev slot
+    /**
+     * Updates the entity's position in the entity grid.
+     * @param entity the entity whose position changed.
+     */
+    public boolean updateGridPlacement(@NonNull Entity entity, double prevX, double prevY) {
+        Pair<Integer, Integer> prevSlotIndex = new Pair<>(getGridPositionFromPositionX(prevX), getGridPositionFromPositionY(prevY));
         HashSet<Entity> prevEntitySlot = entityGrid.get(prevSlotIndex);
 
-
-        if(prevEntitySlot == null){
-           entity.destroy();
-           return true;
+        if (prevEntitySlot == null) {
+            entity.destroy();
+            return true;
         }
 
-        //tries to remove the entity
-        if(prevEntitySlot.remove(entity)){
-
-            //if successful, add the entity again in the correct slot
+        if (prevEntitySlot.remove(entity)) {
             addToGrid(entity);
-
-            //if after removal the prev slot is empty, remove it from the grid
-            if(prevEntitySlot.isEmpty()){
+            if (prevEntitySlot.isEmpty()) {
                 entityGrid.remove(prevSlotIndex);
             }
-
             return true;
         }
         return false;
     }
 
-    public void addToGrid(@NonNull Entity entity){
-        Pair<Integer, Integer> slotIndex =new Pair<>(getGridPositionFromPositionX(entity.getPositionX()), getGridPositionFromPositionY(entity.getPositionY()));
+    /**
+     * Adds the entity to the entity grid.
+     * @param entity the entity you want to add.
+     */
+    public void addToGrid(@NonNull Entity entity) {
+        Pair<Integer, Integer> slotIndex = new Pair<>(getGridPositionFromPositionX(entity.getPositionX()), getGridPositionFromPositionY(entity.getPositionY()));
         HashSet<Entity> mobSlot = entityGrid.get(slotIndex);
-        if(mobSlot == null){
+        if (mobSlot == null) {
             HashSet<Entity> newEntitiesSet = new HashSet<>();
             newEntitiesSet.add(entity);
             entityGrid.put(slotIndex, newEntitiesSet);
@@ -390,61 +392,80 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         mobSlot.add(entity);
     }
 
-    public int getGridPositionFromPositionX(double x){
-        return (int)x/500;
-    }
-    public int getGridPositionFromPositionY(double y){
-        return (int)y/ 500;
+    /**
+     * Get the x grid coordinate from the position
+     * @param x the x position.
+     * @return the grid coordinate
+     */
+    public int getGridPositionFromPositionX(double x) {
+        return (int) x / 500;
     }
 
+    /**
+     * Get the y grid coordinate from the position
+     * @param y the y position.
+     * @return the grid coordinate
+     */
+    public int getGridPositionFromPositionY(double y) {
+        return (int) y / 500;
+    }
 
-    public HashSet<Entity> getEntitiesNear(Entity entity){
-        Pair<Integer, Integer> slotIndex =new Pair<>(getGridPositionFromPositionX(entity.getPositionX()), getGridPositionFromPositionY(entity.getPositionY()));
+    /**
+     * Retrieves all entities near a given entity for collision checks.
+     * 'near' is defined as in the same square or adjacent squares.
+     * @param entity the entity you want to get the entities near
+     */
+    public HashSet<Entity> getEntitiesNear(Entity entity) {
+        Pair<Integer, Integer> slotIndex = new Pair<>(getGridPositionFromPositionX(entity.getPositionX()), getGridPositionFromPositionY(entity.getPositionY()));
         return getNeighboringSquares(slotIndex);
     }
 
-    /**Gets all the mobs in the neighboring square and the square itself
-     * @param slotIndex the index of the center slot
-     * @return a hashSet of all the mobs*/
-    private HashSet<Entity> getNeighboringSquares(Pair<Integer,Integer> slotIndex){
+    /**
+     * @return all entities in a 3x3 grid centered at the given grid slot.
+     */
+    private HashSet<Entity> getNeighboringSquares(Pair<Integer, Integer> slotIndex) {
         HashSet<Entity> entities = new HashSet<>();
 
-        for(int i = -1; i<=1; i++){
-            for(int j = -1; j<=1; j++){
-                HashSet<Entity> group = entityGrid.get(new Pair<>(slotIndex.first + i,slotIndex.second+ j));
-                if(group!=null) entities.addAll(group);
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                HashSet<Entity> group = entityGrid.get(new Pair<>(slotIndex.first + i, slotIndex.second + j));
+                if (group != null) entities.addAll(group);
             }
         }
         return entities;
     }
 
-    public void addProjectile(Projectile projectile){
+    public void addProjectile(Projectile projectile) {
         projectiles.add(projectile);
         addToGrid(projectile);
     }
 
-    public void addPickup(Pickup pickup){
+    public void addPickup(Pickup pickup) {
         pickups.add(pickup);
         addToGrid(pickup);
     }
 
-    private void removeEntityCompletely(Entity entity){
+    /**
+     * Completely removes a given entity from the game.
+     */
+    private void removeEntityCompletely(Entity entity) {
         Pair<Integer, Integer> slot = new Pair<>(getGridPositionFromPositionX(entity.getPositionX()), getGridPositionFromPositionY(entity.getPositionY()));
         entityGrid.get(slot).remove(entity);
-        if(entityGrid.get(slot).isEmpty())
+        if (entityGrid.get(slot).isEmpty())
             entityGrid.remove(slot);
 
-        if(entity instanceof Projectile)
+        if (entity instanceof Projectile)
             projectiles.remove(entity);
-        if(entity instanceof Enemy)
+        if (entity instanceof Enemy)
             enemies.remove(entity);
-        if(entity instanceof Pickup)
+        if (entity instanceof Pickup)
             pickups.remove(entity);
-
     }
 
-    //Add to the set of entities to be removed, doesn't remove now.
-    public void removeEntity(Entity entity){
+    /**
+     * Flags an entity for removal in the next update cycle.
+     */
+    public void removeEntity(Entity entity) {
         toBeRemoved.add(entity);
     }
 
@@ -456,12 +477,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         return screenHeight;
     }
 
-    public void levelUpSequence(){
-        isPaused = true;
-
-    }
-
-    public void showLevelUpDialog(){
+    /**
+     * Displays the level-up UI on the main thread.
+     */
+    public void showLevelUpDialog() {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -475,7 +494,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         return coinsAmount;
     }
 
-    public void addCoins(int coins){
+    public void addCoins(int coins) {
         this.coinsAmount += coins;
     }
 
@@ -483,7 +502,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         return dropTable;
     }
 
-    public void showResultDialog(boolean won){
+    /**
+     * Displays the result dialog (win/lose).
+     */
+    public void showResultDialog(boolean won) {
         pauseEntities();
         activity.runOnUiThread(new Runnable() {
             @Override
@@ -493,15 +515,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         });
     }
 
-    public void pauseEntities(){
+    public void pauseEntities() {
         isPaused = true;
     }
 
-    public void resumeGame(){
+    public void resumeGame() {
         isPaused = false;
     }
 
-    public void stopGame(){
+    public void stopGame() {
         gameLoop.stopGame();
     }
 }

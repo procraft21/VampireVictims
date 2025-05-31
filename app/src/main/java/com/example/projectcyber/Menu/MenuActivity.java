@@ -21,117 +21,131 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.projectcyber.GameActivity.GameActivity;
 import com.example.projectcyber.R;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.example.projectcyber.UserLogic.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
-import com.example.projectcyber.UserLogic.User;
-
+/**
+ * MenuActivity serves as the main hub post-authentication, where the user can review their coin balance,
+ * upgrade stats, and initiate a new game session. It also handles user logout and data synchronization.
+ */
 public class MenuActivity extends AppCompatActivity {
 
-    FirebaseAuth firebaseAuth;
-    FirebaseFirestore DB;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseFirestore DB;
 
-    TextView coinTextView;
+    private TextView coinTextView;
     private RecyclerView statShop;
+    private Button playButton;
+    private FloatingActionButton logoutButton;
 
     private ArrayList<StatItem> stats;
+    private ActivityResultLauncher<Intent> launcher;
 
-    Button playButton;
+    private User user;
 
-    FloatingActionButton logoutButton;
-
-    ActivityResultLauncher<Intent> launcher;
-
+    /**
+     * Initializes the menu activity, loads user data, and configures UI interactions.
+     *
+     * @param savedInstanceState Previous instance state, if available
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_menu);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        MenuActivity activity = this;
 
-        coinTextView = findViewById(R.id.coinsTextView);
-        statShop = findViewById(R.id.statsUpgradesView);
-        stats = new ArrayList<>();
-
+        // Initialize Firebase components
         firebaseAuth = FirebaseAuth.getInstance();
         DB = FirebaseFirestore.getInstance();
 
+        // Initialize views and components
+        coinTextView = findViewById(R.id.coinsTextView);
+        statShop = findViewById(R.id.statsUpgradesView);
         playButton = findViewById(R.id.playButton);
-
         logoutButton = findViewById(R.id.logoutButton);
-        final User[] user = new User[1];
 
-        user[0] = (User) getIntent().getSerializableExtra("User");
+        user = (User) getIntent().getSerializableExtra("User");
+        if (user == null) throw new IllegalStateException("User object must be provided via Intent");
 
-        assert user[0] != null;
+        stats = user.getStats();
+        setCoinsText(user.getCoins());
 
-        long coins = user[0].getCoins();
-        stats = user[0].getStats();
-
-        coinTextView.setText("Coins : " + coins);
-
-        StatUpgradeRecyclerAdapter adapter = new StatUpgradeRecyclerAdapter(user[0], activity);
+        // Configure RecyclerView for stat upgrades
+        StatUpgradeRecyclerAdapter adapter = new StatUpgradeRecyclerAdapter(user, this);
         statShop.setAdapter(adapter);
-        statShop.setLayoutManager(new GridLayoutManager(getApplicationContext(), 3));
+        statShop.setLayoutManager(new GridLayoutManager(this, 3));
 
-        playButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("user", user[0].getMaxHpLvl() + "");
-                saveUserToDatabase(user[0]);
-                startGame(user[0]);
-            }
+        // Handle game launch
+        playButton.setOnClickListener(view -> {
+            Log.d("user", "Max HP Level: " + user.getMaxHpLvl());
+            saveUserToDatabase(user);
+            startGame(user);
         });
 
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                firebaseAuth.signOut();
-                activity.finish();
-            }
+        // Handle user logout
+        logoutButton.setOnClickListener(view -> {
+            firebaseAuth.signOut();
+            finish();
         });
 
-        launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+        // Handle game result returning with coin updates
+        launcher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
                     @Override
-                    public void onActivityResult(ActivityResult o) {
-                        if(o.getResultCode() == RESULT_OK){
-                            Intent data = o.getData();
-                            user[0].addCoins(data.getIntExtra("Coins", 0));
-                            setCoinsText(user[0].getCoins());
-                            saveUserToDatabase(user[0]);
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == RESULT_OK) {
+                            Intent data = result.getData();
+                            if (data != null) {
+                                user.addCoins(data.getIntExtra("Coins", 0));
+                                setCoinsText(user.getCoins());
+                                saveUserToDatabase(user);
+                            }
                         }
                     }
                 });
-
     }
 
-    private void startGame(User user){
+    /**
+     * Launches the GameActivity with user-defined stat modifiers as Intent extras.
+     *
+     * @param user The active user instance with current stat values
+     */
+    private void startGame(User user) {
         Intent intent = new Intent(MenuActivity.this, GameActivity.class);
-        for(StatItem item : stats){
+        for (StatItem item : stats) {
             intent.putExtra(item.getType().name(), item.getFinalValue());
         }
-
-
         launcher.launch(intent);
     }
 
-    private void saveUserToDatabase(User user){
-        DB.collection(getString(R.string.usersCollection)).document(firebaseAuth.getCurrentUser().getUid())
+    /**
+     * Saves the current user state to Firestore.
+     *
+     * @param user The user object containing updated state
+     */
+    private void saveUserToDatabase(User user) {
+        DB.collection(getString(R.string.usersCollection))
+                .document(firebaseAuth.getCurrentUser().getUid())
                 .set(user);
     }
 
-    public void setCoinsText(int coins){
+    /**
+     * Updates the coin text view with the user's current coin balance.
+     *
+     * @param coins Number of coins to display
+     */
+    public void setCoinsText(int coins) {
         coinTextView.setText("Coins : " + coins);
     }
 }

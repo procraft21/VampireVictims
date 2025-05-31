@@ -8,14 +8,30 @@ import com.example.projectcyber.GameActivity.gameObjects.Player;
 
 import java.util.HashMap;
 
+/**
+ * Container for managing weapon-related stats, including their base values and
+ * how they interact with player stats for final computation.
+ */
 public class WeaponStatsContainer {
+
+    /** Reference to the game environment. Used to access player stats. */
     GameView gameView;
 
+    /** Maps weapon stats to corresponding player stats that can modify them. */
     static HashMap<WeaponStatsType, PlayerStatsType> modifierTable;
+
+    /** Maps weapon stats to the type of modification they receive (bonus or percentile). */
     static HashMap<WeaponStatsType, StatModifier.Type> typeTable;
 
+    /** Holds the base stats for this weapon. */
     HashMap<WeaponStatsType, Stat<WeaponStatsType>> stats;
 
+    /**
+     * Constructs a new WeaponStatsContainer with the given base stat values.
+     *
+     * @param startingStats initial values for all relevant weapon stats
+     * @param gameView      reference to the current GameView instance
+     */
     public WeaponStatsContainer(HashMap<WeaponStatsType, Double> startingStats, GameView gameView){
         if(modifierTable == null){
             setModifierTable();
@@ -35,15 +51,21 @@ public class WeaponStatsContainer {
         stats.put(WeaponStatsType.Area, new Stat<>(WeaponStatsType.Area, startingStats.get(WeaponStatsType.Area)));
     }
 
+    /**
+     * Initializes the modifierTable, which links weapon stats to relevant player stats.
+     */
     private void setModifierTable(){
         modifierTable = new HashMap<>();
         modifierTable.put(WeaponStatsType.Duration, PlayerStatsType.Duration);
         modifierTable.put(WeaponStatsType.Damage, PlayerStatsType.Might);
-        modifierTable.put(WeaponStatsType.Amount,PlayerStatsType.Amount);
+        modifierTable.put(WeaponStatsType.Amount, PlayerStatsType.Amount);
         modifierTable.put(WeaponStatsType.Cooldown, PlayerStatsType.Cooldown);
         modifierTable.put(WeaponStatsType.Speed, PlayerStatsType.ProjectileSpd);
     }
 
+    /**
+     * Initializes the typeTable, which specifies how each weapon stat is modified (percentile or flat bonus).
+     */
     private void setTypeTable(){
         typeTable = new HashMap<>();
         typeTable.put(WeaponStatsType.Duration, StatModifier.Type.percentile);
@@ -53,6 +75,12 @@ public class WeaponStatsContainer {
         typeTable.put(WeaponStatsType.Speed, StatModifier.Type.percentile);
     }
 
+    /**
+     * Calculates the final value of a given weapon stat, applying player modifiers if applicable.
+     *
+     * @param type the weapon stat to compute
+     * @return the final value after applying player-based modifiers
+     */
     public double getStatValue(WeaponStatsType type){
         Player player = gameView.getPlayer();
         if(modifierTable.get(type) != null && player != null){
@@ -66,6 +94,12 @@ public class WeaponStatsContainer {
         return stats.get(type).getFinalValue();
     }
 
+    /**
+     * Returns the raw Stat object for a specific weapon stat type.
+     *
+     * @param type the type of weapon stat to retrieve
+     * @return the Stat object
+     */
     public Stat<WeaponStatsType> getStat(WeaponStatsType type){
         return stats.get(type);
     }
