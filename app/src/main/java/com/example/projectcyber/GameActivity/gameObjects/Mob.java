@@ -7,10 +7,7 @@ import android.graphics.Matrix;
 import com.example.projectcyber.GameActivity.GameView;
 import com.example.projectcyber.GameActivity.Utils;
 
-/**
- * Abstract class representing a mobile game object (Mob) that can move,
- * take damage, and interact with other entities via collisions.
- */
+
 public abstract class Mob extends Entity {
 
     /** Base image of the Mob facing right */
@@ -52,13 +49,6 @@ public abstract class Mob extends Entity {
         super.update(deltaTime);
         if (velX > 0) direction = Direction.Right;
         if (velX < 0) direction = Direction.Left;
-    }
-
-    /**
-     * Adds the mob to the game's collision grid.
-     */
-    public void addToGrid() {
-        gameView.addToGrid(this);
     }
 
     /**
@@ -160,14 +150,5 @@ public abstract class Mob extends Entity {
         Matrix matrix = new Matrix();
         matrix.postScale(-1, 1);
         return Bitmap.createBitmap(bitmap, 0, 0, imgRight.getWidth(), imgRight.getHeight(), matrix, true);
-    }
-
-    /**
-     * Returns the current HP of the mob.
-     *
-     * @return Current HP.
-     */
-    public double getCurrHP() {
-        return currHP;
     }
 }

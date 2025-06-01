@@ -1,4 +1,4 @@
-package com.example.projectcyber.GameActivity.Stats;
+package com.example.projectcyber.Menu;
 
 public interface StatType {
     public String getName();

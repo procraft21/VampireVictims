@@ -6,8 +6,7 @@ import android.util.Log;
 
 import com.example.projectcyber.GameActivity.GameView;
 import com.example.projectcyber.GameActivity.Equipment.Items.Item;
-import com.example.projectcyber.GameActivity.Stats.PlayerStatsType;
-import com.example.projectcyber.GameActivity.Stats.PlayerStatsContainer;
+import com.example.projectcyber.Menu.PlayerStatsType;
 import com.example.projectcyber.GameActivity.Equipment.Weapons.Weapon;
 import com.example.projectcyber.GameActivity.gameObjects.Enemy.Enemy;
 import com.example.projectcyber.GameActivity.uiObjects.Joystick;
@@ -17,10 +16,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 
-/**
- * Represents the player character in the game. Handles movement, XP/leveling,
- * stats management, item and weapon equipment, and health recovery.
- */
 public class Player extends Mob {
 
     private static final int PLAYER_WIDTH = 150;
@@ -192,22 +187,6 @@ public class Player extends Mob {
 
     public Collection<Item> getItems() {
         return items.values();
-    }
-
-    public int getAmountOfUpgradableWeapons() {
-        int count = 0;
-        for (Weapon weapon : weapons) {
-            if (weapon.canRaiseLevel()) count++;
-        }
-        return count;
-    }
-
-    public int getAmountOfUpgradableItems() {
-        int count = 0;
-        for (Item item : getItems()) {
-            if (item.canRaiseLevel()) count++;
-        }
-        return count;
     }
 
     public int getOpenWeaponSlots() {

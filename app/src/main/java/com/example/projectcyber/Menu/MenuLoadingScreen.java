@@ -17,8 +17,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MenuLoadingScreen extends AppCompatActivity {
 
-    FirebaseAuth auth;
-    FirebaseFirestore DB;
+    private FirebaseAuth auth;
+    private FirebaseFirestore DB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

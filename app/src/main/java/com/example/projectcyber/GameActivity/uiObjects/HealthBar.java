@@ -6,7 +6,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 
 import com.example.projectcyber.GameActivity.GameView;
-import com.example.projectcyber.GameActivity.Stats.PlayerStatsType;
+import com.example.projectcyber.Menu.PlayerStatsType;
 import com.example.projectcyber.R;
 import com.example.projectcyber.GameActivity.gameObjects.Player;
 

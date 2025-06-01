@@ -1,7 +1,5 @@
 package com.example.projectcyber.GameActivity.Equipment;
 
-import android.media.audiofx.DynamicsProcessing;
-
 import com.example.projectcyber.GameActivity.Equipment.Items.*;
 import com.example.projectcyber.GameActivity.Equipment.Weapons.*;
 
@@ -10,20 +8,17 @@ import com.example.projectcyber.GameActivity.gameObjects.Player;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Random;
 
-/**
- * Handles generation of equipment choices during level-up.
- * Offers the player a set of upgrade options based on what they own,
- * what is available, and their inventory space.
- */
-public class LevelUpEquipmentTable {
+
+public class EquipmentTable {
+
+    /** Random number generator for equipment selection. */
+    static Random rnd = new Random();
 
     /** Maximum number of equipment choices to offer on level-up. */
     public static final int MAX_CHOICES = 3;
-
-    /** Random number generator for equipment selection. */
-    Random rnd = new Random();
 
     /** Set of all possible weapons available to the player. */
     HashSet<Weapon> allWeapons;
@@ -39,7 +34,7 @@ public class LevelUpEquipmentTable {
      *
      * @param gameView the current game view instance
      */
-    public LevelUpEquipmentTable(GameView gameView){
+    public EquipmentTable(GameView gameView){
         this.gameView = gameView;
         allWeapons = new HashSet<>();
         allItems = new HashSet<>();
@@ -81,78 +76,87 @@ public class LevelUpEquipmentTable {
      *
      * @return a set of up to MAX_CHOICES equipment options
      */
-    public HashSet<Equipment> getOptions(){
-        HashSet<Equipment> options = new HashSet<>();
+    public HashSet<Equipment> getOptions() {
+        HashSet<Equipment> options = new HashSet<>(); // Final set of equipment options to return
 
-        ArrayList<Equipment> ownedEligibleEquipment = new ArrayList<>();
+        ArrayList<Equipment> ownedEligibleEquipment = new ArrayList<>(); // Owned equipment that can be upgraded
 
-        ArrayList<Weapon> eligibleWeapons = new ArrayList<>();
-        for(Weapon weapon : allWeapons){
-            if(weapon.canRaiseLevel()){
+        ArrayList<Weapon> eligibleWeapons = new ArrayList<>(); // All weapons that can be upgraded
+        for (Weapon weapon : allWeapons) {
+            if (weapon.canRaiseLevel()) {
                 eligibleWeapons.add(weapon);
-                if(weapon.level > 0)
+                if (weapon.level > 0) // Already owned weapon
                     ownedEligibleEquipment.add(weapon);
             }
         }
 
-        ArrayList<Item> eligibleItems = new ArrayList<>();
-        for(Item item : allItems){
-            if(item.canRaiseLevel()){
+        ArrayList<Item> eligibleItems = new ArrayList<>(); // All items that can be upgraded
+        for (Item item : allItems) {
+            if (item.canRaiseLevel()) {
                 eligibleItems.add(item);
-                if(item.level > 0)
+                if (item.level > 0) // Already owned item
                     ownedEligibleEquipment.add(item);
             }
         }
 
         Player player = gameView.getPlayer();
 
-        for(int i = 0; i < MAX_CHOICES; i++){
+        // Try to fill up to MAX_CHOICES options
+        for (int i = 0; i < MAX_CHOICES; i++) {
             boolean owned = rnd.nextDouble() <= 0.2; // 20% chance to pick an already owned equipment
 
-            if(ownedEligibleEquipment.size() == 0 && !player.haveItemSpace() && !player.haveWeaponSpace()){
-                return options; // No options possible
+            // Early exit: if no more room and no owned items to upgrade
+            if (ownedEligibleEquipment.size() == 0 &&
+                    !player.haveItemSpace() && !player.haveWeaponSpace()) {
+                return options;
             }
 
-            if(owned && ownedEligibleEquipment.size() > 0){
+            if (owned && ownedEligibleEquipment.size() > 0) {
+                // Pick an already owned upgradable item
                 Equipment picked = pickFromArray(ownedEligibleEquipment);
                 options.add(picked);
-                if(picked instanceof Weapon) {
+                if (picked instanceof Weapon) {
                     eligibleWeapons.remove(picked);
-                } else if(picked instanceof Item){
+                } else if (picked instanceof Item) {
                     eligibleItems.remove(picked);
                 }
                 ownedEligibleEquipment.remove(picked);
             } else {
-                if(player.haveWeaponSpace()){
-                    if(player.haveItemSpace()){
+                // Pick a new item depending on player inventory space
+                if (player.haveWeaponSpace()) {
+                    if (player.haveItemSpace()) {
+                        // Space for both: pick from all eligible
                         ArrayList<Equipment> combined = new ArrayList<>();
                         combined.addAll(eligibleWeapons);
                         combined.addAll(eligibleItems);
                         Equipment picked = pickFromArray(combined);
                         options.add(picked);
-                        if(picked instanceof Weapon) {
+                        if (picked instanceof Weapon) {
                             eligibleWeapons.remove(picked);
-                        } else if(picked instanceof Item){
+                        } else if (picked instanceof Item) {
                             eligibleItems.remove(picked);
                         }
                     } else {
+                        // Only weapon space available
                         Equipment picked = pickFromArray(eligibleWeapons);
                         options.add(picked);
                         eligibleWeapons.remove(picked);
                         ownedEligibleEquipment.remove(picked);
                     }
                 } else {
-                    if(player.haveItemSpace()){
+                    if (player.haveItemSpace()) {
+                        // Only item space available
                         Equipment picked = pickFromArray(eligibleItems);
                         options.add(picked);
                         eligibleItems.remove(picked);
                         ownedEligibleEquipment.remove(picked);
                     } else {
+                        // No space for new items, fallback to owned
                         Equipment picked = pickFromArray(ownedEligibleEquipment);
                         options.add(picked);
-                        if(picked instanceof Weapon) {
+                        if (picked instanceof Weapon) {
                             eligibleWeapons.remove(picked);
-                        } else if(picked instanceof Item){
+                        } else if (picked instanceof Item) {
                             eligibleItems.remove(picked);
                         }
                         ownedEligibleEquipment.remove(picked);
@@ -163,6 +167,7 @@ public class LevelUpEquipmentTable {
 
         return options;
     }
+
 
     /**
      * Selects a random element from the given list.
@@ -183,7 +188,7 @@ public class LevelUpEquipmentTable {
      */
     public Weapon getWeapon(Weapon weapon){
         for(Weapon weaponItr : allWeapons){
-            if(weaponItr.name == weapon.name)
+            if(Objects.equals(weaponItr.name, weapon.name))
                 return weaponItr;
         }
         return null;

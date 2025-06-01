@@ -1,11 +1,12 @@
-package com.example.projectcyber.GameActivity.Stats;
+package com.example.projectcyber.GameActivity.gameObjects;
 
-import android.util.Log;
+import com.example.projectcyber.Menu.PlayerStatsType;
+import com.example.projectcyber.Menu.Stat;
 
 import java.util.HashMap;
 
 public class PlayerStatsContainer {
-    HashMap<PlayerStatsType, Stat<PlayerStatsType>> stats;
+    private HashMap<PlayerStatsType, Stat<PlayerStatsType>> stats;
 
     public PlayerStatsContainer(HashMap<PlayerStatsType, Double> startingStats){
         stats = new HashMap<>();
@@ -21,7 +22,7 @@ public class PlayerStatsContainer {
         stats.put(PlayerStatsType.Magnet, new Stat<>(PlayerStatsType.Magnet, startingStats.get(PlayerStatsType.Magnet)));
     }
 
-    public Stat getStat(PlayerStatsType type){
+    public Stat<PlayerStatsType> getStat(PlayerStatsType type){
         return stats.get(type);
     }
 }

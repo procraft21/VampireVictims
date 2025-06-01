@@ -1,7 +1,6 @@
 package com.example.projectcyber.GameActivity;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,12 +21,11 @@ import com.example.projectcyber.GameActivity.Equipment.Equipment;
 import com.example.projectcyber.GameActivity.Equipment.Items.Item;
 import com.example.projectcyber.GameActivity.Equipment.Weapons.Weapon;
 import com.example.projectcyber.GameActivity.PauseMenu.EquipmentAdapter;
-import com.example.projectcyber.GameActivity.Stats.PlayerStatsType;
+import com.example.projectcyber.Menu.PlayerStatsType;
 import com.example.projectcyber.Menu.MenuActivity;
 import com.example.projectcyber.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -39,8 +37,8 @@ import java.util.concurrent.Callable;
  */
 public class GameActivity extends AppCompatActivity {
 
-    GameView gameView;
-    FloatingActionButton pauseButton;
+    private GameView gameView;
+    private FloatingActionButton pauseButton;
 
     /**
      * Called when the activity is first created.
@@ -107,13 +105,13 @@ public class GameActivity extends AppCompatActivity {
                     gameView.getPlayer().addItem((Item) equipment);
             }
             dialog.cancel();
-            gameView.resumeGame();
+            gameView.resumeEntities();
         };
 
         LinearLayout layout = dialog.findViewById(R.id.levelUpLinearLayout);
         for (Equipment option : options) {
             LevelUpItemView itemView = new LevelUpItemView(this);
-            itemView.set(option);
+            itemView.setEquipment(option);
             layout.addView(itemView);
             itemView.setOnClickListener(onClickListener);
         }
@@ -189,7 +187,7 @@ public class GameActivity extends AppCompatActivity {
         itemsRecycler.setAdapter(new EquipmentAdapter(items));
         itemsRecycler.setLayoutManager(getManager.call());
 
-        dialog.setOnCancelListener(dialogInterface -> gameView.resumeGame());
+        dialog.setOnCancelListener(dialogInterface -> gameView.resumeEntities());
 
         Button leaveButton = dialog.findViewById(R.id.leaveButton);
         leaveButton.setOnClickListener(view -> closeGame());
@@ -205,7 +203,6 @@ public class GameActivity extends AppCompatActivity {
      */
     @Override
     protected void onPause() {
-        Log.d("pause", "pause");
         gameView.stopGame();
         super.onPause();
     }

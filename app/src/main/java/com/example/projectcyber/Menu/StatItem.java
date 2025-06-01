@@ -1,11 +1,5 @@
 package com.example.projectcyber.Menu;
 
-import android.util.Log;
-
-import com.example.projectcyber.GameActivity.Stats.Stat;
-import com.example.projectcyber.GameActivity.Stats.StatModifier;
-import com.example.projectcyber.GameActivity.Stats.PlayerStatsType;
-
 import java.io.Serializable;
 
 
@@ -26,16 +20,15 @@ public class StatItem implements Serializable {
      * Constructor for StatItem.
      *
      * @param name          Name of the stat.
-     * @param level         Current level.
      * @param maxLevel      Maximum allowable level.
      * @param initialPrice  Base price for the stat upgrade.
      * @param stat          The underlying stat object.
      * @param modifier      Modifier applied per level.
      * @param list          Reference to the store list for calculating cost.
      */
-    public StatItem(String name, int level, int maxLevel, int initialPrice, Stat stat, StatModifier modifier, StatStoreList list){
+    public StatItem(String name, int maxLevel, int initialPrice, Stat stat, StatModifier modifier, StatStoreList list){
         this.name = name;
-        this.level = level;
+        this.level = 0;
         this.maxLevel = maxLevel;
         this.initialPrice = initialPrice;
         this.basicStat = stat;
@@ -43,12 +36,6 @@ public class StatItem implements Serializable {
         this.list = list;
     }
 
-    /**
-     * @return The current level of this stat.
-     */
-    public int getLevel() {
-        return level;
-    }
 
     /**
      * Sets the level if it's within the allowed max limit and updates totalBought.
@@ -58,15 +45,16 @@ public class StatItem implements Serializable {
      */
     public boolean setLevel(int level) {
         if(level > maxLevel) return false;
-        list.totalBought -= this.level;
-        list.totalBought += level;
+        list.setTotalBought(list.getTotalBought() - this.level);
+        list.setTotalBought(list.getTotalBought() + level);
         this.level = level;
         return true;
     }
 
-    /**
-     * @return The maximum level this stat can reach.
-     */
+    public int getLevel() {
+        return level;
+    }
+
     public int getMaxLevel(){
         return maxLevel;
     }
@@ -80,25 +68,14 @@ public class StatItem implements Serializable {
         return setLevel(level+1);
     }
 
-    /**
-     * @return True if stat can be leveled up.
-     */
     public boolean canLevelUp(){
         return level < maxLevel;
     }
 
-    /**
-     * @return Name of the stat.
-     */
     public String getName() {
         return name;
     }
 
-    /**
-     * Sets the name of the stat.
-     *
-     * @param name New name.
-     */
     public void setName(String name) {
         this.name = name;
     }
@@ -111,7 +88,7 @@ public class StatItem implements Serializable {
     public int getPrice(){
         if(level == maxLevel) return MAX_LEVEL_PRICE;
         int basePrice = initialPrice * (1 + level);
-        int fees = list.totalBought == 0 ? 0 : (int)(20 * Math.pow(1.1, list.totalBought));
+        int fees = list.getTotalBought() == 0 ? 0 : (int)(20 * Math.pow(1.1, list.getTotalBought()));
         return basePrice + fees;
     }
 
@@ -130,7 +107,6 @@ public class StatItem implements Serializable {
     public double getFinalValue(){
         Stat<PlayerStatsType> finalStat = new Stat<>(basicStat);
         for(int i = 0; i < level; i++){
-            Log.d("stats", finalStat.getStatType().name() + " " + finalStat.getFinalValue());
             finalStat.applyModifier(modifier);
         }
         return finalStat.getFinalValue();

@@ -27,7 +27,7 @@ public class EnemySummoner {
         long length;                // Duration of this slot in milliseconds
         long summoningInterval;    // Time between summons
         int minimumEnemies;        // Minimum number of enemies always maintained
-        Set<Enemy> enemies;        // Possible enemy types in this slot
+        HashSet<Enemy> enemies;        // Possible enemy types in this slot
 
         /**
          * Constructs a new SummoningSlot.
@@ -37,7 +37,7 @@ public class EnemySummoner {
          * @param minimumEnemies    Minimum number of enemies alive
          * @param enemies           Set of enemy prototypes to summon
          */
-        public SummoningSlot(long length, long summoningInterval, int minimumEnemies, Set<Enemy> enemies) {
+        public SummoningSlot(long length, long summoningInterval, int minimumEnemies, HashSet<Enemy> enemies) {
             this.length = length;
             this.summoningInterval = summoningInterval;
             this.minimumEnemies = minimumEnemies;

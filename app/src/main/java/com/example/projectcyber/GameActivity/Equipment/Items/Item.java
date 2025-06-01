@@ -1,20 +1,17 @@
 package com.example.projectcyber.GameActivity.Equipment.Items;
 
 import com.example.projectcyber.GameActivity.Equipment.Equipment;
-import com.example.projectcyber.GameActivity.Stats.PlayerStatsType;
-import com.example.projectcyber.GameActivity.Stats.StatModifier;
+import com.example.projectcyber.Menu.PlayerStatsType;
+import com.example.projectcyber.Menu.StatModifier;
 
-/**
- * Abstract class representing a stat-modifying item.
- * Items apply a {@link StatModifier} to a specific {@link PlayerStatsType} and can level up.
- */
+
 public abstract class Item extends Equipment {
 
     /** The stat modifier applied by this item. */
-    StatModifier modifier;
+    protected StatModifier modifier;
 
     /** The type of player stat that this item modifies. */
-    PlayerStatsType statType;
+    protected PlayerStatsType statType;
 
     /**
      * Constructs an item with default level 0.

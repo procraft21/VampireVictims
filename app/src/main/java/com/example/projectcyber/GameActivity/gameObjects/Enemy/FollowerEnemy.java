@@ -28,10 +28,6 @@ public class FollowerEnemy extends Enemy {
 
         lerpTowardPlayer();
 
-        // Set direction for sprite flipping or animation
-        if (player.getPositionX() > posX) direction = Direction.Right;
-        else if (player.getPositionX() < posX) direction = Direction.Left;
-
         super.update(deltaTime);
     }
 

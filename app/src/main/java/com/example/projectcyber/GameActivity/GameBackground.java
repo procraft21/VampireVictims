@@ -73,7 +73,7 @@ public class GameBackground {
      * Converts a position into a tile index.
      *
      * @param pos The position in game world coordinates
-     * @return The corresponding index of the tile grid
+     * @return The corresponding index of the tile gridכ
      */
     private int getSquareIndex(double pos) {
         return (int) pos / SQUARE_SIZE;

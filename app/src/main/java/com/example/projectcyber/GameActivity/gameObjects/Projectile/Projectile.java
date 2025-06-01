@@ -2,18 +2,13 @@ package com.example.projectcyber.GameActivity.gameObjects.Projectile;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 
 import com.example.projectcyber.GameActivity.GameView;
-import com.example.projectcyber.GameActivity.gameObjects.Enemy.Enemy;
 import com.example.projectcyber.GameActivity.gameObjects.Entity;
 import com.example.projectcyber.R;
 
-/**
- * Represents a projectile in the game, such as a bullet or missile.
- * Handles movement, damage, collision radius, and visual representation.
- */
-public class Projectile extends Entity {
+
+public abstract class Projectile extends Entity {
 
     /// Default image used if no custom bitmap is provided
     protected static Bitmap baseBitmap;
@@ -56,25 +51,6 @@ public class Projectile extends Entity {
         this.penetration = penetration;
         this.damage = damage;
         this.speed = speed;
-    }
-
-    /**
-     * Placeholder for collision resolution logic.
-     * Actual behavior should be implemented (e.g. damaging enemies, reducing penetration).
-     *
-     * @param other The entity this projectile collided with.
-     */
-    @Override
-    protected void resolveEntityCollision(Entity other) {
-    }
-
-    /**
-     * Sets the movement behavior of this projectile.
-     *
-     * @param movement New movement behavior.
-     */
-    public void setProjectileMovement(ProjectileMovement movement) {
-        this.projectileMovement = movement;
     }
 
     /**

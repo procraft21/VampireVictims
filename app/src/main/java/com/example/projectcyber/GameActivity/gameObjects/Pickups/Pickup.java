@@ -1,15 +1,11 @@
 package com.example.projectcyber.GameActivity.gameObjects.Pickups;
 
 import com.example.projectcyber.GameActivity.GameView;
-import com.example.projectcyber.GameActivity.Stats.PlayerStatsType;
+import com.example.projectcyber.Menu.PlayerStatsType;
 import com.example.projectcyber.GameActivity.Utils;
 import com.example.projectcyber.GameActivity.gameObjects.Entity;
 import com.example.projectcyber.GameActivity.gameObjects.Player;
 
-/**
- * Base class for all in-game pickups (e.g., XP, coins, health).
- * Handles auto-attract behavior when within range of the player.
- */
 public abstract class Pickup extends Entity implements Cloneable {
 
     private boolean closeToPlayer;

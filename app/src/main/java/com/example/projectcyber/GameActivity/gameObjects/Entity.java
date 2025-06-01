@@ -42,7 +42,7 @@ public abstract class Entity {
         this.posX = posX;
         this.posY = posY;
         this.gameView = gameView;
-        this.immunityList = new ImmunityList(200, this); // Default immunity of 200ms
+        this.immunityList = new ImmunityList(200); // Default immunity of 200ms
     }
 
     /**

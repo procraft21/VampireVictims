@@ -3,8 +3,8 @@ package com.example.projectcyber.GameActivity.Equipment.Items;
 import android.graphics.BitmapFactory;
 
 import com.example.projectcyber.GameActivity.GameView;
-import com.example.projectcyber.GameActivity.Stats.PlayerStatsType;
-import com.example.projectcyber.GameActivity.Stats.StatModifier;
+import com.example.projectcyber.Menu.PlayerStatsType;
+import com.example.projectcyber.Menu.StatModifier;
 import com.example.projectcyber.R;
 
 public class WirelessTransmitter extends Item{

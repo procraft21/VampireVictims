@@ -36,9 +36,8 @@ public class DropTable {
     // Returns a random pickup based on the defined weights
     public Pickup getDrop() {
         Random rnd = new Random();
-        int pick = rnd.nextInt(totalWeight); // Random value between 0 (inclusive) and totalWeight (exclusive)
+        int pick = rnd.nextInt(totalWeight);
 
-        // Iterate through all pickups and subtract their weights from the pick value
         for (Pickup pickup : weightTable.keySet()) {
             pick -= weightTable.get(pickup);
 

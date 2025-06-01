@@ -1,12 +1,7 @@
-package com.example.projectcyber.GameActivity.Stats;
+package com.example.projectcyber.Menu;
 
 import java.io.Serializable;
 
-/**
- * Represents a generic stat with modifiers and final value computation.
- *
- * @param <T> A type that extends StatType, used to distinguish stat categories.
- */
 public class Stat<T extends StatType> implements Serializable {
     private T statType;
     private double value;
@@ -44,12 +39,12 @@ public class Stat<T extends StatType> implements Serializable {
      * @param modifier The modifier to apply.
      */
     public void applyModifier(StatModifier modifier){
-        switch (modifier.type){
+        switch (modifier.getType()){
             case percentile:
-                percentileBonus += modifier.amount / 100;
+                percentileBonus += modifier.getAmount() / 100;
                 break;
             case bonus:
-                rawBonus += modifier.amount;
+                rawBonus += modifier.getAmount();
                 break;
         }
     }

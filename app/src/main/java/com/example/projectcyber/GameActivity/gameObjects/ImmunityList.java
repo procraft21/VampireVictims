@@ -4,31 +4,25 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * A utility class to manage temporary immunity between an Entity and others.
- * This is typically used to prevent repeated interactions (like damage) with the same entity
- * within a short timeframe.
- */
 public class ImmunityList {
 
-    private final ConcurrentHashMap<Entity, Double> timeMap;
-
+    private final HashMap<Entity, Double> timeMap;
     private final double defaultTime;
 
-    private final Entity owner;
 
     /**
      * Constructs a new ImmunityList with the specified default immunity duration.
      *
      * @param defaultTime The default time (in milliseconds) that an entity should remain immune.
-     * @param owner       The owner entity to which this immunity list applies.
      */
-    public ImmunityList(double defaultTime, Entity owner) {
-        this.timeMap = new ConcurrentHashMap<>();
+    public ImmunityList(double defaultTime) {
+        this.timeMap = new HashMap<>();
         this.defaultTime = defaultTime;
-        this.owner = owner;
+
     }
 
     /**
@@ -38,13 +32,17 @@ public class ImmunityList {
      * @param deltaTime The time (in milliseconds) since the last update.
      */
     public void update(double deltaTime) {
+        HashSet<Entity> toBeRemoved = new HashSet<>();
         for (Entity entity : timeMap.keySet()) {
             double newTime = timeMap.get(entity) - deltaTime;
             if (newTime <= 0) {
-                timeMap.remove(entity);
+                toBeRemoved.add(entity);
             } else {
                 timeMap.put(entity, newTime);
             }
+        }
+        for(Entity entity : toBeRemoved){
+            timeMap.remove(entity);
         }
     }
 

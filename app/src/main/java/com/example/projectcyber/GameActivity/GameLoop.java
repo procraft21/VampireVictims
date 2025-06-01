@@ -16,10 +16,7 @@ public class GameLoop extends Thread {
     private final SurfaceHolder surfaceHolder;
 
     private static final double MAX_UPS = 60.0; // Target Updates Per Second
-    private static final double MAX_FPS = 60.0; // Target Frames Per Second
-
     private static final long UPDATE_PERIOD_NS = (long) (1_000_000_000 / MAX_UPS);
-    private static final long DRAW_PERIOD_NS = (long) (1_000_000_000 / MAX_FPS);
 
     private double averageUPS;
     private double averageFPS;

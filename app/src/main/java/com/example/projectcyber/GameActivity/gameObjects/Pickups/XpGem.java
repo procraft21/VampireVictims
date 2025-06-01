@@ -24,8 +24,6 @@ public class XpGem extends Pickup {
         }
 
         bitmap = baseImg;
-
-
         amount = 1;
     }
 

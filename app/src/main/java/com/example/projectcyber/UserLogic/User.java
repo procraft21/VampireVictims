@@ -1,6 +1,6 @@
 package com.example.projectcyber.UserLogic;
 
-import com.example.projectcyber.GameActivity.Stats.PlayerStatsType;
+import com.example.projectcyber.Menu.PlayerStatsType;
 import com.google.firebase.firestore.Exclude;
 
 import java.io.Serializable;

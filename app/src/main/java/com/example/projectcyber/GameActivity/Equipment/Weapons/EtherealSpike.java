@@ -3,7 +3,7 @@ package com.example.projectcyber.GameActivity.Equipment.Weapons;
 import android.graphics.BitmapFactory;
 
 import com.example.projectcyber.GameActivity.GameView;
-import com.example.projectcyber.GameActivity.Stats.StatModifier;
+import com.example.projectcyber.Menu.StatModifier;
 import com.example.projectcyber.GameActivity.gameObjects.Player;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.FriendlyProjectile;
 import com.example.projectcyber.GameActivity.gameObjects.Projectile.Projectile;

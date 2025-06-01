@@ -9,9 +9,9 @@ import com.example.projectcyber.GameActivity.GameView;
 import com.example.projectcyber.R;
 
 public class CoinCounter{
-    Bitmap coinBitmap;
-    int amount;
-    GameView gameView;
+    private Bitmap coinBitmap;
+    private int amount;
+    private GameView gameView;
 
     public CoinCounter(GameView gameView){
         this.gameView = gameView;

@@ -19,12 +19,12 @@ import com.example.projectcyber.R;
  */
 public class LevelUpItemView extends FrameLayout {
 
-    TextView itemNameTextView;
-    TextView itemDescTextView;
-    TextView levelTextView;
-    ImageView equipmentImage;
+    private TextView itemNameTextView;
+    private TextView itemDescTextView;
+    private TextView levelTextView;
+    private ImageView equipmentImage;
 
-    Equipment equipment;
+    private Equipment equipment;
 
 
     public LevelUpItemView(Context context) {
@@ -60,38 +60,21 @@ public class LevelUpItemView extends FrameLayout {
         equipmentImage = findViewById(R.id.levelUpImage);
     }
 
-    /**
-     * Sets the name text of the item.
-     *
-     * @param name The name to display
-     */
+
     private void setName(String name){
         itemNameTextView.setText(name);
     }
 
-    /**
-     * Sets the level text of the item.
-     *
-     * @param level The level number
-     */
+
     private void setLevel(int level){
         levelTextView.setText("level : " + level);
     }
 
-    /**
-     * Sets the description text of the item.
-     *
-     * @param desc The description string
-     */
+
     private void setDesc(String desc){
         itemDescTextView.setText(desc);
     }
 
-    /**
-     * Sets the equipment image.
-     *
-     * @param bitmap The bitmap to show as the item's image
-     */
     private void setBitmap(Bitmap bitmap){
         equipmentImage.setImageBitmap(bitmap);
     }
@@ -116,7 +99,7 @@ public class LevelUpItemView extends FrameLayout {
      *
      * @param equipment The equipment to be displayed
      */
-    public void set(Equipment equipment){
+    public void setEquipment(Equipment equipment){
         this.equipment = equipment;
         LevelDesc desc = equipment.getNextLevelDescription();
         setLevelUpItemView(desc.getName(), desc.getLevel(), desc.getDesc(), equipment.getEquipmentBitmap());

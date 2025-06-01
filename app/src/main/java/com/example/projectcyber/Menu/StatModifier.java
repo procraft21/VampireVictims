@@ -1,13 +1,8 @@
-package com.example.projectcyber.GameActivity.Stats;
-
-import com.example.projectcyber.GameActivity.Equipment.Weapons.WeaponStatsType;
-import com.example.projectcyber.GameActivity.gameObjects.Player;
+package com.example.projectcyber.Menu;
 
 import java.io.Serializable;
 
-/**
- * Represents a modifier that can alter a stat by a flat amount or a percentage.
- */
+
 public class StatModifier implements Serializable {
 
     /**
@@ -19,8 +14,8 @@ public class StatModifier implements Serializable {
         percentile, bonus
     }
 
-    Type type;
-    double amount;
+    private Type type;
+    private double amount;
 
     /**
      * Constructs a StatModifier with a given type and amount.
@@ -33,13 +28,15 @@ public class StatModifier implements Serializable {
         this.amount = amount;
     }
 
-    /**
-     * Gets the type of this modifier.
-     *
-     * @return The modifier type (percentile or bonus).
-     */
+
+    //-------------------- getters ---------------------------------
+
     public Type getType() {
         return type;
+    }
+
+    public double getAmount() {
+        return amount;
     }
 
     /**
@@ -70,12 +67,4 @@ public class StatModifier implements Serializable {
         return null;
     }
 
-    /**
-     * Returns the numeric value of the modifier.
-     *
-     * @return The amount of the modifier.
-     */
-    public double getAmount() {
-        return amount;
-    }
 }

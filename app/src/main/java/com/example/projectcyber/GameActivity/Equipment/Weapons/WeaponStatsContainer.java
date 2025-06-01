@@ -1,17 +1,13 @@
 package com.example.projectcyber.GameActivity.Equipment.Weapons;
 
 import com.example.projectcyber.GameActivity.GameView;
-import com.example.projectcyber.GameActivity.Stats.PlayerStatsType;
-import com.example.projectcyber.GameActivity.Stats.Stat;
-import com.example.projectcyber.GameActivity.Stats.StatModifier;
+import com.example.projectcyber.Menu.PlayerStatsType;
+import com.example.projectcyber.Menu.Stat;
+import com.example.projectcyber.Menu.StatModifier;
 import com.example.projectcyber.GameActivity.gameObjects.Player;
 
 import java.util.HashMap;
 
-/**
- * Container for managing weapon-related stats, including their base values and
- * how they interact with player stats for final computation.
- */
 public class WeaponStatsContainer {
 
     /** Reference to the game environment. Used to access player stats. */

@@ -11,10 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-/**
- * Abstract base class for all weapons. Weapons manage their own firing state,
- * cooldowns, and level-based stat modifications.
- */
+
 public abstract class Weapon extends Equipment {
 
     /** Holds all stat values for this weapon. */
@@ -52,7 +49,7 @@ public abstract class Weapon extends Equipment {
         this.gameView = gameView;
     }
 
-    /** Default constructor. Useful for reflection or subclass setup. */
+    /** Default constructor */
     public Weapon(){}
 
     /**
@@ -123,7 +120,7 @@ public abstract class Weapon extends Equipment {
     protected String getNextLevelStatsDescription() {
         String desc = "";
         for(LevelUpModifier modifier : levelEffects.get(level - 1)){
-            desc += modifier.modifier.getDesc(modifier.statType) + "\n";
+            desc += modifier.getModifier().getDesc(modifier.getStatType()) + "\n";
         }
         return desc;
     }

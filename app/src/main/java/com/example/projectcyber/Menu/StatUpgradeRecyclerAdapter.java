@@ -55,9 +55,9 @@ public class StatUpgradeRecyclerAdapter extends RecyclerView.Adapter<StatUpgrade
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        TextView statNameTextView;
-        TextView statLvlTextView;
-        TextView priceTextView;
+        private TextView statNameTextView;
+        private TextView statLvlTextView;
+        private TextView priceTextView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

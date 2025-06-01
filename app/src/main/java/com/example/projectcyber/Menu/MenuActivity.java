@@ -42,7 +42,6 @@ public class MenuActivity extends AppCompatActivity {
     private Button playButton;
     private FloatingActionButton logoutButton;
 
-    private ArrayList<StatItem> stats;
     private ActivityResultLauncher<Intent> launcher;
 
     private User user;
@@ -77,7 +76,6 @@ public class MenuActivity extends AppCompatActivity {
         user = (User) getIntent().getSerializableExtra("User");
         if (user == null) throw new IllegalStateException("User object must be provided via Intent");
 
-        stats = user.getStats();
         setCoinsText(user.getCoins());
 
         // Configure RecyclerView for stat upgrades
@@ -87,9 +85,8 @@ public class MenuActivity extends AppCompatActivity {
 
         // Handle game launch
         playButton.setOnClickListener(view -> {
-            Log.d("user", "Max HP Level: " + user.getMaxHpLvl());
-            saveUserToDatabase(user);
-            startGame(user);
+            saveUserToDatabase();
+            startGame();
         });
 
         // Handle user logout
@@ -109,7 +106,7 @@ public class MenuActivity extends AppCompatActivity {
                             if (data != null) {
                                 user.addCoins(data.getIntExtra("Coins", 0));
                                 setCoinsText(user.getCoins());
-                                saveUserToDatabase(user);
+                                saveUserToDatabase();
                             }
                         }
                     }
@@ -118,12 +115,10 @@ public class MenuActivity extends AppCompatActivity {
 
     /**
      * Launches the GameActivity with user-defined stat modifiers as Intent extras.
-     *
-     * @param user The active user instance with current stat values
      */
-    private void startGame(User user) {
+    private void startGame() {
         Intent intent = new Intent(MenuActivity.this, GameActivity.class);
-        for (StatItem item : stats) {
+        for (StatItem item : user.getStats()) {
             intent.putExtra(item.getType().name(), item.getFinalValue());
         }
         launcher.launch(intent);
@@ -131,10 +126,8 @@ public class MenuActivity extends AppCompatActivity {
 
     /**
      * Saves the current user state to Firestore.
-     *
-     * @param user The user object containing updated state
      */
-    private void saveUserToDatabase(User user) {
+    private void saveUserToDatabase() {
         DB.collection(getString(R.string.usersCollection))
                 .document(firebaseAuth.getCurrentUser().getUid())
                 .set(user);
@@ -147,5 +140,12 @@ public class MenuActivity extends AppCompatActivity {
      */
     public void setCoinsText(int coins) {
         coinTextView.setText("Coins : " + coins);
+    }
+
+    @Override
+    protected void onPause() {
+        if(firebaseAuth.getCurrentUser() != null)
+            saveUserToDatabase();
+        super.onPause();
     }
 }

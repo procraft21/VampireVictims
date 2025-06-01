@@ -20,7 +20,7 @@ import java.util.Collection;
 
 public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.ViewHolder> {
 
-    ArrayList<Equipment> list;
+    private ArrayList<Equipment> list;
 
     public EquipmentAdapter(Collection<? extends Equipment> equipments){
         list = new ArrayList<>();

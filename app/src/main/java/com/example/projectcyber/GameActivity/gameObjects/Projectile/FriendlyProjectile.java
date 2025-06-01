@@ -6,10 +6,7 @@ import com.example.projectcyber.GameActivity.GameView;
 import com.example.projectcyber.GameActivity.gameObjects.Enemy.Enemy;
 import com.example.projectcyber.GameActivity.gameObjects.Entity;
 
-/**
- * Represents a projectile fired by the player (a "friendly" projectile).
- * It damages enemy entities and supports penetration logic (can pass through multiple enemies).
- */
+
 public class FriendlyProjectile extends Projectile {
 
     /**
@@ -55,8 +52,5 @@ public class FriendlyProjectile extends Projectile {
                 destroy();
             }
         }
-
-        // call parent in case base class adds logic later
-        super.resolveEntityCollision(other);
     }
 }

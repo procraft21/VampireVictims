@@ -30,13 +30,6 @@ public abstract class  Enemy extends Mob implements Cloneable{
 
     public Enemy(GameView gameView, double posX, double posY){
         super(posX,posY, gameView);
-
-        this.currHP = maxHp;
-    }
-
-    @Override
-    public void update(long deltaTime) {
-        super.update(deltaTime);
     }
 
     @NonNull
@@ -44,11 +37,6 @@ public abstract class  Enemy extends Mob implements Cloneable{
     public Object clone() throws CloneNotSupportedException {
         Enemy clone = (Enemy) super.clone();
         return clone;
-    }
-
-    @Override
-    public double getCollisionRadius() {
-        return super.getCollisionRadius();
     }
 
     public int getMight(){
